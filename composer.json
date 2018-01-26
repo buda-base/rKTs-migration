@@ -3,7 +3,10 @@
     "description": "Script to migrate rKTs xml data to RDF",
     "type": "script",
     "require": {
-        "easyrdf/easyrdf": "^0.9.1"
+        "easyrdf/easyrdf": "^0.9.1",
+        "ulrichsg/getopt-php": "^3.0",
+        "symfony/yaml": "^3.4",
+        "ext-simplexml": "*"
     },
     "license": "Apache2",
     "authors": [
