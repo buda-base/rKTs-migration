@@ -25,15 +25,15 @@ $getOpt->addOptions([
 
     Option::create('i', 'input-dir', GetOpt::REQUIRED_ARGUMENT)
         ->setDefaultValue('input/')
-        ->setDescription('input directory with XML files'),
+        ->setDescription('input directory with XML files (defaults to input/)'),
 
     Option::create('o', 'output-dir', GetOpt::REQUIRED_ARGUMENT)
         ->setDefaultValue('output/')
-        ->setDescription('output directory for RDF files'),
+        ->setDescription('output directory for RDF files (defaults to output/)'),
 
     Option::create('c', 'config', GetOpt::REQUIRED_ARGUMENT)
         ->setDefaultValue('rkts.yaml')
-        ->setDescription('Yaml config file (for rKTs or bdrc)'),
+        ->setDescription('Yaml config file (defaults to rkts.yaml)'),
 
 ]);
 
