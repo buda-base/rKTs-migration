@@ -59,20 +59,22 @@ if ($getOpt->getOption('help')) {
     exit;
 }
 
-$conf = Yaml::parseFile($getOpt->getOption('config'));
+$config = Yaml::parseFile($getOpt->getOption('config'));
 
-function getAbstractID($conf, $rKTsID) {
-    // super insecure, but we don't care
-    if (!$conf->useAbstract)
-        return null;
-    return string_replace('%GID', $rKTsID, $conf->abstractUrlFormat);
-}
+$config['opts'] = $getOpt;
 
-function getExpressionID($conf, $rKTsID) {
-    // super insecure, but we don't care
-    return string_replace('%GID', $rKTsID, $conf->expressionUrlFormat);
-}
+EasyRdf_Namespace::set('adm', 'http://purl.bdrc.io/ontology/admin/');
+EasyRdf_Namespace::set('bdd', 'http://purl.bdrc.io/data/');
+EasyRdf_Namespace::set('bdo', 'http://purl.bdrc.io/ontology/core/');
+EasyRdf_Namespace::set('bdr', 'http://purl.bdrc.io/resource/');
+EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
+EasyRdf_Namespace::set('tbr', 'http://purl.bdrc.io/ontology/toberemoved/');
+EasyRdf_Namespace::set('rkts', 'http://purl.rkts.org/resources/');
 
 $xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
 
 mkdir($getOpt->getOption('output-dir'), 0777, true);
+
+require_once "xmltottl.php";
+
+kernel_to_ttl($config, $xml);

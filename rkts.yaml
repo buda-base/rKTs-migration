@@ -1,2 +1,6 @@
 useAbstract: false
 expressionUrlFormat: "http://purl.rkts.org/resources/TXT%GID"
+keepSktUni: true
+keepMgUni: true
+keepSimplifiedRomanizedMongol: true
+useSkosLabels: false
