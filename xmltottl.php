@@ -50,7 +50,18 @@ function add_log_entry($resource) {
     $logNode->addLiteral('adm:logMessage', 'migrated from xml', 'en');
 }
 
-function kernel_item_to_ttl($config, $item) {
+$ntriples = EasyRdf_Format::getFormat('ntriples');
+
+function add_graph_to_global($graph, $localname, $global_fd) {
+    global $ntriples;
+    $output = $graph->serialise($ntriples);
+    // this is really crappy but it seems there is no other option
+    // in easyrdf...
+    $output = str_replace('_:genid', '_:genid'.$localname, $output);
+    fwrite($global_fd, $output);
+}
+
+function kernel_item_to_ttl($config, $item, $global_graph_fd) {
     global $name_to_bcp;
     if (isset($item->now))
         return;
@@ -76,6 +87,7 @@ function kernel_item_to_ttl($config, $item) {
     }
     add_log_entry($expression_r);
     rdf_to_ttl($config, $graph_expression, $expression_r->localName());
+    add_graph_to_global($graph_expression, $expression_r->localName(), $global_graph_fd);
 }
 
 $turtle = EasyRdf_Format::getFormat('turtle');
@@ -88,9 +100,12 @@ function rdf_to_ttl($config, $graph, $basename) {
 }
 
 function kernel_to_ttl($config, $xml) {
+    $global_filename = $config['opts']->getOption('output-dir').'/global.n3';
+    $global_graph_fd = fopen($global_filename, "w");
     foreach($xml->item as $item) {
-        kernel_item_to_ttl($config, $item);
+        kernel_item_to_ttl($config, $item, $global_graph_fd);
     }
+    fclose($global_graph_fd);
 }
 
 // TODO:
