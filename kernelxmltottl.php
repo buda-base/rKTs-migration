@@ -29,7 +29,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd) {
         $seenLangs[$langtag] = true;
         $title = $child->__toString();
         if (isset($seenTitles[$title])) {
-            report_error('kernel', 'duplicate', $id, 'title "'.$title.'" appears more than once');
+            report_error('kernel', 'duplicate', 'rkts_'.$id, 'title "'.$title.'" appears more than once');
             continue;
         }
         $seenTitles[$title] = true;
@@ -42,12 +42,9 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd) {
     add_graph_to_global($graph_expression, $expression_r->localName(), $global_graph_fd);
 }
 
-function kernel_to_ttl($config, $xml) {
-    $global_filename = $config['opts']->getOption('output-dir').'/global.n3';
-    $global_graph_fd = fopen($global_filename, "w");
+function kernel_to_ttl($config, $xml, $global_graph_fd) {
     foreach($xml->item as $item) {
         kernel_item_to_ttl($config, $item, $global_graph_fd);
     }
-    fclose($global_graph_fd);
 }
 

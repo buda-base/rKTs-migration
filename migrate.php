@@ -8,7 +8,7 @@ use GetOpt\ArgumentException;
 use GetOpt\ArgumentException\Missing;
 use Symfony\Component\Yaml\Yaml;
 
-require __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 define('VERSION', '0.1.0');
 
@@ -84,9 +84,9 @@ kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 
 require_once "editionxmltottl.php";
 
-// $filesList = ["dergue"];
+$filesList = ["derge"];
 
-// foreach ($fileList as $fileName) {
+// foreach ($filesList as $fileName) {
 //     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
 //     edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
 // }

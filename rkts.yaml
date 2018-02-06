@@ -10,7 +10,7 @@ keepSimplifiedRomanizedMongol: true
 useSkosLabels: false
 catalogueNumberingScheme: "rKTs"
 oneTitleInHigherLevels: false
-dergue:
+derge:
   RID: "W22084"
   EID: "D"
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
