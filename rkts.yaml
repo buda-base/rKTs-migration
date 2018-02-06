@@ -1,6 +1,17 @@
 useAbstract: false
-expressionUrlFormat: "http://purl.rkts.org/resources/TXT%GID"
+abstractUrlFormat: "http://purl.rkts.org/resources/A%GID"
+expressionUrlFormat: "http://purl.rkts.org/resources/T%GID"
+editionUrlFormat: "http://purl.rkts.org/resources/E%EID"
+textUrlFormat: "http://purl.rkts.org/resources/E%EID_T%GID"
+chapterUrlFormat: "http://purl.rkts.org/resources/E%EID_T%GID_C%CID"
 keepSktUni: true
 keepMgUni: true
 keepSimplifiedRomanizedMongol: true
 useSkosLabels: false
+catalogueNumberingScheme: "rKTs"
+oneTitleInHigherLevels: false
+dergue:
+  RID: "W22084"
+  EID: "D"
+  duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
+  propSigla: "workKaTenSiglaD"

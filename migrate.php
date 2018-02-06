@@ -71,10 +71,24 @@ EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
 EasyRdf_Namespace::set('tbr', 'http://purl.bdrc.io/ontology/toberemoved/');
 EasyRdf_Namespace::set('rkts', 'http://purl.rkts.org/resources/');
 
-$xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
+$kernel_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
 
 mkdir($getOpt->getOption('output-dir'), 0777, true);
 
-require_once "xmltottl.php";
+require_once "kernelxmltottl.php";
 
-kernel_to_ttl($config, $xml);
+$global_filename = $config['opts']->getOption('output-dir').'/global.nt';
+$global_graph_fd = fopen($global_filename, "w");
+
+kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+
+require_once "editionxmltottl.php";
+
+// $filesList = ["dergue"];
+
+// foreach ($fileList as $fileName) {
+//     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
+//     edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+// }
+
+fclose($global_graph_fd);
