@@ -80,15 +80,15 @@ require_once "kernelxmltottl.php";
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+//kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 
 require_once "editionxmltottl.php";
 
 $filesList = ["derge"];
 
-// foreach ($filesList as $fileName) {
-//     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
-//     edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
-// }
+foreach ($filesList as $fileName) {
+    $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
+    edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+}
 
 fclose($global_graph_fd);

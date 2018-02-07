@@ -51,7 +51,9 @@ function report_error($file, $type, $id, $message) {
     error_log($file.':'.$id.':'.$type.': '.$message);
 }
 
-$allowed_vol_letters = ["ka", "kha", "ga", "nga", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "ca", "cha", "ja", "nya", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "am", "ah", "e", "wam", "sa", "la" ];
+$allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "am", "ah", "e", "wam", "sa", "la" ];
+
+// normalization: wam -> waM, ah -> aH, 
 
 $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
 $pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\- ?((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))? \(vol?l\. ?(?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\)\.?$/';
