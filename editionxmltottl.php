@@ -58,7 +58,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, &$edition_info, $
     // TODO: partOf with hierarchical sections
 }
 
-$authorized_sections = ["'dul ba", "'bum", "nyi khri", "khri brgyad", "khri pa", "brgyad stong", "sher phyin", "dkon brtsegs", "mdo sde", "rgyud", "rnying rgyud", "gzungs"];
+$authorized_sections = ["'dul ba", "'bum", "nyi khri", "khri brgyad", "khri pa", "brgyad stong", "sher phyin", "dkon brtsegs", "mdo sde", "rgyud", "rnying rgyud", "gzungs", "dus 'khor", "phal chen"];
 
 function add_to_map(&$volumeMap, $location, $fileName, $rktsid, $check_section=false) {
     global $authorized_sections;
@@ -71,9 +71,9 @@ function add_to_map(&$volumeMap, $location, $fileName, $rktsid, $check_section=f
     $sectionMap = $volumeMap[$section];
     $volume = isset($location['volname']) ? $location['volname'] : $location['bvolname'];
     if (empty($volumeMap[$section]) || end($volumeMap[$section]) !== $volume) {
-        if (in_array($volume, $volumeMap[$section])) {
-            report_error($fileName, 'invalid_vol_order', $rktsid, 'incoherent volume names, "'.$volume.'" appears twice.');
-        }
+        // if (in_array($volume, $volumeMap[$section])) {
+        //     report_error($fileName, 'invalid_vol_order', $rktsid, 'incoherent volume names, "'.$volume.'" appears twice.');
+        // }
         $volumeMap[$section][] = $volume;
     }
     
