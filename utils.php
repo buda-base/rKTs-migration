@@ -18,26 +18,49 @@ function chapnum_to_str($id) {
     return sprintf("%03d", $id_int);
 }
 
-function id_to_url_abstract($rktsid, $config) {
-    return str_replace('%GID', id_to_str($id), $config['abstractUrlFormat']);
+function id_to_url_abstract($rktsid, $config, $bdrc=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat';
+    return str_replace('%GID', id_to_str($id), $config[$paramName]);
 }
 
-function id_to_url_expression($rktsid, $config) {
-    return str_replace('%GID', id_to_str($rktsid), $config['expressionUrlFormat']);
+function id_to_url_expression($rktsid, $config, $bdrc=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat';
+    return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
-function id_to_url_edition($eid, $config) {
-    return str_replace('%EID', id_to_str($eid), $config['editionUrlFormat']);
+function id_to_url_edition($eid, $config, $bdrc=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'EditionUrlFormat';
+    return str_replace('%EID', id_to_str($eid), $config[$paramName]);
 }
 
-function id_to_url_edition_text($eid, $rktsid, $config) {
-    $estr = id_to_url_edition($eid, $config);
-    return str_replace('%GID', id_to_str($rktsid), $estr);
+function id_to_url_edition_text($eid, $rktsid, $config, $partnum, $bdrc=False) {
+    if ($bdrc) {
+        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        return str_replace('%PNUM', id_to_str($partnum), $estr);
+    } else {
+        $estr = id_to_url_edition($eid, $config);
+        return str_replace('%GID', id_to_str($rktsid), $estr);
+    }
 }
 
-function id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config) {
-    $txtstr = id_to_url_edition_text($eid, $rktsid, $chapnum);
-    return str_replace('%CID', chapnum_to_str($chapnum), $txtstr);
+function id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partnum, $bdrc=False) {
+    if ($bdrc) {
+        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        return str_replace('%PNUM', id_to_str($partnum), $estr);
+    } else {
+        $txtstr = id_to_url_edition_text($eid, $rktsid, $chapnum);
+        return str_replace('%CID', chapnum_to_str($chapnum), $txtstr);
+    }
+}
+
+function get_url_for_vol($volumenumber, $config, $bdrc=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'VolumeUrlFormat';
+    return str_replace('%VNUM', chapnum_to_str($volumenumber), $config[$paramName]);
+}
+
+function get_url_for_vol_section($volumesectionnumber, $config, $bdrc=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'bdrcVolumeSectionUrlFormat';
+    return str_replace('%VSNUM', chapnum_to_str($volumenumber), $config[$paramName]);
 }
 
 function add_title($resource, $type, $lit) {

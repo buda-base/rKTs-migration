@@ -30,9 +30,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, &$edition_info, $
         // TODO: add skos:label here for BDRC dataset
         add_title($part_r, 'WorkSanskritTitle', $lit);
     }
-    $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid, $edition_info['volumeMap']);
+    $volumeMapWithUrls = create_volume_map($edition_r, $edition_info['volumeMap']);
+    $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
     if (!empty($location)) {
-        add_to_map($edition_info['volumeMap'], $location, $fileName, 'rkts_'.$rktsid, true);
         $current_section = $location['section'];
         $bvolname = $location['bvolname'];
         foreach ($item->bampo as $bampo) {
@@ -40,22 +40,45 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, &$edition_info, $
             $location['section'] = $current_section;
             if (empty($location['volname']))
                 $location['volname'] = $bvolname;
-            else
-                add_to_map($edition_info['volumeMap'], $location, $fileName, 'rkts_'.$rktsid);
         }
         foreach ($item->chap as $chap) {
             $location = get_chap_loc($chap->p->__toString(), $fileName, 'rkts_'.$rktsid);
             $location['section'] = $current_section;
             if (empty($location['volname']))
                 $location['volname'] = $bvolname;
-            else
-                add_to_map($edition_info['volumeMap'], $location, $fileName, 'rkts_'.$rktsid);
         }
     }
     add_log_entry($part_r);
     //rdf_to_ttl($config, $graph_part, $part_r->localName());
     //add_graph_to_global($graph_part, $part_r->localName(), $global_graph_fd);
     // TODO: partOf with hierarchical sections
+}
+
+function create_volume_map($edition_r, &$editionVolumeMap) {
+    $graph = $edition_r->getGraph();
+    foreach ($editionVolumeMap as $sectionIdx => &$sectionArr) {
+        $sectionName = $sectionArr['name'];
+        $sectionUrl = get_url_for_vol_section($sectionIdx+1, $config);
+        $sectionArr['url'] = $sectionUrl;
+        if (!isset($sectionArr['namesUrlMap'])) {
+            $sectionArr['namesUrlMap'] = [];
+        }
+        $namesUrlMap = $sectionArr['namesUrlMap'];
+        $edition_r->addResource('bdo:hasVolumeSection', $sectionUrl);
+        // new graph?
+        $section_r = $graph->resource($sectionUrl);
+        $section_r->add('rdfs:label', $sectionArr['name'], "bo-x-ewts");
+        $section_r->add('bdo:seqNum', $sectionIdx+1);
+        foreach($sectionArr['volumes'] as $volumeIdx => $volumeName) {
+            $volumeUrl = get_url_for_vol($sectionIdx+$volumeIdx+2, $config);
+            $section_r->add('bdo:VolumeSectionHasVolume', $volumeUrl);
+            $namesUrlMap[$volumeName] = $volumeUrl;
+            $volume_r = $graph->resource($volumeUrl);
+            $volume_r->add('bdo:seqNum', $volumeIdx+1);
+            $volume_r->add('bdo:VolumeSeqNumInWork', $sectionIdx+$volumeIdx+2);
+            $volume_r->add('rdfs:label', $volumeName, "bo-x-ewts");
+        }
+    }
 }
 
 $authorized_sections = ["'dul ba", "'bum", "nyi khri", "khri brgyad", "khri pa", "brgyad stong", "sher phyin", "dkon brtsegs", "mdo sde", "rgyud", "rnying rgyud", "gzungs", "dus 'khor", "phal chen"];
