@@ -53,12 +53,12 @@ function report_error($file, $type, $id, $message) {
 
 $allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI" ];
 
-// normalization: wam -> waM, ah -> aH, 
-
 $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
 $pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))? \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\)$/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
-#$pattern_chap_loc = '/^(?:(?P<volname>[^ ]+) )?(?P<bpageline>[0-9ab]+)$/';
+
+$volumeMap = [];
+$currentSection = null;
 
 function get_text_loc($str, $fileName, $id) {
     global $allowed_vol_letters, $pattern_loc, $pattern_small_loc;
@@ -80,7 +80,18 @@ function get_text_loc($str, $fileName, $id) {
 }
 
 function set_pageline(&$matches, $str, $fileName, $id) {
-    global $pattern_small_loc;
+    global $pattern_small_loc, $volumeMap, $currentSection;
+    if (!empty($matches['bvolname'])) {
+        $volName = $matches['bvolname'];
+        if (!empty($matches['section'])) {
+            $currentSection = $matches['section'];
+            if (!isset($volumeMap[$currentSection]))
+                $volumeMap[$currentSection] = [];
+        }
+        if (!in_array($volName, $volumeMap[$currentSection])) {
+            $volumeMap[$currentSection][] = $volName;
+        }
+    }
     $matches_bpageline = [];
     preg_match($pattern_small_loc, $matches['bpageline'], $matches_bpageline);
     if (empty($matches_bpageline)) {
@@ -142,10 +153,6 @@ function get_chap_loc($str, $fileName, $id) {
 // print_r(get_text_loc("'dul ba, ka 1b1-nga 302a5 (vol. 1-4)", "fileName", "id"));
 // print_r(get_text_loc("gzugs, wam 245a4-247a7 (vol. 102)", "fileName", "id"));
 //print_r(get_text_loc("rgyud, ja 39b7 (vol. 83)"));
-
-function read_simple_loc($str, $default_vol) {
-
-}
 
 function add_label($resource, $type, $lit) {
 //    $resource

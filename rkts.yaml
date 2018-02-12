@@ -1,9 +1,14 @@
 useAbstract: false
-abstractUrlFormat: "http://purl.rkts.org/resources/A%GID"
-expressionUrlFormat: "http://purl.rkts.org/resources/T%GID"
-editionUrlFormat: "http://purl.rkts.org/resources/E%EID"
-textUrlFormat: "http://purl.rkts.org/resources/E%EID_T%GID"
-chapterUrlFormat: "http://purl.rkts.org/resources/E%EID_T%GID_C%CID"
+abstractUrlFormat: "http://purl.rkts.org/resources/WA%GID"
+expressionUrlFormat: "http://purl.rkts.org/resources/WT%GID"
+editionUrlFormat: "http://purl.rkts.org/resources/WE%EID"
+textUrlFormat: "http://purl.rkts.org/resources/WE%EID_T%GID"
+chapterUrlFormat: "http://purl.rkts.org/resources/WE%EID_T%GID_C%CID"
+bdrcAbstractUrlFormat: "http://purl.rkts.org/resources/W0RIA%GID"
+bdrcExpressionUrlFormat: "http://purl.rkts.org/resources/W0RIT%GID"
+bdrcEditionUrlFormat: "http://purl.rkts.org/resources/%RID"
+bdrcTextUrlFormat: "http://purl.rkts.org/resources/%RID_P%PNUM"
+bdrcChapterUrlFormat: "http://purl.rkts.org/resources/%RID_P%PNUM"
 keepSktUni: true
 keepMgUni: true
 keepSimplifiedRomanizedMongol: true
@@ -11,7 +16,24 @@ useSkosLabels: false
 catalogueNumberingScheme: "rKTs"
 oneTitleInHigherLevels: false
 derge:
-  RID: "W22084"
+  RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
   propSigla: "workKaTenSiglaD"
+  volumeMap: [
+     {"name": "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
+     {"name": "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "a"]},
+     {"name": "nyi khri", volumes: ["ka", "kha", "ga"]},
+     {"name": "khri brgyad", volumes: ["ka", "kha", "ga"]},
+     {"name": "khri pa", volumes: ["ga", "nga"]},
+     {"name": "brgyad stong", volumes: ["ka"]},
+     {"name": "sher phyin", volumes: ["ka"]},
+     {"name": "phal chen", volumes: ["ka", "kha", "ga", "nga"]},
+     {"name": "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+     {"name": "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "a", "aM", "aH"]},
+     {"name": "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
+     {"name": "rnying rgyud", volumes: ["ka", "kha", "ga"]},
+     {"name": "gzungs", volumes: ["e", "waM"]},
+     {"name": "dus 'khor", volumes: ["shrI"]},
+     {"name": "dkar chag", volumes: [""]}
+     ]
