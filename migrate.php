@@ -80,7 +80,7 @@ require_once "kernelxmltottl.php";
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+//kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 
 require_once "editionxmltottl.php";
 

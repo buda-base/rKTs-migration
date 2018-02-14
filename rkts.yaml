@@ -6,6 +6,7 @@ rKTsTextUrlFormat: "http://purl.rkts.eu/resources/WE%EID_T%GID"
 rKTsChapterUrlFormat: "http://purl.rkts.eu/resources/WE%EID_T%GID_C%CID"
 rKTsVolumeUrlFormat: "http://purl.rkts.eu/resources/WE%EID_V%VNUM"
 rKTsVolumeSectionUrlFormat: "http://purl.rkts.eu/resources/WE%EID_VS%VSNUM"
+rKTsSectionPartUrlFormat: "http://purl.rkts.eu/resources/WE%EID_P%PNUM"
 bdrcAbstractUrlFormat: "http://purl.bdrc.io/resources/W0RIA%GID"
 bdrcExpressionUrlFormat: "http://purl.bdrc.io/resources/W0RIT%GID"
 bdrcEditionUrlFormat: "http://purl.bdrc.io/resources/%RID"
@@ -32,12 +33,13 @@ derge:
      {name: "khri pa", volumes: ["ga", "nga"]},
      {name: "brgyad stong", volumes: ["ka"]},
      {name: "sher phyin", volumes: ["ka"]},
-     {name: "phal chen", volumes: ["ka", "kha", "ga", "nga"]},
+     {name: "phal chen", volumes: ["ka", "kha", "ga", "a"]},
      {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "a", "aM", "aH"]},
+     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "aM", "aH"]},
      {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
      {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
      {name: "gzungs", volumes: ["e", "waM"]},
      {name: "dus 'khor", volumes: ["shrI"]},
-     {name": "dkar chag", volumes: ["dkar chag"]}
+     {name: "dkar chag", volumes: ["dkar chag"]}
      ]
+  duplicates: [""]

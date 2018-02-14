@@ -20,7 +20,7 @@ function chapnum_to_str($id) {
 
 function id_to_url_abstract($rktsid, $config, $bdrc=False) {
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat';
-    return str_replace('%GID', id_to_str($id), $config[$paramName]);
+    return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
 function id_to_url_expression($rktsid, $config, $bdrc=False) {
@@ -30,7 +30,7 @@ function id_to_url_expression($rktsid, $config, $bdrc=False) {
 
 function id_to_url_edition($eid, $config, $bdrc=False) {
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'EditionUrlFormat';
-    return str_replace('%EID', id_to_str($eid), $config[$paramName]);
+    return str_replace('%EID', $eid, $config[$paramName]);
 }
 
 function id_to_url_edition_text($eid, $rktsid, $config, $partnum, $bdrc=False) {
@@ -38,8 +38,18 @@ function id_to_url_edition_text($eid, $rktsid, $config, $partnum, $bdrc=False) {
         $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
-        $estr = id_to_url_edition($eid, $config);
+        $estr = str_replace('%EID', $eid, $config['rKTsTextUrlFormat']);
         return str_replace('%GID', id_to_str($rktsid), $estr);
+    }
+}
+
+function id_to_url_edition_section_part($eid, $config, $partnum, $bdrc=False) {
+    if ($bdrc) {
+        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        return str_replace('%PNUM', id_to_str($partnum), $estr);
+    } else {
+        $estr = str_replace('%EID', $eid, $config['rKTsSectionPartUrlFormat']);
+        return str_replace('%PNUM', id_to_str($partnum), $estr);
     }
 }
 
@@ -48,19 +58,79 @@ function id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partn
         $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
-        $txtstr = id_to_url_edition_text($eid, $rktsid, $chapnum);
+        $estr = str_replace('%EID', $eid, $config['rKTsChapterUrlFormat']);
+        $txtstr = str_replace('%GID', id_to_str($rktsid), $estr);
         return str_replace('%CID', chapnum_to_str($chapnum), $txtstr);
     }
 }
 
-function get_url_for_vol($volumenumber, $config, $bdrc=False) {
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'VolumeUrlFormat';
-    return str_replace('%VNUM', chapnum_to_str($volumenumber), $config[$paramName]);
+function get_url_for_vol($eid, $volumenumber, $config, $bdrc=False) {
+    if ($bdrc) {
+        $estr = str_replace('%RID', $eid, $config['bdrcVolumeUrlFormat']);
+        return str_replace('%VNUM', chapnum_to_str($volumenumber), $estr);
+    } else {
+        $estr = str_replace('%EID', $eid, $config['rKTsVolumeUrlFormat']);
+        return str_replace('%VNUM', chapnum_to_str($volumenumber), $estr);
+    }
 }
 
-function get_url_for_vol_section($volumesectionnumber, $config, $bdrc=False) {
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'bdrcVolumeSectionUrlFormat';
-    return str_replace('%VSNUM', chapnum_to_str($volumenumber), $config[$paramName]);
+function get_url_for_vol_section($eid, $volumesectionnumber, $config, $bdrc=False) {
+    if ($bdrc) {
+        $estr = str_replace('%RID', $eid, $config['bdrcVolumeSectionUrlFormat']);
+        return str_replace('%VSNUM', chapnum_to_str($volumesectionnumber), $estr);
+    } else {
+        $estr = str_replace('%EID', $eid, $config['rKTsVolumeSectionUrlFormat']);
+        return str_replace('%VSNUM', chapnum_to_str($volumesectionnumber), $estr);
+    }
+}
+
+function url_for_vol($section, $volumeName, $volumeMapWithUrls) {
+    foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
+        if ($sectionArr['name'] == $section) {
+            if (!isset($sectionArr['namesUrlMap'][$volumeName])) {
+                print("cannot find ".$volumeName." in ".$sectionArr['name']."\n");
+            }
+            return $sectionArr['namesUrlMap'][$volumeName];
+        }
+    }
+    return null;
+}
+
+function add_location($resource, $location, $volumeMapWithUrls) {
+    $locationNode = $resource->getGraph()->newBNode();
+    $resource->addResource('bdo:workLocation', $locationNode);
+    $locationNode->add('bdo:workLocationFolio', $location['bpagenum']);
+    $locationNode->add('bdo:workLocationLine', $location['blinenum']);
+    $locationNode->add('bdo:workLocationSide', $location['bpageside']);
+    if (isset($location['epagenum'])) {
+        $locationNode->add('bdo:workLocationEndFolio', $location['epagenum']);
+        $locationNode->add('bdo:workLocationEndSide', $location['epageside']);
+    }
+    if (isset($location['elinenum'])) {
+        $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
+    }
+    $locationNode->addResource('bdo:workLocationSchema', 'bdr:FolioNumberingScheme');
+    $section = $location['section'];
+    $locationNode->addResource('bdo:workLocationVolume', url_for_vol($section, $location['bvolname'], $volumeMapWithUrls));
+    if (isset($location['evolname']) && !empty($location['evolname']) && $location['bvolname'] != $location['evolname']) {
+        $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol($section, $location['evolname'], $volumeMapWithUrls));
+    }
+}
+
+function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
+    $locationNode = $resource->getGraph()->newBNode();
+    $resource->addResource('bdo:workLocation', $locationNode);
+    foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
+        if ($sectionArr['name'] == $section) {
+            $bvolumeName = $sectionArr['volumes'][0];
+            $evolumeName = $sectionArr['volumes'][count($sectionArr['volumes'])-1];
+            $locationNode->addResource('bdo:workLocationVolume', url_for_vol($sectionName, $bvolname, $volumeMapWithUrls));
+            if ($bvolumeName != $evolumename) {
+                $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol($section, $evolumename, $volumeMapWithUrls));
+            }
+            break;
+        }
+    }
 }
 
 function add_title($resource, $type, $lit) {
@@ -121,10 +191,10 @@ function set_pageline(&$matches, $str, $fileName, $id) {
         report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$str.'"');
         return $matches;
     }
-    $matches['bpagenum'] = $matches_bpageline['pagenum'];
+    $matches['bpagenum'] = intval($matches_bpageline['pagenum']);
     $matches['bpageside'] = $matches_bpageline['ab'];
     if (isset($matches_bpageline['linenum']))
-        $matches['blinenum'] = $matches_bpageline['linenum'];
+        $matches['blinenum'] = intval($matches_bpageline['linenum']);
     if (isset($matches['epageline']) && !empty($matches['epageline'])) {
         $matches_epageline = [];
         preg_match($pattern_small_loc, $matches['epageline'], $matches_epageline);
@@ -132,10 +202,10 @@ function set_pageline(&$matches, $str, $fileName, $id) {
             report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$str.'"');
             return $matches;
         }
-        $matches['epagenum'] = $matches_epageline['pagenum'];
+        $matches['epagenum'] = intval($matches_epageline['pagenum']);
         $matches['epageside'] = $matches_epageline['ab'];
         if (isset($matches_epageline['linenum']))
-            $matches['elinenum'] = $matches_epageline['linenum'];
+            $matches['elinenum'] = intval($matches_epageline['linenum']);
     }
 }
 

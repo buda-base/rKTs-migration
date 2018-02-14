@@ -2,15 +2,18 @@
 
 require_once "utils.php";
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, &$edition_info, $fileName) {
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum) {
     $rktsid = $item->rkts;
+    $partnum = $lastpartnum+1;
+    $eid = $edition_info['confinfo']['EID'];
     $url_parent_text = id_to_url_expression($rktsid, $config);
-    $url_broader_edition = id_to_url_edition($edition_info['confinfo']['EID'], $config);
-    $url_part = id_to_url_edition_text($edition_info['confinfo']['EID'], $rktsid, $config);
+    $url_broader_edition = id_to_url_edition($eid, $config);
+    $url_part = id_to_url_edition_text($eid, $rktsid, $config, $partnum);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
     $part_r->addResource('bdo:workExpressionOf', $url_parent_text);
     $part_r->addResource('rdf:type', 'bdo:Work');
+    $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
     $catalogue_index = catalogue_index_xml_to_rdf($item->ref);
     $part_r->addLiteral('bdo:'.$edition_info['confinfo']['propSigla'], $catalogue_index);
     $colophon = $item->coloph;
@@ -30,47 +33,79 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, &$edition_info, $
         // TODO: add skos:label here for BDRC dataset
         add_title($part_r, 'WorkSanskritTitle', $lit);
     }
-    $volumeMapWithUrls = create_volume_map($edition_r, $edition_info['volumeMap']);
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
-    if (!empty($location)) {
+    if (!empty($location)) { // useful for buggy xmls
         $current_section = $location['section'];
         $bvolname = $location['bvolname'];
-        foreach ($item->bampo as $bampo) {
-            $location = get_bampo_loc($bampo->p->__toString(), $fileName, 'rkts_'.$rktsid);
-            $location['section'] = $current_section;
-            if (empty($location['volname']))
-                $location['volname'] = $bvolname;
-        }
-        foreach ($item->chap as $chap) {
+        add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
+        // foreach ($item->bampo as $bampo) {
+        //     $location = get_bampo_loc($bampo->p->__toString(), $fileName, 'rkts_'.$rktsid);
+        //     $location['section'] = $current_section;
+        //     if (empty($location['volname']))
+        //         $location['volname'] = $bvolname;
+        // }
+        $chapnum = 0;
+        foreach ($item->chap as $chap) { // iterating on chapters
+            $chaptitle = $chap->__toString();
+            if (empty($chaptitle))
+                continue;
+            $chapnum += 1;
+            $partnum += 1;
+            $chap_url = id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partnum);
+            $graph_chap = new EasyRdf_Graph();
+            $chap_r = $graph_chap->resource($chap_url);
+            $chap_r->addResource('rdf:type', 'bdo:Work');
+            $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
+            $chap_r->addResource('bdo:workPartOf', $url_part);
+            $chap_r->add('bdo:workPartIndex', $chapnum);
+            $part_r->addResource('bdo:workHasPart', $chap_url);
+            $dotpos = strpos($chaptitle, ". ");
+            if ($dotpos < 5) {
+                $chaptitle = substr($chaptitle, $dotpos+2);
+            } else {
+                print("wrong chapter string format: "+$chaptitle);
+            }
+            $lit = normalize_lit($chaptitle, 'bo-x-ewts');
+            add_title($chap_r, 'WorkOtherTitle', $lit);
             $location = get_chap_loc($chap->p->__toString(), $fileName, 'rkts_'.$rktsid);
-            $location['section'] = $current_section;
-            if (empty($location['volname']))
-                $location['volname'] = $bvolname;
+            if ($location) {
+                $location['section'] = $current_section;
+                if (empty($location['bvolname']))
+                    $location['bvolname'] = $bvolname;
+                add_location($chap_r, $location, $edition_info['confinfo']['volumeMap']);
+            }
+            rdf_to_ttl($config, $graph_chap, $chap_r->localName());
+            //add_graph_to_global($graph_chap, $chap_r->localName(), $global_graph_fd);
         }
     }
-    add_log_entry($part_r);
-    //rdf_to_ttl($config, $graph_part, $part_r->localName());
+    //add_log_entry($part_r);
+    rdf_to_ttl($config, $graph_part, $part_r->localName());
     //add_graph_to_global($graph_part, $part_r->localName(), $global_graph_fd);
     // TODO: partOf with hierarchical sections
+    return $partnum ;
 }
 
-function create_volume_map($edition_r, &$editionVolumeMap) {
+function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_info) {
     $graph = $edition_r->getGraph();
+    $editionId = $edition_info['confinfo']['EID'];
+    $curVolNum = 0;
     foreach ($editionVolumeMap as $sectionIdx => &$sectionArr) {
         $sectionName = $sectionArr['name'];
-        $sectionUrl = get_url_for_vol_section($sectionIdx+1, $config);
+        $sectionUrl = get_url_for_vol_section($edition_info['confinfo']['EID'], $sectionIdx+1, $config);
         $sectionArr['url'] = $sectionUrl;
+        $sectionArr['urlPart'] = id_to_url_edition_section_part($edition_info['confinfo']['EID'], $config, $sectionIdx+1);
         if (!isset($sectionArr['namesUrlMap'])) {
             $sectionArr['namesUrlMap'] = [];
         }
-        $namesUrlMap = $sectionArr['namesUrlMap'];
+        $namesUrlMap = &$sectionArr['namesUrlMap'];
         $edition_r->addResource('bdo:hasVolumeSection', $sectionUrl);
         // new graph?
         $section_r = $graph->resource($sectionUrl);
         $section_r->add('rdfs:label', $sectionArr['name'], "bo-x-ewts");
         $section_r->add('bdo:seqNum', $sectionIdx+1);
         foreach($sectionArr['volumes'] as $volumeIdx => $volumeName) {
-            $volumeUrl = get_url_for_vol($sectionIdx+$volumeIdx+2, $config);
+            $curVolNum += 1;
+            $volumeUrl = get_url_for_vol($edition_info['confinfo']['EID'], $curVolNum, $config);
             $section_r->add('bdo:VolumeSectionHasVolume', $volumeUrl);
             $namesUrlMap[$volumeName] = $volumeUrl;
             $volume_r = $graph->resource($volumeUrl);
@@ -79,6 +114,7 @@ function create_volume_map($edition_r, &$editionVolumeMap) {
             $volume_r->add('rdfs:label', $volumeName, "bo-x-ewts");
         }
     }
+    //print_r($editionVolumeMap);
 }
 
 $authorized_sections = ["'dul ba", "'bum", "nyi khri", "khri brgyad", "khri pa", "brgyad stong", "sher phyin", "dkon brtsegs", "mdo sde", "rgyud", "rnying rgyud", "gzungs", "dus 'khor", "phal chen"];
@@ -110,11 +146,12 @@ function get_base_edition_info($config, $xml, $fileName) {
     return $edition_info;
 }
 
-function write_edition_ttl($config, $edition_info, $global_graph_fd) {
+function write_edition_ttl($config, &$edition_info, $global_graph_fd) {
     $graph_edition = new EasyRdf_Graph();
     $url_edition = id_to_url_edition($edition_info['confinfo']['EID'], $config);
     $edition_r = $graph_edition->resource($url_edition);
     $edition_r->addResource('rdf:type', 'bdo:Work');
+    create_volume_map($edition_r, $edition_info['confinfo']['volumeMap'], $config, $edition_info);
     add_log_entry($edition_r);
     rdf_to_ttl($config, $graph_edition, $edition_r->localName());
     add_graph_to_global($graph_edition, $edition_r->localName(), $global_graph_fd);
@@ -122,9 +159,11 @@ function write_edition_ttl($config, $edition_info, $global_graph_fd) {
 
 function edition_to_ttl($config, $xml, $global_graph_fd, $fileName) {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
+    write_edition_ttl($config, $edition_info, $global_graph_fd);
+    $lastpartnum = 0;
     foreach($xml->item as $item) {
-        edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName);
-    //    return;
+        $lastpartnum = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum);
+        return;
     }
 }
 
