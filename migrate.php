@@ -79,6 +79,8 @@ mkdir($getOpt->getOption('output-dir').'bdrc');
 
 require_once "kernelxmltottl.php";
 
+mb_internal_encoding('UTF-8');
+
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 

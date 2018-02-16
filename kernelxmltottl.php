@@ -75,6 +75,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
 function kernel_to_ttl($config, $xml, $global_graph_fd, $bdrc=False) {
     foreach($xml->item as $item) {
         kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc);
+        //return;
     }
 }
 

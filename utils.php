@@ -285,17 +285,19 @@ function normalize_lit($title, $langtag, $bdrc=False) {
 }
 
 function add_log_entry($resource) {
-    $logNode = $resource->getGraph()->newBNode();
-    $resource->addResource('adm:logEntry', $logNode);
-    $logNode->addLiteral('adm:logDate', new DateTime());
-    $logNode->addLiteral('adm:logMessage', 'migrated from xml', 'en');
+    // $logNode = $resource->getGraph()->newBNode();
+    // $resource->addResource('adm:logEntry', $logNode);
+    // $logNode->addLiteral('adm:logDate', new DateTime());
+    // $logNode->addLiteral('adm:logMessage', 'migrated from xml', 'en');
 }
 
-$ntriples = EasyRdf_Format::getFormat('ntriples');
+require_once "Nquads.php";
+
+$nquads = new Nquads();
 
 function add_graph_to_global($graph, $localname, $global_fd) {
-    global $ntriples;
-    $output = $graph->serialise($ntriples);
+    global $nquads;
+    $output = $nquads->serialise($graph);
     // this is really crappy but it seems there is no other option
     // in easyrdf...
     $output = str_replace('_:genid', '_:genid'.$localname, $output);

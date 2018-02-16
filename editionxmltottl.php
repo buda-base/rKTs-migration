@@ -50,7 +50,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         if (!$section_r || $section_r->getUri() != $url_semantic_section) {
             if ($section_r) {
                 rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName());
-                add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+                if (!$bdrc)
+                    add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
             }
             $graph_section = new EasyRdf_Graph();
             $section_r = $graph_section->resource($url_semantic_section);
@@ -206,7 +207,7 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     create_volume_map($edition_r, $edition_info['confinfo']['volumeMap'], $config, $edition_info, $global_graph_fd);
     add_log_entry($edition_r);
     rdf_to_ttl($config, $graph_edition, $edition_r->localName());
-    if ($bdrc)
+    if (!$bdrc)
         add_graph_to_global($graph_edition, $edition_r->localName(), $global_graph_fd);
 }
 
