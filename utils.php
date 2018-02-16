@@ -18,6 +18,11 @@ function chapnum_to_str($id) {
     return sprintf("%03d", $id_int);
 }
 
+// 7a -> 7A
+function rdf_ci_to_url($id) {
+    return strtoupper($id);
+}
+
 function id_to_url_abstract($rktsid, $config, $bdrc=False) {
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat';
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
@@ -33,13 +38,14 @@ function id_to_url_edition($eid, $config, $bdrc=False) {
     return str_replace('%EID', $eid, $config[$paramName]);
 }
 
-function id_to_url_edition_text($eid, $rktsid, $config, $partnum, $bdrc=False) {
+function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
+    // ci is catalogue index, should be unique in the edition
     if ($bdrc) {
         $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsTextUrlFormat']);
-        return str_replace('%GID', id_to_str($rktsid), $estr);
+        return str_replace('%GID', rdf_ci_to_url($ci), $estr);
     }
 }
 
@@ -53,13 +59,13 @@ function id_to_url_edition_section_part($eid, $config, $partnum, $bdrc=False) {
     }
 }
 
-function id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partnum, $bdrc=False) {
+function id_to_url_edition_text_chapter($eid, $ci, $chapnum, $config, $partnum, $bdrc=False) {
     if ($bdrc) {
         $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsChapterUrlFormat']);
-        $txtstr = str_replace('%GID', id_to_str($rktsid), $estr);
+        $txtstr = str_replace('%GID', rdf_ci_to_url($ci), $estr);
         return str_replace('%CID', chapnum_to_str($chapnum), $txtstr);
     }
 }
@@ -260,8 +266,14 @@ $name_to_bcp = [
     'skttrans' => 'sa-x-ewts'
 ];
 
-function normalize_lit($title, $langtag) {
+function normalize_lit($title, $langtag, $bdrc=False) {
     // todo: normalize mongolian romanization here
+    if ($bdrc && $langtag=="cmg-x-poppe-simpl") {
+        $init=["c", "j", "sh", "g"];
+        $repl=["č", "ǰ", "š", "γ"];
+        $title=str_replace($init, $repl, $title);
+        $langtag = "cmg-x-poppe";
+    }
     return EasyRdf_Literal::create($title, $langtag);
 }
 

@@ -16,6 +16,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd) {
     $graph_expression = new EasyRdf_Graph();
     $expression_r = $graph_expression->resource($url_expression);
     $expression_r->addResource('rdf:type', 'bdo:Work');
+    $part_r->addResource('owl:sameAs', id_to_url_expression($id, $config, true));
     $labelAdded = false;
     $seenTitles = [];
     $seenLangs = [];
