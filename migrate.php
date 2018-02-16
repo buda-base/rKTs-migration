@@ -69,7 +69,7 @@ EasyRdf_Namespace::set('bdo', 'http://purl.bdrc.io/ontology/core/');
 EasyRdf_Namespace::set('bdr', 'http://purl.bdrc.io/resource/');
 EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
 EasyRdf_Namespace::set('tbr', 'http://purl.bdrc.io/ontology/toberemoved/');
-EasyRdf_Namespace::set('rkts', 'http://purl.rkts.eu/resources/');
+EasyRdf_Namespace::set('rkts', 'http://purl.rkts.eu/resource/');
 
 $kernel_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
 
@@ -82,15 +82,16 @@ require_once "kernelxmltottl.php";
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 
-//kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 
 require_once "editionxmltottl.php";
 
 $filesList = ["derge"];
 
-foreach ($filesList as $fileName) {
-    $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
-    edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
-}
+// foreach ($filesList as $fileName) {
+//     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
+//     edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+// }
 
 fclose($global_graph_fd);

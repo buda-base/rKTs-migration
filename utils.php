@@ -279,6 +279,8 @@ function normalize_lit($title, $langtag, $bdrc=False) {
         $title=str_replace($init, $repl, $title);
         $langtag = "cmg-x-poppe";
     }
+    if ($bdrc && ($langtag == "cmg-Mong" || $langtag == "sa-Deva"))
+        return null;
     return EasyRdf_Literal::create($title, $langtag);
 }
 
