@@ -23,6 +23,8 @@ oneTitleInExpression: false
 derge:
   RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:PrintTypeBlockPrint'
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
   propSigla: "workKaTenSiglaD"
   volumeMap: [

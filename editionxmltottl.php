@@ -177,11 +177,15 @@ function get_base_edition_info($config, $xml, $fileName) {
     return $edition_info;
 }
 
-function write_edition_ttl($config, &$edition_info, $global_graph_fd) {
+function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $bdrc=False) {
     $graph_edition = new EasyRdf_Graph();
-    $url_edition = id_to_url_edition($edition_info['confinfo']['EID'], $config);
+    $url_edition = id_to_url_edition($edition_info['confinfo']['EID'], $config, $bdrc);
     $edition_r = $graph_edition->resource($url_edition);
     $edition_r->addResource('rdf:type', 'bdo:Work');
+    $edition_name = $xml->name->__toString();
+    $edition_r->add('skos:prefLabel', $edition_name, 'en');
+    $edition_r->add('bdo:langScript', $edition_info['confinfo']['langScript']);
+    $edition_r->add('bdo:workPrintType', $edition_info['confinfo']['printType']);
     create_volume_map($edition_r, $edition_info['confinfo']['volumeMap'], $config, $edition_info, $global_graph_fd);
     add_log_entry($edition_r);
     rdf_to_ttl($config, $graph_edition, $edition_r->localName());
@@ -190,7 +194,7 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd) {
 
 function edition_to_ttl($config, $xml, $global_graph_fd, $fileName) {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
-    write_edition_ttl($config, $edition_info, $global_graph_fd);
+    write_edition_ttl($config, $edition_info, $global_graph_fd, $xml);
     $lastpartnum = 0;
     $section_r = null;
     foreach($xml->item as $item) {
