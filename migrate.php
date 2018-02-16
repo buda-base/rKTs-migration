@@ -74,6 +74,8 @@ EasyRdf_Namespace::set('rkts', 'http://purl.rkts.eu/resources/');
 $kernel_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
 
 mkdir($getOpt->getOption('output-dir'), 0777, true);
+mkdir($getOpt->getOption('output-dir').'rKTs');
+mkdir($getOpt->getOption('output-dir').'bdrc');
 
 require_once "kernelxmltottl.php";
 

@@ -49,6 +49,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $graph_section = new EasyRdf_Graph();
             $section_r = $graph_section->resource($url_semantic_section);
             $section_r->addResource('rdf:type', 'bdo:Work');
+            $section_r->addResource('bdo:workPartOf', $url_broader_edition);
             $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
             $section_r->addLiteral('rdfs:label', normalize_lit($current_section, 'bo-x-ewts'));
         }

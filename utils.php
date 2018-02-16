@@ -20,7 +20,12 @@ function chapnum_to_str($id) {
 
 // 7a -> 7A
 function rdf_ci_to_url($id) {
-    return strtoupper($id);
+    if (substr($id, -1) == 'a') {
+        $id_int = intval(substr($id, 0, -1));
+        return sprintf("%04d", $id_int).'A';
+    } 
+    $id_int = intval($id);
+    return sprintf("%04d", $id_int);
 }
 
 function id_to_url_abstract($rktsid, $config, $bdrc=False) {
@@ -297,9 +302,10 @@ function add_graph_to_global($graph, $localname, $global_fd) {
 
 $turtle = EasyRdf_Format::getFormat('turtle');
 
-function rdf_to_ttl($config, $graph, $basename) {
+function rdf_to_ttl($config, $graph, $basename, $bdrc=False) {
     global $turtle;
     $output = $graph->serialise($turtle);
-    $filename = $config['opts']->getOption('output-dir').'/'.$basename.'.ttl';
+    $subdir = $bdrc ? 'bdrc' : 'rKTs' ;
+    $filename = $config['opts']->getOption('output-dir').'/'.$subdir.'/'.$basename.'.ttl';
     file_put_contents($filename, $output);
 }
