@@ -9,11 +9,11 @@ rKTsVolumeSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_VS%VSNUM"
 rKTsSectionPartUrlFormat: "http://purl.rkts.eu/resource/WE%EID_P%PNUM"
 bdrcAbstractUrlFormat: "http://purl.bdrc.io/resource/W0RIA%GID"
 bdrcExpressionUrlFormat: "http://purl.bdrc.io/resource/W0RIT%GID"
-bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%RID"
-bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%RID_P%PNUM"
-bdrcChapterUrlFormat: "http://purl.bdrc.io/resource/%RID_P%PNUM"
-bdrcVolumeUrlFormat: "http://purl.bdrc.io/resource/%RID_V%VNUM"
-bdrcVolumeSectionUrlFormat: "http://purl.bdrc.io/resource/%RID_VS%VSNUM"
+bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%EID"
+bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
+bdrcChapterUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
+bdrcVolumeUrlFormat: "http://purl.bdrc.io/resource/%EID_V%VNUM"
+bdrcVolumeSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_VS%VSNUM"
 keepSktUni: true
 keepMgUni: true
 keepSimplifiedRomanizedMongol: true

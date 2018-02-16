@@ -27,8 +27,8 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
         $abstract_r->addResource('rdf:type', 'bdo:Work');
         $lit = normalize_lit($firstSanskritTitle, 'sa-x-iats', $bdrc);
         $abstract_r->add('skos:prefLabel', $lit);
-        $abstract_r->add('bdo:workType', 'bdr:WorkTypeConceptualWork');
-        $abstract_r->add('bdo:language', 'bdr:LangSa');
+        $abstract_r->addResource('bdo:workType', 'bdr:WorkTypeConceptualWork');
+        $abstract_r->addResource('bdo:language', 'bdr:LangSa');
         add_title($abstract_r, 'WorkBibliographicTitle', $lit);
         $abstract_r->addResource('bdo:workHasExpression', $url_expression);
         $abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc));
@@ -39,7 +39,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
     }
     $expression_r->addResource('rdf:type', 'bdo:Work');
     $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc));
-    $expression_r->add('bdo:language', 'bdr:LangBo');
+    $expression_r->addResource('bdo:language', 'bdr:LangBo');
     $labelAdded = false;
     $seenTitles = [];
     $seenLangs = [];

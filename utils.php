@@ -46,7 +46,7 @@ function id_to_url_edition($eid, $config, $bdrc=False) {
 function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
     // ci is catalogue index, should be unique in the edition
     if ($bdrc) {
-        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsTextUrlFormat']);
@@ -56,7 +56,7 @@ function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
 
 function id_to_url_edition_section_part($eid, $config, $partnum, $bdrc=False) {
     if ($bdrc) {
-        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsSectionPartUrlFormat']);
@@ -66,7 +66,7 @@ function id_to_url_edition_section_part($eid, $config, $partnum, $bdrc=False) {
 
 function id_to_url_edition_text_chapter($eid, $ci, $chapnum, $config, $partnum, $bdrc=False) {
     if ($bdrc) {
-        $estr = str_replace('%RID', $eid, $config['bdrcTextUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsChapterUrlFormat']);
@@ -77,7 +77,7 @@ function id_to_url_edition_text_chapter($eid, $ci, $chapnum, $config, $partnum, 
 
 function get_url_for_vol($eid, $volumenumber, $config, $bdrc=False) {
     if ($bdrc) {
-        $estr = str_replace('%RID', $eid, $config['bdrcVolumeUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcVolumeUrlFormat']);
         return str_replace('%VNUM', chapnum_to_str($volumenumber), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsVolumeUrlFormat']);
@@ -87,7 +87,7 @@ function get_url_for_vol($eid, $volumenumber, $config, $bdrc=False) {
 
 function get_url_for_vol_section($eid, $volumesectionnumber, $config, $bdrc=False) {
     if ($bdrc) {
-        $estr = str_replace('%RID', $eid, $config['bdrcVolumeSectionUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcVolumeSectionUrlFormat']);
         return str_replace('%VSNUM', chapnum_to_str($volumesectionnumber), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsVolumeSectionUrlFormat']);

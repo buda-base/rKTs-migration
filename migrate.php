@@ -91,7 +91,8 @@ $filesList = ["derge"];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
-    edition_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
 }
 
 fclose($global_graph_fd);
