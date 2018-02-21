@@ -272,14 +272,14 @@ $name_to_bcp = [
 ];
 
 function normalize_lit($title, $langtag, $bdrc=False) {
-    // todo: normalize mongolian romanization here
-    if ($bdrc && $langtag=="cmg-x-poppe-simpl") {
-        $init=["c", "j", "sh", "g"];
-        $repl=["č", "ǰ", "š", "γ"];
-        $title=str_replace($init, $repl, $title);
-        $langtag = "cmg-x-poppe";
-    }
-    if ($bdrc && ($langtag == "cmg-Mong" || $langtag == "sa-Deva"))
+    // bdrc uses sa-x-iast for Sanskrit, and cmg-Mong for Mongolian (transliterations are sloppy it seems)
+    // if ($bdrc && $langtag=="cmg-x-poppe-simpl") {
+    //     $init=["c", "j", "sh", "g"];
+    //     $repl=["č", "ǰ", "š", "γ"];
+    //     $title=str_replace($init, $repl, $title);
+    //     $langtag = "cmg-x-poppe";
+    // }
+    if ($bdrc && ($langtag == "cmg-x-poppe-simpl" || $langtag == "sa-Deva"))
         return null;
     return EasyRdf_Literal::create($title, $langtag);
 }
