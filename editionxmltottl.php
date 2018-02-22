@@ -47,9 +47,11 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     if (!empty($location)) { // useful for xml debugging only
         $current_section = $location['section'];
         $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
+        $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
+        $section_partTreeIndex = strval($sectionIndex);
         if (!$section_r || $section_r->getUri() != $url_semantic_section) {
             if ($section_r) {
-                rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName());
+                rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
                 if (!$bdrc)
                     add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
             }
@@ -57,10 +59,17 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $section_r = $graph_section->resource($url_semantic_section);
             $section_r->addResource('rdf:type', 'bdo:Work');
             $section_r->addResource('bdo:workPartOf', $url_broader_edition);
+            $section_r->addLiteral('bdo:workPartIndex', $sectionIndex);
             $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
             $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
+            $section_r->addLiteral('bdo:workPartTreeIndex', $section_partTreeIndex);
         }
+        $section_part_count = $section_r->countValues('bdo:workHasPart');
         $section_r->addResource('bdo:workHasPart', $part_r->getUri());
+        $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
+        $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
+        $part_partTreeIndex = $section_partTreeIndex.'.'.($section_part_count+1);
+        $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
         $bvolname = $location['bvolname'];
         add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
@@ -83,7 +92,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $chap_r->addResource('rdf:type', 'bdo:Work');
             $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
             $chap_r->addResource('bdo:workPartOf', $url_part);
-            $chap_r->add('bdo:workPartIndex', $chapnum);
+            $chap_r->addLiteral('bdo:workPartIndex', $chapnum);
+            $chap_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex.'.'.$chapnum);
             $part_r->addResource('bdo:workHasPart', $chap_url);
             $dotpos = strpos($chaptitle, ". ");
             if ($dotpos < 5) {
@@ -116,6 +126,15 @@ function get_url_section_part($sectionName, $editionVolumeMap, $eid, $config, $b
     foreach ($editionVolumeMap as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $sectionName) {
             return id_to_url_edition_section_part($eid, $config, $sectionIdx+1, $bdrc);
+        }
+    }
+    return null;
+}
+
+function get_SectionIndex($sectionName, $editionVolumeMap) {
+    foreach ($editionVolumeMap as $sectionIdx => $sectionArr) {
+        if ($sectionArr['name'] == $sectionName) {
+            return $sectionIdx+1;
         }
     }
     return null;
@@ -206,7 +225,7 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     }
     create_volume_map($edition_r, $edition_info['confinfo']['volumeMap'], $config, $edition_info, $global_graph_fd);
     add_log_entry($edition_r);
-    rdf_to_ttl($config, $graph_edition, $edition_r->localName());
+    rdf_to_ttl($config, $graph_edition, $edition_r->localName(), $bdrc);
     if (!$bdrc)
         add_graph_to_global($graph_edition, $edition_r->localName(), $global_graph_fd);
 }
