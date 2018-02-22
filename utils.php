@@ -54,13 +54,13 @@ function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
     }
 }
 
-function id_to_url_edition_section_part($eid, $config, $partnum, $bdrc=False) {
+function id_to_url_edition_section_part($eid, $config, $partnum, $sectionNum, $bdrc=False) {
     if ($bdrc) {
         $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
         return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsSectionPartUrlFormat']);
-        return str_replace('%PNUM', id_to_str($partnum), $estr);
+        return str_replace('%SNUM', chapnum_to_str($sectionNum), $estr);
     }
 }
 

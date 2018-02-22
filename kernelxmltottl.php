@@ -40,7 +40,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
     $expression_r->addResource('rdf:type', 'bdo:Work');
     $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc));
     $expression_r->addResource('bdo:language', 'bdr:LangBo');
-    $labelAdded = false;
+    $expression_r->addLiteral('bdo:workKaTenRefrKTs', $id);
     $seenTitles = [];
     $seenLangs = [];
     foreach ($item->children() as $child) {
