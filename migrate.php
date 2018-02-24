@@ -84,12 +84,12 @@ mb_internal_encoding('UTF-8');
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
+// kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+// kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 
 require_once "editionxmltottl.php";
 
-$filesList = ["derge"];
+$filesList = ["stog", /*"derge"*/];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
