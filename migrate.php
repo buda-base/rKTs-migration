@@ -94,7 +94,7 @@ $filesList = ["stog", /*"derge"*/];
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
-    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
+    //editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
 }
 
 fclose($global_graph_fd);
