@@ -44,6 +44,7 @@ derge:
      {name: "dus 'khor", volumes: ["shrI"]},
      {name: "dkar chag", volumes: ["dkar chag"]}
      ]
+  volumeBdrcPageFirstFolioDefault: 3,
 stog:
   RID: ["W22083"]
   EID: "D"
@@ -66,4 +67,42 @@ stog:
      {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
      {name: "dkar chag", volumes: ["dkar chag"]}
      ]
+  volumeBdrcPageFirstFolioDefault: 9,
+  volumeBdrcPageFirstFolio:
+    "35": 13,
+    "36": 15,
+    "37": 11,
+    "38": 13,
+    "39": 25,
+    "40": 23,
+    "51": 23,
+    "53": 11,
+    "54": 15,
+    "55": 11,
+    "57": 25,
+    "58": 13,
+    "59": 17,
+    "60": 19,
+    "61": 11,
+    "62": 19,
+    "63": 13,
+    "64": 17,
+    "65": 19,
+    "66": 15,
+    "67": 17,
+    "68": 15,
+    "69": 15,
+    "70": 17,
+    "71": 11,
+    "72": 35,
+    "73": 23,
+    "74": 23,
+    "75": 11,
+    "76": 11,
+    "77": 13,
+    "79": 23,
+    "81": 13,
+    "86": 15,
+    "87": 29,
+    "88": 25
   duplicates: [""]
