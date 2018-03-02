@@ -89,7 +89,7 @@ kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 
 require_once "editionxmltottl.php";
 
-$filesList = ["stog", /*"derge"*/];
+$filesList = ["stog", "derge"];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
