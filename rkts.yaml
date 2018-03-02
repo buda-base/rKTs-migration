@@ -138,7 +138,7 @@ chemdo:
      {name: "sher phyin sna tshogs", volumes: ["ka"]},
      {name: "phal chen", volumes: ["ka", "kha", "ga", "nga"]},
      {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "aM", "aH"]},
+     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", aM", "aH"]},
      {name: "rgyud 'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
      {name: "gzungs 'dus", volumes: ["e", "waM"]},
      {name: "dus 'khor 'grel bshad", volumes: ["shrI"]},
