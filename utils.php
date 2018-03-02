@@ -95,7 +95,7 @@ function get_url_for_vol_section($eid, $volumesectionnumber, $config, $bdrc=Fals
     }
 }
 
-function url_for_vol($section, $volumeName, $volumeMapWithUrls) {
+function url_for_vol_name($section, $volumeName, $volumeMapWithUrls) {
     foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $section) {
             if (!isset($sectionArr['namesUrlMap'][$volumeName])) {
@@ -107,9 +107,34 @@ function url_for_vol($section, $volumeName, $volumeMapWithUrls) {
     return null;
 }
 
+function url_for_vol_num($volumenum, $volumeMapWithUrls) {
+    $res = $volumeMapWithUrls['volnumInfo'][intval($volumenum)]['url'];
+    if ($res ==null) {
+        print("cannot find url for volume ".$volumenum);
+    }
+    return $res;
+}
+
 function add_location($resource, $location, $volumeMapWithUrls) {
     $locationNode = $resource->getGraph()->newBNode();
     $resource->addResource('bdo:workLocation', $locationNode);
+    if (isset($location['bvolnum'])) {
+        // chemdo style
+        $locationNode->addResource('bdo:workLocationSchema', 'bdr:PageNumberingScheme');
+        $locationNode->add('bdo:workLocationPage', $location['bpagenum']);
+        if (isset($location['epagenum'])) {
+            $locationNode->add('bdo:workLocationEndPage', $location['epagenum']);
+        }
+        if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
+            $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_num($location['evolnum'], $volumeMapWithUrls));
+        }
+        $volurl = url_for_vol_num($location['bvolnum'], $volumeMapWithUrls);
+        if ($volurl)
+            $locationNode->addResource('bdo:workLocationVolume', $volurl);
+        else
+            print_r($location);
+        return;
+    }
     $locationNode->add('bdo:workLocationFolio', $location['bpagenum']);
     $locationNode->add('bdo:workLocationLine', $location['blinenum']);
     $locationNode->add('bdo:workLocationSide', $location['bpageside']);
@@ -122,9 +147,9 @@ function add_location($resource, $location, $volumeMapWithUrls) {
     }
     $locationNode->addResource('bdo:workLocationSchema', 'bdr:FolioNumberingScheme');
     $section = $location['section'];
-    $locationNode->addResource('bdo:workLocationVolume', url_for_vol($section, $location['bvolname'], $volumeMapWithUrls));
+    $locationNode->addResource('bdo:workLocationVolume', url_for_vol_name($section, $location['bvolname'], $volumeMapWithUrls));
     if (isset($location['evolname']) && !empty($location['evolname']) && $location['bvolname'] != $location['evolname']) {
-        $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol($section, $location['evolname'], $volumeMapWithUrls));
+        $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_name($section, $location['evolname'], $volumeMapWithUrls));
     }
 }
 
@@ -135,9 +160,9 @@ function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
         if ($sectionArr['name'] == $section) {
             $bvolumeName = $sectionArr['volumes'][0];
             $evolumeName = $sectionArr['volumes'][count($sectionArr['volumes'])-1];
-            $locationNode->addResource('bdo:workLocationVolume', url_for_vol($sectionName, $bvolname, $volumeMapWithUrls));
+            $locationNode->addResource('bdo:workLocationVolume', url_for_vol_name($sectionName, $bvolname, $volumeMapWithUrls));
             if ($bvolumeName != $evolumename) {
-                $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol($section, $evolumename, $volumeMapWithUrls));
+                $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_name($section, $evolumename, $volumeMapWithUrls));
             }
             break;
         }
@@ -161,24 +186,33 @@ $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
 $pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))? \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\)$/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
+$pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)-(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
+$pattern_loc_simple_small = '/^(?:(?P<bvolnum>\d+)\.)?(?P<bpagenum>\d+)(?:-(?:(?P<evolnum>\d+)\.)?(?P<epagenum>\d+))?$/';
+
 $volumeMap = [];
 $currentSection = null;
 
 function get_text_loc($str, $fileName, $id) {
-    global $allowed_vol_letters, $pattern_loc, $pattern_small_loc;
+    global $allowed_vol_letters, $pattern_loc, $pattern_small_loc, $pattern_loc_simple;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    preg_match($pattern_loc, $str, $matches);
+    if ($fileName == "chemdo") {
+        preg_match($pattern_loc_simple, $str, $matches);    
+    } else {
+        preg_match($pattern_loc, $str, $matches);
+    }
     if (empty($matches)) {
         report_error($fileName, 'invalid_loc', $id, 'cannot understand string "'.$str.'"');
         return [];
     }
+    if ($fileName == "chemdo")
+        return $matches;
     if (!in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'", invalid volume number "'.$matches['bvolname'].'"');
     }
     if (!empty($matches['evolname']) && !in_array($matches['evolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'", invalid volume number "'.$matches['evolname'].'"');
-    }
+    }    
     set_pageline($matches, $str, $fileName, $id);
     return $matches;
 }
@@ -221,34 +255,44 @@ function set_pageline(&$matches, $str, $fileName, $id) {
 }
 
 function get_bampo_loc($str, $fileName, $id) {
-    global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc;
+    global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    preg_match($pattern_bampo_chap_loc, $str, $matches);
+    if ($fileName == "chemdo") {
+        preg_match($pattern_loc_simple_small, $str, $matches);
+    } else {
+        preg_match($pattern_bampo_chap_loc, $str, $matches);
+    }
     if (empty($matches)) {
         report_error($fileName, 'invalid_bampo_loc', $id, 'cannot understand bampo->p string "'.$str.'"');
         return [];
     }
-    if (!empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
+    if ($fileName != "chemdo" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'" (bampo loc), invalid volume number "'.$matches['b volname'].'"');
     }
-    set_pageline($matches, $str, $fileName, $id);
+    if ($fileName != "chemdo")
+        set_pageline($matches, $str, $fileName, $id);
     return $matches;
 }
 
 function get_chap_loc($str, $fileName, $id) {
-    global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc;
+    global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    preg_match($pattern_bampo_chap_loc, $str, $matches);
+    if ($fileName == "chemdo") {
+        preg_match($pattern_loc_simple_small, $str, $matches);    
+    } else {
+        preg_match($pattern_bampo_chap_loc, $str, $matches);
+    }
     if (empty($matches)) {
         report_error($fileName, 'invalid_chap_loc', $id, 'cannot understand chap->p string "'.$str.'"');
         return [];
     }
-    if (!empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
+    if ($fileName != "chemdo" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'" (chap loc), invalid volume number "'.$matches['bvolname'].'"');
     }
-    set_pageline($matches, $str, $fileName, $id);
+    if ($fileName != "chemdo")
+        set_pageline($matches, $str, $fileName, $id);
     return $matches;
 }
 

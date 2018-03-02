@@ -4,10 +4,11 @@ require_once "utils.php";
 
 function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, &$section_r, $eid=null, $bdrc=False) {
     $rktsid = $item->rkts;
+    if ($rktsid == '-')
+        return;
     $partnum = $lastpartnum+1;
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $catalogue_index = catalogue_index_xml_to_rdf($item->ref);
-    file_put_contents("/tmp/S-rKTs.csv", $catalogue_index.",".$rktsid."\n", FILE_APPEND);
     $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
     $url_part = id_to_url_edition_text($eid, $catalogue_index, $config, $partnum, $bdrc);
@@ -46,7 +47,14 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     }
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
     if (!empty($location)) { // useful for xml debugging only
-        $current_section = $location['section'];
+        $current_section = '';
+        if ($fileName == "chemdo") {
+            $bvolnum = $location['bvolnum'];
+            $volinfos = $edition_info['confinfo']['volumeMap']['volnumInfo'][$bvolnum];
+            $current_section = $volinfos['sectionName'];
+        } else {
+            $current_section = $location['section'];
+        }
         $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
         $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
         $section_partTreeIndex = strval($sectionIndex);
@@ -69,10 +77,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $section_r->addResource('bdo:workHasPart', $part_r->getUri());
         $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
         $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
-        $part_partTreeIndex = $section_partTreeIndex.'.'.($section_part_count+1);
+        $part_partTreeIndex = $section_partTreeIndex.'.'.sprintf("%02d", $section_part_count+1);
         $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
-        $bvolname = $location['bvolname'];
         add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
         // foreach ($item->bampo as $bampo) {
         //     $location = get_bampo_loc($bampo->p->__toString(), $fileName, 'rkts_'.$rktsid);
@@ -81,6 +88,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         //         $location['volname'] = $bvolname;
         // }
         $chapnum = 0;
+        $bvolname = '';
+        if ($fileName != 'chemdo')
+            $bvolname = $location['bvolname'];
         foreach ($item->chap as $chap) { // iterating on chapters
             $chaptitle = $chap->__toString();
             if (empty($chaptitle))
@@ -94,13 +104,13 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
             $chap_r->addResource('bdo:workPartOf', $url_part);
             $chap_r->addLiteral('bdo:workPartIndex', $chapnum);
-            $chap_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex.'.'.$chapnum);
+            $chap_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex.'.'.sprintf("%02d", $chapnum));
             $part_r->addResource('bdo:workHasPart', $chap_url);
             $dotpos = strpos($chaptitle, ". ");
             if ($dotpos < 5) {
                 $chaptitle = substr($chaptitle, $dotpos+2);
             } else {
-                report_error($fileName, 'wrong chapter format', 'rkts_'.$rktsid, $chaptitle);
+                //report_error($fileName, 'wrong chapter format', 'rkts_'.$rktsid, $chaptitle);
             }
             $lit = normalize_lit($chaptitle, 'bo-x-ewts', $bdrc);
             add_title($chap_r, 'WorkOtherTitle', $lit);
@@ -108,7 +118,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $location = get_chap_loc($chap->p->__toString(), $fileName, 'rkts_'.$rktsid);
             if ($location) {
                 $location['section'] = $current_section;
-                if (empty($location['bvolname']))
+                if ($fileName == 'chamdo' && empty($location['bvolname']))
                     $location['bvolname'] = $bvolname;
                 add_location($chap_r, $location, $edition_info['confinfo']['volumeMap']);
             }
@@ -147,6 +157,10 @@ function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_inf
     $editionId = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $curVolNum = 0;
     foreach ($editionVolumeMap as $sectionIdx => &$sectionArr) {
+        if (!isset($editionVolumeMap['volnumInfo'])) {
+            $editionVolumeMap['volnumInfo'] = [];
+            $editionVolumeMap['volnumInfo'][0] = null;
+        }
         $sectionName = $sectionArr['name'];
         $sectionUrl = get_url_for_vol_section($editionId, $sectionIdx+1, $config, $bdrc);
         $sectionArr['url'] = $sectionUrl;
@@ -166,6 +180,7 @@ function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_inf
             $volumeUrl = get_url_for_vol($editionId, $curVolNum, $config, $bdrc);
             $section_r->add('bdo:VolumeSectionHasVolume', $volumeUrl);
             $namesUrlMap[$volumeName] = $volumeUrl;
+            $editionVolumeMap['volnumInfo'][$curVolNum] = ['url' => $volumeUrl, 'sectionName' => $sectionName];
             $graph_volume = new EasyRdf_Graph();
             $volume_r = $graph_volume->resource($volumeUrl);
             $volume_r->add('bdo:seqNum', $volumeIdx+1);
