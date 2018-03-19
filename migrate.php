@@ -87,9 +87,17 @@ $global_graph_fd = fopen($global_filename, "w");
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 
+unset($kernel_xml);
+
+$kernelt_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rktst.xml');
+kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, true);
+kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, true);
+
+unset($kernelt_xml);
+
 require_once "editionxmltottl.php";
 
-$filesList = ["stog", "derge"];
+$filesList = ["stog", "derge", "chemdo"];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');

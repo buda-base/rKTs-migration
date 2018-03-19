@@ -11,11 +11,15 @@ function get_first_sanskrit_title($item) {
     return null;
 }
 
-function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
+function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
     global $name_to_bcp;
-    if (isset($item->now) || $item->count() < 2)
+    if (isset($item->now) || isset($item->old) || $item->count() < 2)
         return;
-    $id = $item->rkts;
+    if ($tengyur) {
+        $id = 'T'+$item->rktst;
+    } else {
+        $id = $item->rkts;
+    }
     $url_expression = id_to_url_expression($id, $config, $bdrc);
     $graph_expression = new EasyRdf_Graph();
     $expression_r = $graph_expression->resource($url_expression);
@@ -45,7 +49,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False) {
     $seenLangs = [];
     foreach ($item->children() as $child) {
         $name = $child->getName();
-        if ($name == "rkts") continue;
+        if ($name == "rkts" || $name == "rktst") continue;
         if (empty($child->__toString())) continue;
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))

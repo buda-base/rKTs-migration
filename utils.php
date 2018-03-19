@@ -308,9 +308,12 @@ function add_label($resource, $type, $lit) {
 
 $name_to_bcp = [
     'tibetan' => 'bo-x-ewts',
+    'tib' => 'bo-x-ewts',
     'sktuni' => 'sa-Deva',
     'sanskrit' => 'sa-x-iats',
+    'skt' => 'sa-x-iats',
     'mongolian' => 'cmg-x-poppe-simpl',
+    'mng' => 'cmg-x-poppe-simpl',
     'mnguni' => 'cmg-Mong',
     'skttrans' => 'sa-x-ewts'
 ];
