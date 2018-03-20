@@ -1,14 +1,18 @@
 useAbstract: true
-rKTsAbstractUrlFormat: "http://purl.rkts.eu/resource/WA%GID"
-rKTsExpressionUrlFormat: "http://purl.rkts.eu/resource/WT%GID"
+rKTsAbstractUrlFormatKan: "http://purl.rkts.eu/resource/WKA%GID"
+rKTsExpressionUrlFormatKan: "http://purl.rkts.eu/resource/WKT%GID"
+rKTsAbstractUrlFormatTen: "http://purl.rkts.eu/resource/WTA%GID"
+rKTsExpressionUrlFormatTen: "http://purl.rkts.eu/resource/WTT%GID"
 rKTsEditionUrlFormat: "http://purl.rkts.eu/resource/WE%EID"
 rKTsTextUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID"
 rKTsChapterUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID_C%CID"
 rKTsVolumeUrlFormat: "http://purl.rkts.eu/resource/WE%EID_V%VNUM"
 rKTsVolumeSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_VS%VSNUM"
 rKTsSectionPartUrlFormat: "http://purl.rkts.eu/resource/WE%EID_S%SNUM"
-bdrcAbstractUrlFormat: "http://purl.bdrc.io/resource/W0RIA%GID"
-bdrcExpressionUrlFormat: "http://purl.bdrc.io/resource/W0RIT%GID"
+bdrcAbstractUrlFormatKan: "http://purl.bdrc.io/resource/W0RKA%GID"
+bdrcExpressionUrlFormatKan: "http://purl.bdrc.io/resource/W0RKT%GID"
+bdrcAbstractUrlFormatTen: "http://purl.bdrc.io/resource/W0RTA%GID"
+bdrcExpressionUrlFormatTen: "http://purl.bdrc.io/resource/W0RTT%GID"
 bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%EID"
 bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
 bdrcChapterUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
@@ -253,3 +257,31 @@ chemdo:
     "103": 27,
     "104": 35
   duplicates: [""]
+tenjurd:
+  RID: ["W23703"]
+  EID: "DT"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaD"
+  volumeMap: []
+tenjurg:
+  RID: ["W23702"]
+  EID: "GT"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaG"
+  volumeMap: []
+tenjurn:
+  RID: ["W22704"]
+  EID: "NT"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaN"
+  volumeMap: []
+tenjurq:
+  RID: ["W1KG13126"]
+  EID: "QT"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaQ"
+  volumeMap: []

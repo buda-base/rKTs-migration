@@ -28,13 +28,13 @@ function rdf_ci_to_url($id) {
     return sprintf("%04d", $id_int);
 }
 
-function id_to_url_abstract($rktsid, $config, $bdrc=False) {
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat';
+function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.($tengyur ? 'Ten' : 'Kan');
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
-function id_to_url_expression($rktsid, $config, $bdrc=False) {
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat';
+function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat'.($tengyur ? 'Ten' : 'Kan');
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
