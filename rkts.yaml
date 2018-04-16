@@ -21,9 +21,65 @@ bdrcVolumeSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_VS%VSNUM"
 keepSktUni: true
 keepMgUni: true
 keepSimplifiedRomanizedMongol: true
+migrateChapters: false
 useSkosLabels: false
 catalogueNumberingScheme: "rKTs"
 oneTitleInExpression: false
+KTMapping:
+    "326": 3437, # indicated in Tohoku
+    "1000": 1,
+    "1110": 10,
+    "1111": 11,
+    "1112": 12,
+    "1113": 14,
+    "1114": 18,
+    "1115": 19,
+    "1116": 23,
+    "940": 26,
+    "1118": 38,
+    "1119": 44,
+    "1120": 50,
+    "995": 58,
+    "999": 561,
+    "1314": 857,
+    "471": 858, # ?
+    "1065": 1065, # strange coincidence?
+    "1121": 1550,
+    "484": 1920, # ?
+#    "698": "1976",
+    "816": 2599, # ?
+    "820": 2602, # ?
+    "380": 2677, # ?
+    "469": 2797,
+#    "9": 3135,
+    "1122": 3275,
+    "1123": 3281,
+    "338": 3300,
+    "1124": 3424,
+    "1125": 3425,
+    "1126": 3426,
+    "1127": 3482,
+    "1128": 3483,
+    "1129": 3484,
+    "1294": 3485,
+    "981": 3488,
+    "947": 3517,
+    "1130": 3534,
+    "1131": 3536,
+    "1132": 3538,
+    "903": 3539,
+    "1095": 3711,
+    "1096": 3712,
+    "1097": 3730,
+    "811": 3734,
+    "1107": 3738,
+    "815": 3743,
+    "818": 3744,
+    "819": 3746,
+    "280": 3911,
+    "281": 3912,
+    "1135": 3916,
+    "812": 3943
 derge:
   RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
@@ -257,28 +313,45 @@ chemdo:
     "103": 27,
     "104": 35
   duplicates: [""]
-tenjurd:
+tanjurd:
   RID: ["W23703"]
   EID: "DT"
   langScript: 'bdr:boDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaD"
-  volumeMap: []
-tenjurg:
+  volumeMap: [
+     {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
+     {name: "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da"]},
+     {name: "nyi khri", volumes: ["ka", "kha", "ga"]},
+     {name: "khri brgyad stong pa", volumes: ["ka", "kha", "ga"]},
+     {name: "khri brgyad stong pa", volumes: ["ka"]},
+     {name: "khri pa", volumes: ["ka"]},
+     {name: "sher phyin sna tshogs", volumes: ["ka"]},
+     {name: "phal chen", volumes: ["ka", "kha", "ga", "nga"]},
+     {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", aM", "aH"]},
+     {name: "rgyud 'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
+     {name: "gzungs 'dus", volumes: ["e", "waM"]},
+     {name: "dus 'khor 'grel bshad", volumes: ["shrI"]},
+     {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
+     {name: "dkar chag", volumes: ["dkar chag"]},
+     {name: "gzhungs phran sna tshogs", volumes: ["oM"]},
+     ]
+tanjurg:
   RID: ["W23702"]
   EID: "GT"
   langScript: 'bdr:boDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaG"
   volumeMap: []
-tenjurn:
+tanjurn:
   RID: ["W22704"]
   EID: "NT"
   langScript: 'bdr:boDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaN"
   volumeMap: []
-tenjurq:
+tanjurq:
   RID: ["W1KG13126"]
   EID: "QT"
   langScript: 'bdr:boDbuCan'
