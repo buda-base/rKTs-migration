@@ -39,7 +39,7 @@ KTMapping:
     "1095": 3711,
     "1096": 3712,
     "816": 2599,
-    "846": 64, # end of those indicated in Tohoku
+    "846": 64, # end of those indicated in Tohoku, last one may be a different translation
     "1000": 1,
     "1110": 10,
     "1111": 11,
@@ -89,6 +89,15 @@ KTMapping:
     "281": 3912,
     "1135": 3916,
     "812": 3943
+SameTextDifferentTranslation: # all come from Tohoku
+    "3740": 3741, # D4407 = D4408
+    "3722": 3496, # D4388 = D4158
+#    "3717": 3216, # D4383 = D3871, looks wrong
+    "3194": 3190, # D3849 = D3845
+    "3193": 3189, # D3848 = D3844
+    "3185": 3500, # D3840 = D4162 (see erratum)
+    "3157": 3787, # D3812 = D4462 (error p. 686, not appearing in the erratum)
+    "3361": 3362, # D4022 = D4023
 derge:
   RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
