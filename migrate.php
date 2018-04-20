@@ -71,7 +71,7 @@ EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
 EasyRdf_Namespace::set('tbr', 'http://purl.bdrc.io/ontology/toberemoved/');
 EasyRdf_Namespace::set('rkts', 'http://purl.rkts.eu/resource/');
 
-$kernel_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rkts.xml');
+$kernel_xml = simplexml_load_file('rKTs/Kernel/'.'rkts.xml');
 
 mkdir($getOpt->getOption('output-dir'), 0777, true);
 mkdir($getOpt->getOption('output-dir').'rKTs');
@@ -84,25 +84,39 @@ mb_internal_encoding('UTF-8');
 $global_filename = $config['opts']->getOption('output-dir').'/global.nt';
 $global_graph_fd = fopen($global_filename, "w");
 
+require_once "utils.php";
+
+$gl_rkts_props = get_rkts_props();
+$gl_rkts_abstract = get_abstract_mapping();
+
+require_once "editionxmltottl.php";
+
+// $filesList = ["stog", "derge", "chemdo"];
+
+// foreach ($filesList as $fileName) {
+//     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
+//     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
+//     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
+// }
+
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 
-unset($kernel_xml);
+// unset($kernel_xml);
 
-$kernelt_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.'rktst.xml');
+
+// $filesListT = ["tanjurd"/*, "tanjurg", "tanjugn", "tanjurq"*/];
+
+// foreach ($filesListT as $fileName) {
+//     $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
+//     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, false, true);
+//     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true, true);
+// }
+
+$kernelt_xml = simplexml_load_file('rKTs/Kernel/'.'rktst.xml');
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, true);
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, true);
 
 unset($kernelt_xml);
-
-require_once "editionxmltottl.php";
-
-$filesList = ["stog", "derge", "chemdo"];
-
-foreach ($filesList as $fileName) {
-    $edition_xml = simplexml_load_file($getOpt->getOption('input-dir').'/'.$fileName.'.xml');
-    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName);
-    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
-}
 
 fclose($global_graph_fd);

@@ -2,14 +2,14 @@
 
 require_once "utils.php";
 
-$xml = simplexml_load_file('input/tanjurg.xml');
+$xml = simplexml_load_file('input/chemdo.xml');
 
-$tengyur = True;
+$tengyur = False;
 
 // get_text_loc("rgyud 'grel, pu 317b7-320a5", "", "1");
 // get_text_loc("'dul ba, ka 1b1-nga 302a5 (vol. 1-4)", "", "1");
 
-$fd = fopen("/tmp/GT-locations.csv", "w");
+$fd = fopen("/tmp/A-locations.csv", "w");
 
 $fields = [
     "section",

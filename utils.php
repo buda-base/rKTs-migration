@@ -10,7 +10,7 @@ function catalogue_index_xml_to_rdf($index) {
 
 function id_to_str($id) {
     $id_int = intval($id);
-    return sprintf("%05d", $id_int);
+    return sprintf("%04d", $id_int);
 }
 
 function chapnum_to_str($id) {
@@ -180,10 +180,10 @@ function report_error($file, $type, $id, $message) {
     error_log($file.':'.$id.':'.$type.': '.$message);
 }
 
-$allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI", "ki", "khi", "gi", "ngi", "ci", "chi", "ji" ];
+$allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu", "hi", "dzu", "wu", "zhu", "'u", "ru", "lu", "shu", "su", "hu", "u", "ke", "ge", "nge", "ce", "che", "je", "te", "de", "pe", "phe", "tshe", "dze", "we", "zhe", "ze", "ye", "re", "le", "she", "se", "he", "ko", "ngo", "co", "jo", "nyo", "to", "tho", "no", "po", "zu", "yu", "A", "khe", "nye", "the", "ne", "tse", "'e", "kho", "go", "cho", "do", "pho", "bo", "mo" ];
 
 $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
-$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))? \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\)$/';
+$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?(?: \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\))?/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
 $pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)-(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
@@ -359,4 +359,42 @@ function rdf_to_ttl($config, $graph, $basename, $bdrc=False) {
     $subdir = $bdrc ? 'bdrc' : 'rKTs' ;
     $filename = $config['opts']->getOption('output-dir').'/'.$subdir.'/'.$basename.'.ttl';
     file_put_contents($filename, $output);
+}
+
+function get_rkts_props() {
+    $res = [];
+    $filename = "rkts-actors.csv";
+    $handle = fopen($filename, "r");
+    if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            $triples = explode(',', $line);
+            if (!isset($res[$triples[0]]))
+                $res[$triples[0]] = [];
+            if (!isset($res[$triples[0]][$triples[1]]))
+                $res[$triples[0]][$triples[1]] = [];
+            $res[$triples[0]][$triples[1]][] = $triples[2];
+        }
+        fclose($handle);
+    } else {
+        print("error opening ".$filename);
+    }
+    return $res; 
+}
+
+function get_abstract_mapping() {
+    $res = [];
+    $filename = "abstract-rkts.csv";
+    $handle = fopen($filename, "r");
+    if ($handle) {
+        while (($line = fgets($handle)) !== false) {
+            $map = explode(',', $line);
+            if (!empty($map[1]) && strpos($map[1], '?') === false) {
+                $res[trim($map[1])] = trim($map[0]);
+            }
+        }
+        fclose($handle);
+    } else {
+        print("error opening ".$filename);
+    }
+    return $res; 
 }

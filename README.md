@@ -20,7 +20,7 @@ TODO:
 - fix 'og pages in ganden
 - remove shejawa?
 - replace 'a -> A
-- replace pad ma -> pad+ma
+- replace pad ma -> pad+ma, pandi -> paN+Di
 
 Questions:
 - why the note "17 chapters" in dergue.xml for rKTs1 while there are 36?

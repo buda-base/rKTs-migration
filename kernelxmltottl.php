@@ -4,15 +4,23 @@ require_once "utils.php";
 
 function get_first_sanskrit_title($item) {
     foreach ($item->children() as $tag => $child) {
-        if ($tag == "sanskrit" && !empty($child->__toString())) {
+        if (($tag == "sanskrit" || $tag == "skt") && !empty($child->__toString())) {
             return $child->__toString();
         }
     }
     return null;
 }
 
+function add_props($resource, $props, $propidx, $ontoproperty) {
+    if (isset($props[$propidx])) {
+        foreach($props[$propidx] as $object) {
+            $resource->addResource($ontoproperty, 'bdr:'.$object);
+        }
+    }
+}
+
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract;
     if (isset($item->now) || isset($item->old) || $item->count() < 2)
         return;
     if ($tengyur) {
@@ -20,14 +28,30 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     } else {
         $id = $item->rkts;
     }
+    $idwithletter = ($tengyur ? 'T' : 'K').$id;
+    // if (!$tengyur && isset($config['KTMapping'][$id])) {
+    //     $tid = $config['KTMapping'][$id];
+    // }
     $url_expression = id_to_url_expression($id, $config, $bdrc, $tengyur);
     $graph_expression = new EasyRdf_Graph();
     $expression_r = $graph_expression->resource($url_expression);
+    if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+        $props = $gl_rkts_props[$idwithletter];
+        add_props($expression_r, $props, 'pa', 'bdo:creatorPandita');
+        add_props($expression_r, $props, 'tr', 'bdo:creatorTranslator');
+        add_props($expression_r, $props, 're', 'bdo:creatorReviserOfTranslation');
+    }
     $firstSanskritTitle = get_first_sanskrit_title($item);
-    if ($config['useAbstract'] && $firstSanskritTitle) {
+    if ($bdrc && $config['useAbstract'] && $firstSanskritTitle) {
         $graph_abstract = new EasyRdf_Graph();
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
         $abstract_r = $graph_abstract->resource($url_abstract);
+        if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+            $props = $gl_rkts_props[$idwithletter];
+            add_props($abstract_r, $props, 'ma', 'bdo:creatorMainAuthor');
+            add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
+            add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
+        }
         $abstract_r->addResource('rdf:type', 'bdo:Work');
         $lit = normalize_lit($firstSanskritTitle, 'sa-x-iats', $bdrc);
         $abstract_r->add('skos:prefLabel', $lit);

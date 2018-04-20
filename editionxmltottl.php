@@ -2,8 +2,12 @@
 
 require_once "utils.php";
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, &$section_r, $eid=null, $bdrc=False) {
-    $rktsid = $item->rkts;
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, &$section_r, $eid=null, $bdrc=False, $tengyur=False) {
+    if ($tengyur) {
+        $rktsid = $item->rktst;
+    } else {
+        $rktsid = $item->rkts;
+    }
     if ($rktsid == '-')
         return;
     $partnum = $lastpartnum+1;
@@ -92,6 +96,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         if ($fileName != 'chemdo')
             $bvolname = $location['bvolname'];
         foreach ($item->chap as $chap) { // iterating on chapters
+            if ($config['migrateChapters']) break;
             $chaptitle = $chap->__toString();
             if (empty($chaptitle))
                 continue;
@@ -162,6 +167,9 @@ function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_inf
             $editionVolumeMap['volnumInfo'][0] = null;
         }
         $sectionName = $sectionArr['name'];
+        if (!isset($sectionArr['name'])) {
+            print_r($sectionArr);
+        }
         $sectionUrl = get_url_for_vol_section($editionId, $sectionIdx+1, $config, $bdrc);
         $sectionArr['url'] = $sectionUrl;
         if (!isset($sectionArr['namesUrlMap'])) {
@@ -259,14 +267,14 @@ function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False
     }
 }
 
-function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False) {
+function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False, $tengyur=False) {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     write_edition_ttl($config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc);
     $lastpartnum = $bdrc ? count($edition_info['confinfo']['volumeMap']) : 0;
     $section_r = null;
     foreach($xml->item as $item) {
-        $lastpartnum = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $section_r, $eid, $bdrc);
+        $lastpartnum = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $section_r, $eid, $bdrc, $tengyur);
         //return;
     }
     rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
