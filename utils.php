@@ -29,7 +29,12 @@ function rdf_ci_to_url($id) {
 }
 
 function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
+    global $gl_rkts_abstract;
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.($tengyur ? 'Ten' : 'Kan');
+    $idwithletter = ($tengyur ? 'T' : 'K').$rktsid;
+    if ($bdrc && isset($gl_rkts_abstract[$idwithletter])) {
+        return 'http://purl.bdrc.io/resource/'.$gl_rkts_abstract[$idwithletter];
+    }
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
