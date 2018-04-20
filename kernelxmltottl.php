@@ -19,6 +19,8 @@ function add_props($resource, $props, $propidx, $ontoproperty) {
     }
 }
 
+
+
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
     global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract;
     if (isset($item->now) || isset($item->old) || $item->count() < 2)

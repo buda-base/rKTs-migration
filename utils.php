@@ -323,6 +323,32 @@ $name_to_bcp = [
     'skttrans' => 'sa-x-ewts'
 ];
 
+function add_shad($tibstr) {
+    // we suppose that there is no space at the end
+    // copied from 
+    $tibstrlen = strlen($tibstr);
+    if ($tibstrlen < 2)
+        return $tibstr;
+    $last = mb_substr($tibstr, -1);
+    if ($last == 'a' || $last == 'i' || $last == 'e' || $last == 'o')
+        $last = mb_substr($tibstr, -2, 1);
+    if ($tibstrlen > 2 && $last == 'g' && mb_substr($tibstr, -3, 1) == 'n')
+        return $tibstr." /";
+    if ($last == 'g' || $last == 'k' || ($tibstrlen > 2 && $last == 'h' && mb_substr($tibstr, -3, 1) == 's'))
+        return $tibstr;
+    if ($last < 'A' || $last > 'z' || ($last > 'Z' && $last < 'a'))  // string doesn't end with tibetan letter
+        return $tibstr;
+    return $tibstr."/";
+}
+
+// print(add_shad("a ga")."\n");
+// print(add_shad("a sho")."\n");
+// print(add_shad("a ki")."\n");
+// print(add_shad("a gu")."\n");
+// print(add_shad("a nga")."\n");
+// print(add_shad("a ngu")."\n");
+// print(add_shad("a ngi")."\n");
+
 function normalize_lit($title, $langtag, $bdrc=False) {
     // bdrc uses sa-x-iast for Sanskrit, and cmg-Mong for Mongolian (transliterations are sloppy it seems)
     // if ($bdrc && $langtag=="cmg-x-poppe-simpl") {
@@ -333,6 +359,9 @@ function normalize_lit($title, $langtag, $bdrc=False) {
     // }
     if ($bdrc && ($langtag == "cmg-x-poppe-simpl" || $langtag == "sa-Deva"))
         return null;
+    if ($bdrc && $langtag == "bo-x-ewts") {
+        $title = add_shad($title);
+    }
     return EasyRdf_Literal::create($title, $langtag);
 }
 
