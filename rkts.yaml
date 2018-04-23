@@ -124,7 +124,7 @@ derge:
   volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["W22083"]
-  EID: "D"
+  EID: "S"
   langScript: 'bdr:boDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaS"
@@ -223,7 +223,7 @@ chemdo:
      {name: "dkar chag", volumes: ["dkar chag"]},
      {name: "gzhungs phran sna tshogs", volumes: ["oM"]},
      ]
-  volumeBdrcPageThirdPageDefault: 20,
+  volumeBdrcPageThirdPageDefault: 19,
   volumeBdrcPageThirdPage:
     "1": 20
     "2": 22
@@ -238,44 +238,21 @@ chemdo:
     "11": 20
     "12": 28
     "13": 28
-    "14": 19
-    "15": 19
-    "16": 19
-    "17": 19
-    "18": 19
-    "19": 19
-    "20": 19
-    "21": 19
-    "22": 19
-    "23": 19
-    "24": 19
-    "25": 19
     "26": 11
-    "27": 19
-    "28": 19
-    "29": 19
     "30": 21
     "31": 21
-    "32": 19
     "33": 21
     "34": 27
     "35": 21
-    "36": 19
-    "37": 19
-    "38": 19
     "39": 21
     "40": 21
-    "41": 19
     "42": 22
     "43": 23
     "44": 23
-    "45": 19
     "46": 22
-    "47": 19
     "48": 21
     "49": 21
     "50": 21
-    "51": 19
     "52": 17
     "53": 17
     "54": 21
@@ -291,15 +268,12 @@ chemdo:
     "64": 23
     "65": 3
     "66": 23
-    "67": 19
     "68": 23
     "69": 23
     "70": 23
     "71": 23
     "72": 27
-    "73": 19
     "74": 21
-    "75": 19
     "76": 21
     "77": 29
     "78": 31
@@ -323,8 +297,6 @@ chemdo:
     "96": 33
     "97": 39
     "98": 47
-    "99": 19
-    "100": 19
     "101": 3
     "102": 29
     "103": 27
