@@ -71,8 +71,6 @@ EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
 EasyRdf_Namespace::set('tbr', 'http://purl.bdrc.io/ontology/toberemoved/');
 EasyRdf_Namespace::set('rkts', 'http://purl.rkts.eu/resource/');
 
-$kernel_xml = simplexml_load_file('rKTs/Kernel/'.'rkts.xml');
-
 mkdir($getOpt->getOption('output-dir'), 0777, true);
 mkdir($getOpt->getOption('output-dir').'rKTs');
 mkdir($getOpt->getOption('output-dir').'bdrc');
@@ -98,11 +96,10 @@ require_once "editionxmltottl.php";
 //     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
 // }
 
+$kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
-
-// unset($kernel_xml);
-
+unset($kernel_xml);
 
 // $filesListT = ["tanjurd"/*, "tanjurg", "tanjugn", "tanjurq"*/];
 
@@ -111,10 +108,9 @@ kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 //     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true, true);
 // }
 
-$kernelt_xml = simplexml_load_file('rKTs/Kernel/'.'rktst.xml');
+$kernelt_xml = simplexml_load_file('rKTs/Kernel/rktst.xml');
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, true);
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, true);
-
 unset($kernelt_xml);
 
 fclose($global_graph_fd);
