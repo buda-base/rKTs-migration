@@ -122,6 +122,62 @@ derge:
      {name: "dkar chag", volumes: ["dkar chag"]}
      ]
   volumeBdrcPageFirstFolioDefault: 3
+narthang:
+  RID: ["W22703"]
+  EID: "N"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaN"
+  volumeBdrcPageFirstFolioDefault: 3
+peking:
+  RID: ["W1PD96684"]
+  EID: "Q"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaQ"
+  volumeBdrcPageFirstFolioDefault: 3
+lhasa:
+  RID: ["W26071"]
+  EID: "H"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaH"
+  volumeBdrcPageFirstFolioDefault: 5
+urga:
+  RID: ["W29468"]
+  EID: "U"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaU"
+  volumeBdrcPageFirstFolioDefault: 3
+shey:
+  RID: ["W1PD127393"]
+  EID: "Z"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeManuscript'
+  propSigla: "workKaTenSiglaZ"
+  volumeBdrcPageFirstFolioDefault: 3
+lithang:
+  RID: ["W4CZ7445"]
+  EID: "J"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaJ"
+  volumeBdrcPageFirstFolioDefault: 3
+ulaanbaatar:
+  RID: ["W1KG14700"]
+  EID: "V"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeManuscript'
+  propSigla: "workKaTenSiglaV"
+  volumeBdrcPageFirstFolioDefault: 3
+dolpo:
+  RID: ["W1KG14700"]
+  EID: "Do"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeManuscript'
+  propSigla: "workKaTenSiglaDo"
+  volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["W22083"]
   EID: "S"
