@@ -45,6 +45,11 @@ function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
 }
 
 function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
+    // for bdrc, when the exact same text is in both Kangyur and Tengyur, we just take the Tengyur ID for the URL
+    if ($bdrc && !$tengyur && array_key_exists(intval($rktsid), $config['KTMapping'])) {
+        $rktsid = $config['KTMapping'][intval($rktsid)];
+        $tengyur = true;
+    }
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat'.($tengyur ? 'Ten' : 'Kan');
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }

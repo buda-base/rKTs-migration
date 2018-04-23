@@ -19,8 +19,10 @@ function add_props($resource, $props, $propidx, $ontoproperty) {
     }
 }
 
+$gl_KanToTenExpressions = [];
+
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions;
     if (isset($item->now) || isset($item->old) || $item->count() < 2)
         return;
     if ($tengyur) {
@@ -28,10 +30,26 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     } else {
         $id = $item->rkts;
     }
-    $idwithletter = ($tengyur ? 'T' : 'K').$id;
+    $storeAsDuplicate = false;
+    $restoredFromDuplicate = false;
     $url_expression = id_to_url_expression($id, $config, $bdrc, $tengyur);
     $graph_expression = new EasyRdf_Graph();
     $expression_r = $graph_expression->resource($url_expression);
+    $seenTitles = [];
+    $seenLangs = [];
+    if ($bdrc && !$tengyur && isset($config['KTMapping'][intval($id)])) {
+        $storeAsDuplicate = true;
+        $idtostore = intval($config['KTMapping'][intval($id)]);
+    }
+    $idwithletter = ($tengyur ? 'T' : 'K').$id;
+    if ($bdrc && $tengyur && isset($gl_KanToTenExpressions[intval($id)])) {
+        $stored_expr_data = $gl_KanToTenExpressions[intval($id)];
+        $expression_r = $stored_expr_data["res"];
+        $graph_expression = $stored_expr_data["graph"];
+        $seenTitles = $stored_expr_data["seenTitles"];
+        $seenLangs = $stored_expr_data["seenLangs"];
+        $restoredFromDuplicate = true;
+    }
     if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
         $props = $gl_rkts_props[$idwithletter];
         add_props($expression_r, $props, 'pa', 'bdo:creatorPandita');
@@ -39,7 +57,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         add_props($expression_r, $props, 're', 'bdo:creatorReviserOfTranslation');
     }
     $firstSanskritTitle = get_first_sanskrit_title($item);
-    if ($bdrc && $config['useAbstract']) {
+    if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
         $expression_r->addResource('bdo:workExpressionOf', $url_abstract);
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
@@ -66,10 +84,8 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     $expression_r->addResource('rdf:type', 'bdo:Work');
     $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
-    $expression_r->addResource('bdo:language', 'bdr:LangBo');
+    $expression_r->addResource('bdo:workLangScript', 'bdr:LangBoTibt'); // some works are just sanskrit dharanis...
     $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), intval($id));
-    $seenTitles = [];
-    $seenLangs = [];
     foreach ($item->children() as $child) {
         $name = $child->getName();
         if ($name == "rkts" || $name == "rktst") continue;
@@ -78,7 +94,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
             continue;
         $title = $child->__toString();
-        if (isset($seenTitles[$title])) {
+        if (!$restoredFromDuplicate && isset($seenTitles[$title])) {
             report_error('kernel', 'duplicate', 'rkts_'.$id, 'title "'.$title.'" appears more than once');
             continue;
         }
@@ -92,6 +108,15 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $seenTitles[$title] = true;
         $seenLangs[$langtag] = true;
 
+    }
+    if ($storeAsDuplicate) {
+        $gl_KanToTenExpressions[$idtostore] = [
+            "res" => $expression_r,
+            "graph" => $graph_expression,
+            "seenLangs" => $seenLangs,
+            "seenTitles" => $seenTitles
+        ];
+        return;
     }
     add_log_entry($expression_r);
     rdf_to_ttl($config, $graph_expression, $expression_r->localName(), $bdrc);

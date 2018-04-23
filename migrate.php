@@ -61,6 +61,9 @@ if ($getOpt->getOption('help')) {
 
 $config = Yaml::parseFile($getOpt->getOption('config'));
 
+// print_r($config['KTMapping']);
+// return;
+
 $config['opts'] = $getOpt;
 
 EasyRdf_Namespace::set('adm', 'http://purl.bdrc.io/ontology/admin/');
