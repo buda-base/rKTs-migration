@@ -6,7 +6,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 function catalogue_index_xml_to_rdf($index, $edition_info) {
     $index = substr($index, strlen($edition_info['confinfo']['EID']));
-    $index = str_replace(["(", "."], "-", $index);
+    $index = str_replace(["(", ".", ","], "-", $index);
     $index = str_replace(")", "", $index);
     return $index;
 }
