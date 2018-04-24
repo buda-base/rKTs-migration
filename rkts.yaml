@@ -5,6 +5,7 @@ rKTsAbstractUrlFormatTen: "http://purl.rkts.eu/resource/WTA%GID"
 rKTsExpressionUrlFormatTen: "http://purl.rkts.eu/resource/WTT%GID"
 rKTsEditionUrlFormat: "http://purl.rkts.eu/resource/WE%EID"
 rKTsTextUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID"
+rKTsSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_S%SNUM"
 rKTsChapterUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID_C%CID"
 rKTsVolumeUrlFormat: "http://purl.rkts.eu/resource/WE%EID_V%VNUM"
 rKTsVolumeSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_VS%VSNUM"
@@ -14,7 +15,8 @@ bdrcExpressionUrlFormatKan: "http://purl.bdrc.io/resource/W0RKT%GID"
 bdrcAbstractUrlFormatTen: "http://purl.bdrc.io/resource/W0RTA%GID"
 bdrcExpressionUrlFormatTen: "http://purl.bdrc.io/resource/W0RTT%GID"
 bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%EID"
-bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
+bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_%GID"
+bdrcSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_S%SNUM"
 bdrcChapterUrlFormat: "http://purl.bdrc.io/resource/%EID_P%PNUM"
 bdrcVolumeUrlFormat: "http://purl.bdrc.io/resource/%EID_V%VNUM"
 bdrcVolumeSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_VS%VSNUM"
@@ -129,6 +131,19 @@ narthang:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaN"
   volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na"]},
+    {name: "'bum", volumes: ["ka", "na"]},
+    {name: "nyi khri", volumes: ["ka", "ga"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ka"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "sna tshogs", volumes: ["ka"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "ra", "la", "sha", "sa", "ha", "a", "ki"]},
+    {name: "myang 'das", volumes: ["ka", "kha"]},
+    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "sha"]},
+    ]
 peking:
   RID: ["W1PD96684"]
   EID: "Q"
@@ -136,6 +151,14 @@ peking:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaQ"
   volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "rgyud", volumes: ["om", "ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya"]},
+    {name: "sher phyin", volumes: ["ra", "ji", "nyi", "di", "ni", "phi", "bi", "mi", "tsi"]},
+    {name: "dkon brtsegs", volumes: ["tshi", "dzi", "wi", "zhi", "zi", "'i"]},
+    {name: "phal chen", volumes: ["yi", "hi"]},
+    {name: "mdo sna tshogs", volumes: ["i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu", "dzu", "wu", "zhu", "zu", "'u", "lu", "shu", "su", "hu", "u", "ke"]},
+    {name: "'dul ba", volumes: ["khe", "ce", "che", "te", "the", "de", "ne", "pe", "phe"]},
+    ]
 lhasa:
   RID: ["W26071"]
   EID: "H"
@@ -143,6 +166,18 @@ lhasa:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaH"
   volumeBdrcPageFirstFolioDefault: 5
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na"]},
+    {name: "'bum", volumes: ["ka", "ma"]},
+    {name: "nyi khri", volumes: ["ka", "ga"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "sna tshogs", volumes: ["ka"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "ra", "la", "sha", "sa", "ha", "a"]},
+    {name: "myang 'das", volumes: ["ka", "kha"]},
+    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha"]},
+    ]
 urga:
   RID: ["W29468"]
   EID: "U"
@@ -150,6 +185,20 @@ urga:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaU"
   volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
+    {name: "'bum", volumes: ["ka", "a"]},
+    {name: "nyi khri", volumes: ["ka", "a"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ga", "nga"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "sna tshogs", volumes: ["ka"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH", "ki"]},
+    {name: "rgyud", volumes: ["ga", "nga", "tha", "na", "pa", "pha", "ba", "ma", "wa"]},
+    {name: "rnying rgyud", volumes: ["ka", "ga"]},
+    {name: "gzungs", volumes: ["e", "waM"]},
+    ]
 shey:
   RID: ["W1PD127393"]
   EID: "Z"
@@ -157,6 +206,19 @@ shey:
   printType: 'bdr:ObjectTypeManuscript'
   propSigla: "workKaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "ja", "nya", "ta", "tha", "da", "na"]},
+    {name: "'bum", volumes: ["ka", "na"]},
+    {name: "nyi khri", volumes: ["ka", "nga"]},
+    {name: "khri rgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ka", "kha"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "sras sna tshogs", volumes: ["ka"]},
+    {name: "phal chen", volumes: ["ka"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "cha"]},
+    {name: "mdo", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "ha", "a", "ki", "ngi", "ci", "chi", "ji"]},
+    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha"]},
+    ]
 cone:
   RID: ["W1PD96685"]
   EID: "C"
@@ -164,6 +226,18 @@ cone:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaC"
   volumeBdrcPageFirstFolioDefault: 5
+  volumeMap: [
+    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "ya", "pa", "pha", "ba", "tsa", "ma", "tsha", "dza", "wa", "zha", "za", "'a"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH"]},
+    {name: "'bum", volumes: ["ka", "ma"]},
+    {name: "nyi khri", volumes: ["ka", "nga"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "sna tshogs", volumes: ["ka"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ga", "nga"]},
+    {name: "phal chen", volumes: ["ka", "cha"]},
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
+    ]
 lithang:
   RID: ["W4CZ7445"]
   EID: "J"
@@ -171,6 +245,24 @@ lithang:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaJ"
   volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
+    {name: "'bum", volumes: ["ka", "a"]},
+    {name: "nyi khri", volumes: ["ka", "nga"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ga", "nga"]},
+    {name: "brgyad stong", volumes: ["ka"]},
+    {name: "sna tshogs", volumes: ["ka"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "padma dkar po", volumes: ["ja"]},
+    {name: "mdo sde", volumes: ["nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH"]},
+    {name: "phal chen", volumes: ["ka", "cha"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "rgyud 'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha"]},
+    {name: "rgyud gzung 'dus", volumes: ["za"]},
+    {name: "rgyud 'bum", volumes: ["'a", "ya"]},
+    {name: "dri med 'od", volumes: ["A"]},
+    ]
 ulaanbaatar:
   RID: ["W1KG14700"]
   EID: "V"
@@ -178,13 +270,25 @@ ulaanbaatar:
   printType: 'bdr:ObjectTypeManuscript'
   propSigla: "workKaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
-dolpo:
-  RID: ["W1KG14700"]
-  EID: "Do"
-  langScript: 'bdr:boDbuCan'
-  printType: 'bdr:ObjectTypeManuscript'
-  propSigla: "workKaTenSiglaDo"
-  volumeBdrcPageFirstFolioDefault: 3
+  volumeMap: [
+    {name: "'dul ba", volumes: ["ka", "nga", "ca", "cha", "tha", "na", "pa"]},
+    {name: "'bum", volumes: ["ka", "ma"]},
+    {name: "nyi khri", volumes: ["ka", "nga"]},
+    {name: "khri brgyad", volumes: ["ka", "ga"]},
+    {name: "khri pa", volumes: ["ka", "kha"]},
+    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
+    {name: "mdo sde", volumes: ["ka", "kha", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "dza", "ba", "ma", "ya", "tsa", "tsha", "wa", "zha", "za", "sa", "'a", "ra", "la", "sha", "ha", "a", "ki", "ngi", "ci", "chi", "ji"]},
+    {name: "myang 'das", volumes: ["ka", "ga"]},
+    {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
+    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "ja", "cha", "nya", "ta", "tha", "da", "pa", "na", "pha", "ba", "ma", "tsa", "tsha"]},
+    ]
+# dolpo:
+#   RID: ["W1KG14700"]
+#   EID: "Do"
+#   langScript: 'bdr:boDbuCan'
+#   printType: 'bdr:ObjectTypeManuscript'
+#   propSigla: "workKaTenSiglaDo"
+#   volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["W22083"]
   EID: "S"
@@ -364,7 +468,6 @@ chemdo:
     "102": 29
     "103": 27
     "104": 35
-  duplicates: [""]
 tanjurd:
   RID: ["W23703"]
   EID: "DT"
@@ -372,23 +475,23 @@ tanjurd:
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaD"
   volumeMap: [
-     {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
-     {name: "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da"]},
-     {name: "nyi khri", volumes: ["ka", "kha", "ga"]},
-     {name: "khri brgyad stong pa", volumes: ["ka", "kha", "ga"]},
-     {name: "khri brgyad stong pa", volumes: ["ka"]},
-     {name: "khri pa", volumes: ["ka"]},
-     {name: "sher phyin sna tshogs", volumes: ["ka"]},
-     {name: "phal chen", volumes: ["ka", "kha", "ga", "nga"]},
-     {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-     {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", aM", "aH"]},
-     {name: "rgyud 'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
-     {name: "gzungs 'dus", volumes: ["e", "waM"]},
-     {name: "dus 'khor 'grel bshad", volumes: ["shrI"]},
-     {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
-     {name: "dkar chag", volumes: ["dkar chag"]},
-     {name: "gzhungs phran sna tshogs", volumes: ["oM"]},
-     ]
+    {name: "bstod tshogs", volumes: ["ka"]},
+    {name: "rgyud 'grel", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu"]},
+    {name: "mdo 'grel (sher phyin)", volumes: ["ka", "kha", "ga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "pa", "pha", "ba", "ma"]},
+    {name: "mdo 'grel (dbu ma)", volumes: ["tsa", "tsha", "dza", "wa", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "ki", "khi", "gi"]},
+    {name: "mdo 'grel (mdo)", volumes: ["ngi", "ci", "chi", "ji", "nyi", "ti", "di", "ni", "pi"]},
+    {name: "mdo 'grel (sems tsam)", volumes: ["phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "hi"]},
+    {name: "mdo 'grel (mngon pa)", volumes: ["i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu"]},
+    {name: "mdo 'grel ('dul ba)", volumes: ["du", "nu", "pu", "bu", "mu", "tsu", "tshu", "dzu", "wu", "zhu", "zu", "'u", "yu", "ru", "lu", "shu", "su"]},
+    {name: "mdo 'grel (skyes rabs)", volumes: ["hu", "u", "ke", "khe", "ge"]},
+    {name: "mdo 'grel (spring yig)", volumes: ["ge", "nge"]},
+    {name: "mdo 'grel (mtshad ma)", volumes: ["ce", "che", "je", "nye", "te", "the", "de", "ne", "pe", "phe", "tse", "tshe", "dze", "we", "zhe", "ze", "'e", "ye", "re", "le", "she", "se"]},
+    {name: "mdo 'grel (gso rig)", volumes: ["he", "e", "ko", "go"]},
+    {name: "mdo 'grel (bzo rig)", volumes: ["ngo"]},
+    {name: "mdo 'grel (thun mong ba lugs kyi bstan bcos)", volumes: ["ngo"]},
+    {name: "mdo 'grel (bstan bcos sna tshogs)", volumes: ["co", "jo", "nyo", "to", "tho", "do", "no", "po"]},
+    ]
+  volumeBdrcPageFirstFolioDefault: 3
 tanjurg:
   RID: ["W23702"]
   EID: "GT"

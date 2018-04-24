@@ -3,6 +3,7 @@
 require_once "utils.php";
 
 function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, &$section_r, $eid=null, $bdrc=False, $tengyur=False) {
+    global $gl_abstractUrl_catId;
     if ($tengyur) {
         $rktsid = $item->rktst;
     } else {
@@ -12,10 +13,14 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         return;
     $partnum = $lastpartnum+1;
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
-    $catalogue_index = catalogue_index_xml_to_rdf($item->ref);
+    $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info);
     $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
     $url_part = id_to_url_edition_text($eid, $catalogue_index, $config, $partnum, $bdrc);
+    if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
+        $gl_abstractUrl_catId[$url_parent_text] = [];
+    }
+    array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
     $part_r->addResource('bdo:workExpressionOf', $url_parent_text);
@@ -84,7 +89,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_partTreeIndex = $section_partTreeIndex.'.'.sprintf("%02d", $section_part_count+1);
         $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
-        add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
+        add_location_simple($part_r, $location, $edition_info);
+        //add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
         // foreach ($item->bampo as $bampo) {
         //     $location = get_bampo_loc($bampo->p->__toString(), $fileName, 'rkts_'.$rktsid);
         //     $location['section'] = $current_section;
@@ -96,7 +102,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         if ($fileName != 'chemdo')
             $bvolname = $location['bvolname'];
         foreach ($item->chap as $chap) { // iterating on chapters
-            if ($config['migrateChapters']) break;
+            if (!$config['migrateChapters']) break;
             $chaptitle = $chap->__toString();
             if (empty($chaptitle))
                 continue;
@@ -125,7 +131,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 $location['section'] = $current_section;
                 if ($fileName == 'chamdo' && empty($location['bvolname']))
                     $location['bvolname'] = $bvolname;
-                add_location($chap_r, $location, $edition_info['confinfo']['volumeMap']);
+                add_location_simple($chap_r, $location, $edition_info);
             }
             rdf_to_ttl($config, $graph_chap, $chap_r->localName(), $bdrc);
             if (!$bdrc)
@@ -162,45 +168,46 @@ function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_inf
     $editionId = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $curVolNum = 0;
     foreach ($editionVolumeMap as $sectionIdx => &$sectionArr) {
-        if (!isset($editionVolumeMap['volnumInfo'])) {
-            $editionVolumeMap['volnumInfo'] = [];
-            $editionVolumeMap['volnumInfo'][0] = null;
-        }
-        $sectionName = $sectionArr['name'];
-        if (!isset($sectionArr['name'])) {
-            print_r($sectionArr);
-        }
         $sectionUrl = get_url_for_vol_section($editionId, $sectionIdx+1, $config, $bdrc);
-        $sectionArr['url'] = $sectionUrl;
-        if (!isset($sectionArr['namesUrlMap'])) {
-            $sectionArr['namesUrlMap'] = [];
-        }
-        $namesUrlMap = &$sectionArr['namesUrlMap'];
-        $edition_r->addResource('bdo:hasVolumeSection', $sectionUrl);
         $semantic_section_url = id_to_url_edition_section_part($eid, $config, $sectionIdx+1, $sectionIdx+1, $bdrc);
         $edition_r->addResource('bdo:workHasPart', $semantic_section_url);
-        $graph_section = new EasyRdf_Graph();
-        $section_r = $graph_section->resource($sectionUrl);
-        $section_r->add('rdfs:label', $sectionArr['name'], "bo-x-ewts");
-        $section_r->add('bdo:seqNum', $sectionIdx+1);
-        foreach($sectionArr['volumes'] as $volumeIdx => $volumeName) {
-            $curVolNum += 1;
-            $volumeUrl = get_url_for_vol($editionId, $curVolNum, $config, $bdrc);
-            $section_r->add('bdo:VolumeSectionHasVolume', $volumeUrl);
-            $namesUrlMap[$volumeName] = $volumeUrl;
-            $editionVolumeMap['volnumInfo'][$curVolNum] = ['url' => $volumeUrl, 'sectionName' => $sectionName];
-            $graph_volume = new EasyRdf_Graph();
-            $volume_r = $graph_volume->resource($volumeUrl);
-            $volume_r->add('bdo:seqNum', $volumeIdx+1);
-            $volume_r->add('bdo:VolumeSeqNumInWork', $curVolNum);
-            $volume_r->add('rdfs:label', $volumeName, "bo-x-ewts");
-            rdf_to_ttl($config, $graph_volume, $volume_r->localName(), $bdrc);
-            if (!$bdrc)
-                add_graph_to_global($graph_volume, $volume_r->localName(), $global_graph_fd);
-        }
-        rdf_to_ttl($config, $graph_section, $section_r->localName(), $bdrc);
-        if (!$bdrc)
-            add_graph_to_global($graph_section, $section_r->localName(), $global_graph_fd);
+        // if (!isset($editionVolumeMap['volnumInfo'])) {
+        //     $editionVolumeMap['volnumInfo'] = [];
+        //     $editionVolumeMap['volnumInfo'][0] = null;
+        // }
+        // $sectionName = $sectionArr['name'];
+        // if (!isset($sectionArr['name'])) {
+        //     print_r($sectionArr);
+        // }
+
+        // $sectionArr['url'] = $sectionUrl;
+        // if (!isset($sectionArr['namesUrlMap'])) {
+        //     $sectionArr['namesUrlMap'] = [];
+        // }
+        // $namesUrlMap = &$sectionArr['namesUrlMap'];
+        // $edition_r->addResource('bdo:hasVolumeSection', $sectionUrl);
+        // $graph_section = new EasyRdf_Graph();
+        // $section_r = $graph_section->resource($sectionUrl);
+        // $section_r->add('rdfs:label', $sectionArr['name'], "bo-x-ewts");
+        // $section_r->add('bdo:seqNum', $sectionIdx+1);
+        // foreach($sectionArr['volumes'] as $volumeIdx => $volumeName) {
+        //     $curVolNum += 1;
+        //     $volumeUrl = get_url_for_vol($editionId, $curVolNum, $config, $bdrc);
+        //     $section_r->add('bdo:VolumeSectionHasVolume', $volumeUrl);
+        //     $namesUrlMap[$volumeName] = $volumeUrl;
+        //     $editionVolumeMap['volnumInfo'][$curVolNum] = ['url' => $volumeUrl, 'sectionName' => $sectionName];
+        //     $graph_volume = new EasyRdf_Graph();
+        //     $volume_r = $graph_volume->resource($volumeUrl);
+        //     $volume_r->add('bdo:seqNum', $volumeIdx+1);
+        //     $volume_r->add('bdo:VolumeSeqNumInWork', $curVolNum);
+        //     $volume_r->add('rdfs:label', $volumeName, "bo-x-ewts");
+        //     rdf_to_ttl($config, $graph_volume, $volume_r->localName(), $bdrc);
+        //     if (!$bdrc)
+        //         add_graph_to_global($graph_volume, $volume_r->localName(), $global_graph_fd);
+        // }
+        // rdf_to_ttl($config, $graph_section, $section_r->localName(), $bdrc);
+        // if (!$bdrc)
+        //     add_graph_to_global($graph_section, $section_r->localName(), $global_graph_fd);
     }
     //print_r($editionVolumeMap);
 }

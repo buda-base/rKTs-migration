@@ -22,7 +22,7 @@ function add_props($resource, $props, $propidx, $ontoproperty) {
 $gl_KanToTenExpressions = [];
 
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId;
     if (isset($item->now) || isset($item->old) || $item->count() < 2)
         return;
     if ($tengyur) {
@@ -55,6 +55,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         add_props($expression_r, $props, 'pa', 'bdo:creatorPandita');
         add_props($expression_r, $props, 'tr', 'bdo:creatorTranslator');
         add_props($expression_r, $props, 're', 'bdo:creatorReviserOfTranslation');
+    }
+    if (isset($gl_abstractUrl_catId[$url_expression])) {
+        foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
+            $expression_r->addResource('bdo:workHasExpression', $text_url);
+        }
     }
     $firstSanskritTitle = get_first_sanskrit_title($item);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates

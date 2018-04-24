@@ -4,13 +4,24 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-function catalogue_index_xml_to_rdf($index) {
-    return substr($index, 1);
+function catalogue_index_xml_to_rdf($index, $edition_info) {
+    $index = substr($index, strlen($edition_info['confinfo']['EID']));
+    $index = str_replace(["(", "."], "-", $index);
+    $index = str_replace(")", "", $index);
+    return $index;
 }
 
 function id_to_str($id) {
-    $id_int = intval($id);
-    return sprintf("%04d", $id_int);
+    $id_int = 0;
+    if (ctype_digit($id)) {
+        $id_int = intval($id);
+        return sprintf("%04d", $id_int);
+    } else {
+        $intlen = strspn($id , "0123456789");
+        $id_int = intval(substr($id, 0, $intlen));
+        $id_int_str = sprintf("%04d", $id_int);
+        return $id_int_str.substr($id, $intlen);
+    }
 }
 
 function chapnum_to_str($id) {
@@ -20,12 +31,16 @@ function chapnum_to_str($id) {
 
 // 7a -> 7A
 function rdf_ci_to_url($id) {
-    if (substr($id, -1) == 'a') {
-        $id_int = intval(substr($id, 0, -1));
-        return sprintf("%04d", $id_int).'A';
-    } 
-    $id_int = intval($id);
-    return sprintf("%04d", $id_int);
+    $id_int = 0;
+    if (ctype_digit($id)) {
+        $id_int = intval($id);
+        return sprintf("%04d", $id_int);
+    } else {
+        $intlen = strspn($id , "0123456789");
+        $id_int = intval(substr($id, 0, $intlen));
+        $id_int_str = sprintf("%04d", $id_int);
+        return $id_int_str.strtoupper(substr($id, $intlen));
+    }
 }
 
 function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
@@ -63,7 +78,8 @@ function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
     // ci is catalogue index, should be unique in the edition
     if ($bdrc) {
         $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
-        return str_replace('%PNUM', id_to_str($partnum), $estr);
+        return str_replace('%GID', rdf_ci_to_url($ci), $estr);
+        //return str_replace('%PNUM', id_to_str($partnum), $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsTextUrlFormat']);
         return str_replace('%GID', rdf_ci_to_url($ci), $estr);
@@ -72,10 +88,10 @@ function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
 
 function id_to_url_edition_section_part($eid, $config, $partnum, $sectionNum, $bdrc=False) {
     if ($bdrc) {
-        $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
-        return str_replace('%PNUM', id_to_str($partnum), $estr);
+        $estr = str_replace('%EID', $eid, $config['bdrcSectionUrlFormat']);
+        return str_replace('%SNUM', id_to_str($partnum), $estr);
     } else {
-        $estr = str_replace('%EID', $eid, $config['rKTsSectionPartUrlFormat']);
+        $estr = str_replace('%EID', $eid, $config['bdrcSectionUrlFormat']);
         return str_replace('%SNUM', chapnum_to_str($sectionNum), $estr);
     }
 }
@@ -129,6 +145,50 @@ function url_for_vol_num($volumenum, $volumeMapWithUrls) {
         print("cannot find url for volume ".$volumenum);
     }
     return $res;
+}
+
+function folio_side_to_pagenum($folionum, $side, $volnum, $edition_info) {
+    if ($side == null || empty($side))
+        return $folionum;
+    $toadd = 0;
+    if ($side == 'b')
+        $toadd=1;
+    $volnum = intval($volnum);
+    $folionum = intval($folionum);
+    $onea = $edition_info['confinfo']['volumeBdrcPageFirstFolioDefault'];
+    if (in_array('volumeBdrcPageFirstFolio', $edition_info['confinfo'])) {
+        $map = $edition_info['confinfo']['volumeBdrcPageFirstFolio'];
+        if (in_array($volnum, $map)) {
+            $onea = intval($map[$volnum]);
+        }
+    }
+    $imagenum = 2*($folionum-1)+$onea+$toadd;
+    return $imagenum;
+}
+
+function add_location_simple($resource, $location, $edition_info) {
+    $locationNode = $resource->getGraph()->newBNode();
+    $resource->addResource('bdo:workLocation', $locationNode);
+    if (isset($location['bvolnum'])) {
+        $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
+        $evolnum = $location['bvolnum'];
+        if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
+            $evolnum = $location['evolnum'];
+            $locationNode->add('bdo:workLocationVolumeEnd', intval($location['evolnum']));
+        }
+        if (isset($location['blinenum'])) {
+            $locationNode->add('bdo:workLocationLine', $location['blinenum']);
+        }
+        if (isset($location['elinenum'])) {
+            $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
+        }
+        $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
+        $locationNode->add('bdo:workLocationPage', $bpagenum);
+        if (isset($location['epagenum'])) {
+            $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
+            $locationNode->add('bdo:workLocationEndPage', $epagenum);
+        }
+    }
 }
 
 function add_location($resource, $location, $volumeMapWithUrls) {
