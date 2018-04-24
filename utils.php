@@ -437,10 +437,10 @@ function normalize_lit($title, $langtag, $bdrc=False) {
 }
 
 function add_log_entry($resource) {
-    // $logNode = $resource->getGraph()->newBNode();
-    // $resource->addResource('adm:logEntry', $logNode);
-    // $logNode->addLiteral('adm:logDate', new DateTime());
-    // $logNode->addLiteral('adm:logMessage', 'migrated from xml', 'en');
+    $logNode = $resource->getGraph()->newBNode();
+    $resource->addResource('adm:logEntry', $logNode);
+    $logNode->addLiteral('adm:logDate', new DateTime());
+    $logNode->addLiteral('adm:logMessage', 'migrated from rKTs data', 'en');
 }
 
 require_once "Nquads.php";

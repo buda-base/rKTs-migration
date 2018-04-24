@@ -82,6 +82,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             add_title($abstract_r, 'WorkBibliographicTitle', $lit);
             $abstract_r->addResource('bdo:workHasExpression', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
+            add_log_entry($abstract_r);
             rdf_to_ttl($config, $graph_abstract, $abstract_r->localName(), $bdrc);
             if (!$bdrc)
                 add_graph_to_global($graph_abstract, $abstract_r->localName(), $global_graph_fd);

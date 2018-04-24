@@ -138,7 +138,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 add_graph_to_global($graph_chap, $chap_r->localName(), $global_graph_fd);
         }
     }
-    //add_log_entry($part_r);
+    add_log_entry($part_r);
     rdf_to_ttl($config, $graph_part, $part_r->localName(), $bdrc);
     if (!$bdrc)
         add_graph_to_global($graph_part, $part_r->localName(), $global_graph_fd);
