@@ -199,7 +199,7 @@ function report_error($file, $type, $id, $message) {
 $allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu", "hi", "dzu", "wu", "zhu", "'u", "ru", "lu", "shu", "su", "hu", "u", "ke", "ge", "nge", "ce", "che", "je", "te", "de", "pe", "phe", "tshe", "dze", "we", "zhe", "ze", "ye", "re", "le", "she", "se", "he", "ko", "ngo", "co", "jo", "nyo", "to", "tho", "no", "po", "zu", "yu", "A", "khe", "nye", "the", "ne", "tse", "'e", "kho", "go", "cho", "do", "pho", "bo", "mo" ];
 
 $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
-$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?(?: \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?\))?/';
+$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?(?: \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?)?/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
 $pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)-(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';

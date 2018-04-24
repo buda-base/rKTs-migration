@@ -157,6 +157,13 @@ shey:
   printType: 'bdr:ObjectTypeManuscript'
   propSigla: "workKaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
+cone:
+  RID: ["W1PD96685"]
+  EID: "C"
+  langScript: 'bdr:boDbuCan'
+  printType: 'bdr:ObjectTypeBlockPrint'
+  propSigla: "workKaTenSiglaC"
+  volumeBdrcPageFirstFolioDefault: 5
 lithang:
   RID: ["W4CZ7445"]
   EID: "J"
