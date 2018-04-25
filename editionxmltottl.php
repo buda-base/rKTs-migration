@@ -49,7 +49,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         add_title($part_r, 'WorkBibliographicTitle', $lit);
     }
     $skttrans = $item->skttrans;
-    if (!empty($skttrans->__toString())) {
+    if (!empty($skttrans->__toString()) && $skttrans->__toString() != "-") {
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
         add_title($part_r, 'WorkSanskritTitle', $lit);
@@ -136,6 +136,17 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             rdf_to_ttl($config, $graph_chap, $chap_r->localName(), $bdrc);
             if (!$bdrc)
                 add_graph_to_global($graph_chap, $chap_r->localName(), $global_graph_fd);
+        }
+    } else { # couldn't read loc
+        $section_part_count = $section_r->countValues('bdo:workHasPart');
+        $section_r->addResource('bdo:workHasPart', $part_r->getUri());
+        $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
+        $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
+        $part_r->addResource('bdo:workPartOf', $section_r);
+        if ($item->loc != "") {
+            $noteNode = $part_r->getGraph()->newBNode();
+            $part_r->addResource('bdo:note', $noteNode);
+            $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
         }
     }
     add_log_entry($part_r);
