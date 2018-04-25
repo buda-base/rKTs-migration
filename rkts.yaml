@@ -239,7 +239,7 @@ cone:
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
     ]
 lithang:
-  RID: ["W4CZ7445"]
+  RID: ["W4CZ7445", "W4PD3142"]
   EID: "J"
   langScript: 'bdr:boDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
