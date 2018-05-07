@@ -75,7 +75,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
             $abstract_r->addResource('rdf:type', 'bdo:Work');
-            $lit = normalize_lit($firstSanskritTitle, 'sa-x-iats', $bdrc);
+            $lit = normalize_lit($firstSanskritTitle, 'sa-x-iast', $bdrc);
             $abstract_r->add('skos:prefLabel', $lit);
             $abstract_r->addResource('bdo:workType', 'bdr:WorkTypeAbstractWork');
             $abstract_r->addResource('bdo:language', 'bdr:LangSa');
