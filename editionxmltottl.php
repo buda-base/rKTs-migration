@@ -251,16 +251,17 @@ function get_base_edition_info($config, $xml, $fileName) {
     return $edition_info;
 }
 
-function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False) {
+function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False, $tengyur=False) {
     $graph_edition = new EasyRdf_Graph();
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     $url_edition = id_to_url_edition($eid, $config, $bdrc);
     $edition_r = $graph_edition->resource($url_edition);
     $edition_r->addResource('rdf:type', 'bdo:Work');
     $edition_name = $xml->name->__toString();
-    $edition_r->add('skos:prefLabel', $edition_name, 'en');
-    $edition_r->add('bdo:langScript', $edition_info['confinfo']['langScript']);
-    $edition_r->add('bdo:workPrintType', $edition_info['confinfo']['printType']);
+    $edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
+    $edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
+    $edition_r->addResource('bdo:langScript', $edition_info['confinfo']['langScript']);
+    $edition_r->addResource('bdo:workPrintType', $edition_info['confinfo']['printType']);
     if ($bdrc) {
         $edition_r->addResource('rdfs:seeAlso', id_to_url_edition($edition_info['confinfo']['EID'], $config, !$bdrc));
     } else {
@@ -288,7 +289,7 @@ function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False
 function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False, $tengyur=False) {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
-    write_edition_ttl($config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc);
+    write_edition_ttl($config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
     $lastpartnum = $bdrc ? count($edition_info['confinfo']['volumeMap']) : 0;
     $section_r = null;
     foreach($xml->item as $item) {
