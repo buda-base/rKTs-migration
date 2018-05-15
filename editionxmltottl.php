@@ -89,7 +89,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_partTreeIndex = $section_partTreeIndex.'.'.sprintf("%02d", $section_part_count+1);
         $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
-        add_location_simple($part_r, $location, $edition_info);
+        add_location_simple($part_r, $location, $edition_info, $eid);
         //add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
         // foreach ($item->bampo as $bampo) {
         //     $location = get_bampo_loc($bampo->p->__toString(), $fileName, 'rkts_'.$rktsid);

@@ -166,11 +166,12 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $edition_info) {
     return $imagenum;
 }
 
-function add_location_simple($resource, $location, $edition_info) {
+function add_location_simple($resource, $location, $edition_info, $eid) {
     $locationNode = $resource->getGraph()->newBNode();
     $resource->addResource('bdo:workLocation', $locationNode);
     if (isset($location['bvolnum'])) {
         $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
+        $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
         $evolnum = $location['bvolnum'];
         if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
             $evolnum = $location['evolnum'];
