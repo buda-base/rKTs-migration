@@ -246,11 +246,15 @@ function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
     }
 }
 
-function add_title($resource, $type, $lit) {
-    $titleNode = $resource->getGraph()->newBNode();
-    $resource->addResource('bdo:workTitle', $titleNode);
+function add_title($resource, $type, $lit, $sameTypeNode=null) {
+    $titleNode = $sameTypeNode;
+    if ($titleNode == null) {
+        $titleNode = $resource->getGraph()->newBNode();
+        $resource->addResource('bdo:workTitle', $titleNode);
+    }
     $titleNode->add('rdfs:label', $lit);
     $titleNode->addResource('rdf:type', 'bdo:'.$type);
+    return $titleNode;
 }
 
 function report_error($file, $type, $id, $message) {

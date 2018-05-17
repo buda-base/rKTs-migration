@@ -43,16 +43,17 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_r->add('bdo:workColophon', $lit);
     }
     $tib = $item->tib;
+    $bibliographicalTitleNode = null;
     if (!empty($tib->__toString())) {
         $lit = normalize_lit($tib, 'bo-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
-        add_title($part_r, 'WorkBibliographicTitle', $lit);
+        $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
     }
     $skttrans = $item->skttrans;
     if (!empty($skttrans->__toString()) && $skttrans->__toString() != "-") {
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
-        add_title($part_r, 'WorkSanskritTitle', $lit);
+        add_title($part_r, 'WorkBibliographicalTitle', $lit, $bibliographicalTitleNode);
     }
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
     if (!empty($location)) { // useful for xml debugging only
