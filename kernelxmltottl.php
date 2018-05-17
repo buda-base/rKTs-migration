@@ -113,7 +113,6 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         }
         $seenTitles[$title] = true;
         $seenLangs[$langtag] = true;
-
     }
     if ($storeAsDuplicate) {
         $gl_KanToTenExpressions[$idtostore] = [

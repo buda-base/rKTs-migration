@@ -14,7 +14,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     $partnum = $lastpartnum+1;
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info);
-    $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc);
+    $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $tengyur);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
     $url_part = id_to_url_edition_text($eid, $catalogue_index, $config, $partnum, $bdrc);
     if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
@@ -277,13 +277,13 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
         add_graph_to_global($graph_edition, $edition_r->localName(), $global_graph_fd);
 }
 
-function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False) {
+function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False, $tengyur=False) {
     if ($bdrc) {
         foreach ($config[$fileName]['RID'] as $rid) {
-            edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $rid, $bdrc);
+            edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $rid, $bdrc, $tengyur);
         }
     } else {
-        edition_to_ttl($config, $xml, $global_graph_fd, $fileName);
+        edition_to_ttl($config, $xml, $global_graph_fd, $fileName, null, $bdrc, $tengyur);
     }
 }
 
