@@ -4,8 +4,11 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-function catalogue_index_xml_to_rdf($index, $edition_info) {
-    $index = substr($index, strlen($edition_info['confinfo']['EID']));
+function catalogue_index_xml_to_rdf($index, $edition_info, $tengyur) {
+    $edlen = strlen($edition_info['confinfo']['EID']);
+    if ($tengyur)
+        $edlen -= 1; // Tengyur editions end with an additional T
+    $index = substr($index, $edlen);
     $index = str_replace(["(", ".", ","], "-", $index);
     $index = str_replace(")", "", $index);
     return $index;
