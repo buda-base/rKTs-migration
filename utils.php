@@ -178,7 +178,7 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
         $evolnum = $location['bvolnum'];
         if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
             $evolnum = $location['evolnum'];
-            $locationNode->add('bdo:workLocationVolumeEnd', intval($location['evolnum']));
+            $locationNode->add('bdo:workLocationEndVolume', intval($location['evolnum']));
         }
         if (isset($location['blinenum'])) {
             $locationNode->add('bdo:workLocationLine', $location['blinenum']);
