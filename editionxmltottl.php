@@ -42,15 +42,15 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $lit = normalize_lit($colophon, 'bo-x-ewts', $bdrc);
         $part_r->add('bdo:workColophon', $lit);
     }
-    $tib = $item->tib;
+    $tib = trim($item->tib->__toString());
     $bibliographicalTitleNode = null;
-    if (!empty($tib->__toString())) {
+    if (!empty($tib)) {
         $lit = normalize_lit($tib, 'bo-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
         $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
     }
-    $skttrans = $item->skttrans;
-    if (!empty($skttrans->__toString()) && $skttrans->__toString() != "-") {
+    $skttrans = trim($item->skttrans->__toString());
+    if (!empty($skttrans) && $skttrans != "-") {
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
         add_title($part_r, 'WorkBibliographicalTitle', $lit, $bibliographicalTitleNode);

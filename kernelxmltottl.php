@@ -5,7 +5,7 @@ require_once "utils.php";
 function get_first_sanskrit_title($item) {
     foreach ($item->children() as $tag => $child) {
         if (($tag == "sanskrit" || $tag == "skt") && !empty($child->__toString())) {
-            return $child->__toString();
+            return trim($child->__toString());
         }
     }
     return null;
@@ -99,7 +99,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
             continue;
-        $title = $child->__toString();
+        $title = trim($child->__toString());
         if (!$restoredFromDuplicate && isset($seenTitles[$title])) {
             report_error('kernel', 'duplicate', 'rkts_'.$id, 'title "'.$title.'" appears more than once');
             continue;
