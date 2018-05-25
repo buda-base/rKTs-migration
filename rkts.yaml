@@ -121,7 +121,6 @@ derge:
      {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
      {name: "gzungs", volumes: ["e", "waM"]},
      {name: "dus 'khor", volumes: ["shrI"]},
-     {name: "dkar chag", volumes: ["dkar chag"]}
      ]
   volumeBdrcPageFirstFolioDefault: 3
 narthang:
@@ -308,7 +307,6 @@ stog:
      {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "ki", "khi", "gi", "ngi", "ci", "chi", "ji"]},
      {name: "myang 'das", volumes: ["ka", "kha", "ga"]},
      {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa"]},
-     {name: "dkar chag", volumes: ["dkar chag"]}
      ]
   volumeBdrcPageFirstFolioDefault: 9
   volumeBdrcPageFirstFolio:
