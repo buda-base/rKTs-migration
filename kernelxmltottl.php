@@ -14,6 +14,11 @@ function get_first_sanskrit_title($item) {
 function add_props($resource, $props, $propidx, $ontoproperty) {
     if (isset($props[$propidx])) {
         foreach($props[$propidx] as $object) {
+            $object = trim($object);
+            if ($resource->localName() == $object) {
+                report_error('kernel', 'pointer_to_self', $object, 'property '.$propidx);
+                return;
+            }
             $resource->addResource($ontoproperty, 'bdr:'.$object);
         }
     }
