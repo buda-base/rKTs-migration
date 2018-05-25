@@ -170,28 +170,28 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $edition_info) {
 }
 
 function add_location_simple($resource, $location, $edition_info, $eid) {
+    if (!isset($location['bvolnum']))
+        return;
     $locationNode = $resource->getGraph()->newBNode();
     $resource->addResource('bdo:workLocation', $locationNode);
-    if (isset($location['bvolnum'])) {
-        $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
-        $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
-        $evolnum = $location['bvolnum'];
-        if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
-            $evolnum = $location['evolnum'];
-            $locationNode->add('bdo:workLocationEndVolume', intval($location['evolnum']));
-        }
-        if (isset($location['blinenum'])) {
-            $locationNode->add('bdo:workLocationLine', $location['blinenum']);
-        }
-        if (isset($location['elinenum'])) {
-            $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
-        }
-        $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
-        $locationNode->add('bdo:workLocationPage', $bpagenum);
-        if (isset($location['epagenum'])) {
-            $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
-            $locationNode->add('bdo:workLocationEndPage', $epagenum);
-        }
+    $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
+    $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
+    $evolnum = $location['bvolnum'];
+    if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
+        $evolnum = $location['evolnum'];
+        $locationNode->add('bdo:workLocationEndVolume', intval($location['evolnum']));
+    }
+    if (isset($location['blinenum'])) {
+        $locationNode->add('bdo:workLocationLine', $location['blinenum']);
+    }
+    if (isset($location['elinenum'])) {
+        $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
+    }
+    $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
+    $locationNode->add('bdo:workLocationPage', $bpagenum);
+    if (isset($location['epagenum'])) {
+        $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
+        $locationNode->add('bdo:workLocationEndPage', $epagenum);
     }
 }
 
