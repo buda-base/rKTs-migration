@@ -17,9 +17,9 @@ function add_props($resource, $props, $propidx, $ontoproperty) {
             $object = trim($object);
             if ($resource->localName() == $object) {
                 report_error('kernel', 'pointer_to_self', $object, 'property '.$propidx);
-                return;
+            } else {
+                $resource->addResource($ontoproperty, 'bdr:'.$object);
             }
-            $resource->addResource($ontoproperty, 'bdr:'.$object);
         }
     }
 }
