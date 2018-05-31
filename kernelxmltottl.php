@@ -83,7 +83,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $lit = normalize_lit($firstSanskritTitle, 'sa-x-iast', $bdrc);
             $abstract_r->add('skos:prefLabel', $lit);
             $abstract_r->addResource('bdo:workType', 'bdr:WorkTypeAbstractWork');
-            $abstract_r->addResource('bdo:language', 'bdr:LangSa');
+            $abstract_r->addResource('bdo:workLangScript', 'bdr:Sa');
             add_title($abstract_r, 'WorkBibliographicalTitle', $lit);
             $abstract_r->addResource('bdo:workHasExpression', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
