@@ -67,7 +67,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         }
         $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
         $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
-        $section_partTreeIndex = strval($sectionIndex);
+        $section_partTreeIndex = sprintf("%02d", $sectionIndex);
         if (!$section_r || $section_r->getUri() != $url_semantic_section) {
             if ($section_r) {
                 rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
