@@ -100,6 +100,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "T3361": "T3362" # D4022 = D4023
     "K42": "K331" # From 84000
     "K654": "K655" # From Tarthang Tulku's catalog
+    #"K483": "K485" # probable, should be studied...
 derge:
   RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
