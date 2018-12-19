@@ -1,4 +1,4 @@
-# rKTs XML to RDF migration script
+# rKTs XML to RDF migration script 
 
 This script is only for internal purposes and requires non-public data to be run.
 
