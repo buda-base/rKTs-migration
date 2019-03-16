@@ -413,7 +413,7 @@ function add_shad($tibstr) {
         $last = mb_substr($tibstr, -2, 1);
     if ($tibstrlen > 2 && $last == 'g' && mb_substr($tibstr, -3, 1) == 'n')
         return $tibstr." /";
-    if ($last == 'g' || $last == 'k' || ($tibstrlen > 2 && $last == 'h' && mb_substr($tibstr, -3, 1) == 's'))
+    if ($last == 'g' || $last == 'k' || ($tibstrlen == 3 && $last == 'h' && mb_substr($tibstr, -3, 1) == 's') || ($tibstrlen > 3 && $last == 'h' && mb_substr($tibstr, -3, 1) == 's' && mb_substr($tibstr, -4, 1) != 't'))
         return $tibstr;
     if ($last < 'A' || $last > 'z' || ($last > 'Z' && $last < 'a'))  // string doesn't end with tibetan letter
         return $tibstr;
@@ -427,6 +427,7 @@ function add_shad($tibstr) {
 // print(add_shad("a nga")."\n");
 // print(add_shad("a ngu")."\n");
 // print(add_shad("a ngi")."\n");
+// print(add_shad("a tsho")."\n");
 
 function normalize_lit($title, $langtag, $bdrc=False) {
     // bdrc uses sa-x-iast for Sanskrit, and cmg-Mong for Mongolian (transliterations are sloppy it seems)
