@@ -104,7 +104,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
 derge:
   RID: ["W22084", "W4CZ5369", "W30532"]
   EID: "D"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
   propSigla: "workKaTenSiglaD"
@@ -128,7 +128,7 @@ derge:
 narthang:
   RID: ["W22703"]
   EID: "N"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaN"
   volumeBdrcPageFirstFolioDefault: 3
@@ -148,7 +148,7 @@ narthang:
 peking:
   RID: ["W1PD96684"]
   EID: "Q"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaQ"
   volumeBdrcPageFirstFolioDefault: 3
@@ -163,7 +163,7 @@ peking:
 lhasa:
   RID: ["W26071"]
   EID: "H"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaH"
   volumeBdrcPageFirstFolioDefault: 5
@@ -182,7 +182,7 @@ lhasa:
 urga:
   RID: ["W29468"]
   EID: "U"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaU"
   volumeBdrcPageFirstFolioDefault: 3
@@ -203,7 +203,7 @@ urga:
 shey:
   RID: ["W1PD127393"]
   EID: "Z"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeManuscript'
   propSigla: "workKaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
@@ -223,7 +223,7 @@ shey:
 cone:
   RID: ["W1PD96685"]
   EID: "C"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaC"
   volumeBdrcPageFirstFolioDefault: 5
@@ -242,7 +242,7 @@ cone:
 lithang:
   RID: ["W4CZ7445", "W4PD3142"]
   EID: "J"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaJ"
   volumeBdrcPageFirstFolioDefault: 3
@@ -267,7 +267,7 @@ lithang:
 ulaanbaatar:
   RID: ["W1KG14700"]
   EID: "V"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeManuscript'
   propSigla: "workKaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
@@ -286,14 +286,14 @@ ulaanbaatar:
 # dolpo:
 #   RID: ["W1KG14700"]
 #   EID: "Do"
-#   langScript: 'bdr:boDbuCan'
+#   langScript: 'bdr:BoDbuCan'
 #   printType: 'bdr:ObjectTypeManuscript'
 #   propSigla: "workKaTenSiglaDo"
 #   volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["W22083"]
   EID: "S"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaS"
   volumeMap: [
@@ -369,7 +369,7 @@ stog:
 chemdo:
   RID: ["W1PD96682"]
   EID: "A"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeTypeSet'
   propSigla: "workKaTenSiglaA"
   volumeMap: [
@@ -471,7 +471,7 @@ chemdo:
 tanjurd:
   RID: ["W23703"]
   EID: "DT"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaD"
   volumeMap: [
@@ -495,21 +495,21 @@ tanjurd:
 tanjurg:
   RID: ["W23702"]
   EID: "GT"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaG"
   volumeMap: []
 tanjurn:
   RID: ["W22704"]
   EID: "NT"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaN"
   volumeMap: []
 tanjurq:
   RID: ["W1KG13126"]
   EID: "QT"
-  langScript: 'bdr:boDbuCan'
+  langScript: 'bdr:BoDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   propSigla: "workKaTenSiglaQ"
   volumeMap: []
