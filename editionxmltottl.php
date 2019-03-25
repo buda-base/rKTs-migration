@@ -2,7 +2,7 @@
 
 require_once "utils.php";
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, &$section_r, $eid=null, $bdrc=False, $tengyur=False) {
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False) {
     global $gl_abstractUrl_catId;
     if ($tengyur) {
         $rktsid = $item->rktst;
@@ -70,6 +70,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $section_partTreeIndex = sprintf("%02d", $sectionIndex);
         if (!$section_r || $section_r->getUri() != $url_semantic_section) {
             if ($section_r) {
+                if ($lastloc != null && !empty($lastloc))
+                    add_location_section_end($section_r, $lastloc, $edition_info, $eid);
                 rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
                 if (!$bdrc)
                     add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
@@ -82,6 +84,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
             $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
             $section_r->addLiteral('bdo:workPartTreeIndex', $section_partTreeIndex);
+            add_location_section_begin($section_r, $location, $edition_info, $eid);
         }
         $section_part_count = $section_r->countValues('bdo:workHasPart');
         $section_r->addResource('bdo:workHasPart', $part_r->getUri());
@@ -154,7 +157,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     rdf_to_ttl($config, $graph_part, $part_r->localName(), $bdrc);
     if (!$bdrc)
         add_graph_to_global($graph_part, $part_r->localName(), $global_graph_fd);
-    return $partnum ;
+    return array($partnum, $location) ;
 }
 
 function get_url_section_part($sectionName, $editionVolumeMap, $eid, $config, $bdrc=False) {
@@ -292,9 +295,10 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     write_edition_ttl($config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
     $lastpartnum = $bdrc ? count($edition_info['confinfo']['volumeMap']) : 0;
+    $lastloc = null;
     $section_r = null;
     foreach($xml->item as $item) {
-        $lastpartnum = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $section_r, $eid, $bdrc, $tengyur);
+        list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur);
         //return;
     }
     rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
