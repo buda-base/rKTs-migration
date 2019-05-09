@@ -8,3 +8,5 @@ composer.phar
 input/
 output/
 .DS_Store
+/.buildpath
+/.project
