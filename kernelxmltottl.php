@@ -2,10 +2,14 @@
 
 require_once "utils.php";
 
-function get_first_sanskrit_title($item) {
+function get_first_title_lit($item, $bdrc) {
     foreach ($item->children() as $tag => $child) {
-        if (($tag == "sanskrit" || $tag == "skt") && !empty($child->__toString())) {
-            return trim($child->__toString());
+        $content = trim($child->__toString());
+        if (($tag == "sanskrit" || $tag == "skt") && !empty($content)) {
+            return normalize_lit($content, 'sa-x-iast', $bdrc);
+        }
+        if (($tag == "tibetan" || $tag == "tib") && !empty($content)) {
+            return normalize_lit($content, 'bo-x-ewts', $bdrc);
         }
     }
     return null;
@@ -84,7 +88,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $expression_r->addResource('bdo:workHasExpression', $text_url);
         }
     }
-    $firstSanskritTitle = get_first_sanskrit_title($item);
+    $firstTitleLit = get_first_title_lit($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
         $expression_r->addResource('bdo:workExpressionOf', $url_abstract);
@@ -98,10 +102,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
             $abstract_r->addResource('rdf:type', 'bdo:AbstractWork');
-            $lit = normalize_lit($firstSanskritTitle, 'sa-x-iast', $bdrc);
-            $abstract_r->add('skos:prefLabel', $lit);
             $abstract_r->addResource('bdo:workLangScript', 'bdr:Sa');
-            add_title($abstract_r, 'WorkBibliographicalTitle', $lit);
+            if ($firstTitleLit) {
+                $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
+            }
             $abstract_r->addResource('bdo:workHasExpression', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
             add_log_entry($abstract_r);
