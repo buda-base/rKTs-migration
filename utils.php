@@ -4,6 +4,13 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+function bnode_url($facetprefix, $res, $rootres, $objectstr) {
+    $data = $res->localName().$objectstr;
+    $hash = hash('sha256', $data);
+    $hashpart = substr($hash, 0, 12);
+    return $res->getUri().'_'.$facetprefix.$hashpart;
+}
+
 function catalogue_index_xml_to_rdf($index, $edition_info, $tengyur) {
     $edlen = strlen($edition_info['confinfo']['EID']);
     if ($tengyur)
@@ -290,11 +297,12 @@ function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
 }
 
 function add_title($resource, $type, $lit, $sameTypeNode=null) {
-    $titleNode = $sameTypeNode;
-    if ($titleNode == null) {
-        $titleNode = $resource->getGraph()->newBNode();
-        $resource->addResource('bdo:workTitle', $titleNode);
-    }
+    // $titleNode = $sameTypeNode;
+    // if ($titleNode == null) {
+    $nodeUri = bnode_url("TT", $resource, $resource, $type.$lit->getValue());
+    $titleNode = $resource->getGraph()->resource($nodeUri);
+    $resource->addResource('bdo:workTitle', $titleNode);
+    //}
     $titleNode->add('rdfs:label', $lit);
     $titleNode->addResource('rdf:type', 'bdo:'.$type);
     return $titleNode;
@@ -486,6 +494,8 @@ function normalize_lit($title, $langtag, $bdrc=False) {
 }
 
 function add_log_entry($resource) {
+    // no log entries, we add them in the migration
+    return;
     $logNode = $resource->getGraph()->newBNode();
     $resource->addResource('adm:logEntry', $logNode);
     $logNode->addLiteral('adm:logDate', new DateTime());
