@@ -2,7 +2,7 @@
 
 require_once "utils.php";
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False) {
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False, $parentId=null, $thisPartTreeIndex=null) {
     global $gl_abstractUrl_catId;
     if ($tengyur) {
         $rktsid = $item->rktst;
@@ -66,9 +66,12 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $current_section = $location['section'];
         }
         $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
+        if ($parentId != null) {
+            $url_semantic_section = $parentId;
+        }
         $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
         $section_partTreeIndex = sprintf("%02d", $sectionIndex);
-        if (!$section_r || $section_r->getUri() != $url_semantic_section) {
+        if ($parentId == null && (!$section_r || $section_r->getUri() != $url_semantic_section)) {
             if ($section_r) {
                 if ($lastloc != null && !empty($lastloc))
                     add_location_section_end($section_r, $lastloc, $edition_info, $eid);
@@ -91,6 +94,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
         $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
         $part_partTreeIndex = $section_partTreeIndex.'.'.sprintf("%02d", $section_part_count+1);
+        if ($thisPartTreeIndex != null) {
+            $part_partTreeIndex = $thisPartTreeIndex;
+        }
         $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
         add_location_simple($part_r, $location, $edition_info, $eid);
@@ -140,6 +146,14 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             rdf_to_ttl($config, $graph_chap, $chap_r->localName(), $bdrc);
             if (!$bdrc)
                 add_graph_to_global($graph_chap, $chap_r->localName(), $global_graph_fd);
+        }
+        $subitempartnum = 0;
+        foreach ($item->subitem as $subitem) { // iterating on chapters
+            $subitemlastloc = null;
+            $subitempartnum += 1;
+            $partTreeIndex = $part_partTreeIndex.'.'.sprintf("%02d", $subitempartnum);
+            list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $tengyur, $url_part, $partTreeIndex);
+            
         }
     } else { # couldn't read loc
         $section_part_count = $section_r->countValues('bdo:workHasPart');
