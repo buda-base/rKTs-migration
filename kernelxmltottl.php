@@ -48,14 +48,16 @@ function add_props_creator($resource, $props, $propidx, $roleres) {
 
 $gl_KanToTenExpressions = [];
 
+$subitemtoitem = [];
+
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem;
     if (isset($item->now) || isset($item->old) || $item->count() < 2)
         return;
     if ($tengyur) {
-        $id = $item->rktst;
+        $id = $item->rktst->__toString();
     } else {
-        $id = $item->rkts;
+        $id = $item->rkts->__toString();
     }
     $storeAsDuplicate = false;
     $restoredFromDuplicate = false;
@@ -127,6 +129,16 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $name = $child->getName();
         if ($name == "rkts" || $name == "rktst") continue;
         if (empty($child->__toString())) continue;
+        if ($name == "subitem") {
+            $subitem = $child->__toString();
+            $subitemtoitem[$subitem] = $id;
+            $expression_r->addResource('bdo:workHasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
+            continue;
+        }
+        if (array_key_exists($id, $subitemtoitem)) {
+            $parentid = $subitemtoitem[$id];
+            $expression_r->addResource('bdo:workPartOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
+        }
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
             continue;
