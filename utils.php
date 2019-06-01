@@ -179,7 +179,8 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $edition_info) {
 function add_location_simple($resource, $location, $edition_info, $eid) {
     if (!isset($location['bvolnum']))
         return;
-    $locationNode = $resource->getGraph()->newBNode();
+    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
     $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
     $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
@@ -209,7 +210,8 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
         report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate begin location');
         return;
     }
-    $locationNode = $resource->getGraph()->newBNode();
+    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
     $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
     $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
@@ -243,7 +245,8 @@ function add_location_section_end($resource, $location, $edition_info, $eid) {
 }
 
 function add_location($resource, $location, $volumeMapWithUrls) {
-    $locationNode = $resource->getGraph()->newBNode();
+    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
     if (isset($location['bvolnum'])) {
         // chemdo style
@@ -281,7 +284,8 @@ function add_location($resource, $location, $volumeMapWithUrls) {
 }
 
 function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
-    $locationNode = $resource->getGraph()->newBNode();
+    $locationUri = bnode_url("WL", $resource, $resource, $sectionName);
+    $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
     foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $section) {

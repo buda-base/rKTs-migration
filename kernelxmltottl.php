@@ -129,6 +129,13 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $name = $child->getName();
         if ($name == "rkts" || $name == "rktst") continue;
         if (empty($child->__toString())) continue;
+        if ($name == "note") {
+            $noteUri = bnode_url("NT", $expression_r, $expression_r, $child->__toString());
+            $noteNode = $expression_r->getGraph()->resource($noteUri);
+            $expression_r->addResource('bdo:note', $noteNode);
+            $noteNode->add('bdo:noteText', $child->__toString());
+            continue;
+        }
         if ($name == "subitem") {
             $subitem = $child->__toString();
             $subitemtoitem[$subitem] = $id;
