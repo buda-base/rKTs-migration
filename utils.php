@@ -182,6 +182,7 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
     $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
     $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
     $evolnum = $location['bvolnum'];
@@ -213,6 +214,7 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:workLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
     $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
     $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
@@ -247,6 +249,7 @@ function add_location_section_end($resource, $location, $edition_info, $eid) {
 function add_location($resource, $location, $volumeMapWithUrls) {
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
+    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
     $resource->addResource('bdo:workLocation', $locationNode);
     if (isset($location['bvolnum'])) {
         // chemdo style
@@ -286,6 +289,7 @@ function add_location($resource, $location, $volumeMapWithUrls) {
 function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
     $locationUri = bnode_url("WL", $resource, $resource, $sectionName);
     $locationNode = $resource->getGraph()->resource($locationUri);
+    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
     $resource->addResource('bdo:workLocation', $locationNode);
     foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $section) {
