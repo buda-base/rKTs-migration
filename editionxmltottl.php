@@ -324,6 +324,7 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
         list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur);
         //return;
     }
+    add_location_section_end($section_r, $lastloc, $edition_info, $eid);
     rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
     if (!$bdrc)
         add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
