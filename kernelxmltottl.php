@@ -104,6 +104,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
             $abstract_r->addResource('rdf:type', 'bdo:AbstractWork');
+            // TODO: some are from Chinese  
             $abstract_r->addResource('bdo:workLangScript', 'bdr:Sa');
             if ($firstTitleLit) {
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);

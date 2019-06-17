@@ -47,13 +47,30 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     if (!empty($tib)) {
         $lit = normalize_lit($tib, 'bo-x-ewts', $bdrc);
         $part_r->add('skos:prefLabel', $lit);
-        $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
+        //if on derge, tib is the incipit title:
+        if ($edition_info['confinfo']['EID'] == "D") {
+            $bibliographicalTitleNode = add_title($part_r, 'WorkIncipitTitle', $lit);
+        } else {
+            $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
+        }
+    }
+    $coltitle = trim($item->coltitle->__toString());
+    if (!empty($coltitle) && $coltitle != "-") {
+        $lit = normalize_lit($coltitle, 'bo-x-ewts', $bdrc);
+        if (empty($tib)) {
+            $part_r->add('skos:prefLabel', $lit);
+        }
+        add_title($part_r, 'WorkColophonTitle', $lit, $bibliographicalTitleNode);
     }
     $skttrans = trim($item->skttrans->__toString());
     if (!empty($skttrans) && $skttrans != "-") {
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
-        $part_r->add('skos:prefLabel', $lit);
-        add_title($part_r, 'WorkBibliographicalTitle', $lit, $bibliographicalTitleNode);
+        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+    }
+    $zhtrans = trim($item->zhtrans->__toString());
+    if (!empty($zhtrans)) {
+        $lit = normalize_lit($zhtrans, 'zh-x-ewts', $bdrc);
+        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
     }
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
     if (!empty($location)) { // useful for xml debugging only
@@ -153,7 +170,6 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $subitempartnum += 1;
             $partTreeIndex = $part_partTreeIndex.'.'.sprintf("%02d", $subitempartnum);
             list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $tengyur, $url_part, $partTreeIndex);
-            
         }
     } else { # couldn't read loc
         $section_part_count = $section_r->countValues('bdo:workHasPart');
