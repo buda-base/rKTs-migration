@@ -457,6 +457,7 @@ $name_to_bcp = [
     'mng' => 'cmg-x-poppe-simpl',
     'mnguni' => 'cmg-Mong',
     'skttrans' => 'sa-x-ewts',
+    'bsktrans' => 'bsk-x-ewts',
     'zhtrans' => 'zh-x-ewts',
     'chinese' => 'zh-Hant',
 ];
@@ -498,7 +499,7 @@ function normalize_lit($title, $langtag, $bdrc=False) {
     // }
     if ($bdrc && ($langtag == "cmg-x-poppe-simpl" || $langtag == "sa-Deva"))
         return null;
-    if ($bdrc && $langtag == "bo-x-ewts") {
+    if ($bdrc && substr($langtag, -4) == "ewts") {
         $title = add_shad($title);
     }
     return EasyRdf_Literal::create($title, $langtag);
