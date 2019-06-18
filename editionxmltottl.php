@@ -2,8 +2,24 @@
 
 require_once "utils.php";
 
+$tag_to_event_role = [
+    'author' => ['bdr:R0ER0011', 'bdo:AuthoredEvent'],
+    'translator-pandita' => ['bdr:R0ER0018', 'bdo:TranslatedEvent'],
+    'translator' => ['bdr:R0ER0026', 'bdo:TranslatedEvent'],
+    'sponsor' => ['bdr:R0ER0030', 'bdo:TranslatedEvent'],
+    'scribe' => ['bdr:R0ER0024', 'bdo:TranslatedEvent'],
+    'translator2-pandita' => ['bdr:R0ER0018', 'bdo:SecondTranslatedEvent'],
+    'translator2' => ['bdr:R0ER0018', 'bdo:SecondTranslatedEvent'],
+    'revisor-pandita' => ['bdr:R0ER0018', 'bdo:RevisedEvent'],
+    'revisor' => ['bdr:R0ER0023', 'bdo:RevisedEvent'],
+    'revisor2-pandita' => ['bdr:R0ER0018', 'bdo:SecondRevisedEvent'],
+    'revisor2' => ['bdr:R0ER0023', 'bdo:SecondRevisedEvent'],
+    'revisor3-pandita' => ['bdr:R0ER0018', 'bdo:ThirdRevisedEvent'],
+    'revisor3' => ['bdr:R0ER0023', 'bdo:ThirdRevisedEvent']
+];
+
 function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False, $parentId=null, $thisPartTreeIndex=null) {
-    global $gl_abstractUrl_catId;
+    global $gl_abstractUrl_catId , $tag_to_event_role;
     if ($tengyur) {
         $rktsid = $item->rktst;
     } else {
@@ -67,10 +83,39 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
         add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
     }
+    $bsktrans = trim($item->bsktrans->__toString());
+    if (!empty($bsktrans) && $bsktrans != "-") {
+        $lit = normalize_lit($bsktrans, 'bsk-x-ewts', $bdrc);
+        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+    }
     $zhtrans = trim($item->zhtrans->__toString());
     if (!empty($zhtrans)) {
         $lit = normalize_lit($zhtrans, 'zh-x-ewts', $bdrc);
         add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+    }
+    $events = [];
+    foreach ($tag_to_event_role as $tag => $eventrole) {
+        $event = $eventrole[1];
+        $role = $eventrole[0];
+        foreach($item->$tag as $node) {
+            $lit = normalize_lit($node, 'bo-x-ewts', $bdrc);
+            $eventResource = null;
+            if (!array_key_exists($event, $events)) {
+                $nodeUri = bnode_url("EV", $part_r, $part_r, $event.$lit->getValue());
+                $eventResource = $part_r->getGraph()->resource($nodeUri);
+                $eventResource->addResource('rdf:type', $event);
+                $part_r->addResource('bdo:workEvent', $eventResource);
+                $events[$event] = $eventResource;
+            } else {
+                $eventResource = $events[$event];
+            }
+            $airUri = bnode_url("AIR", $part_r, $part_r, $event.$lit->getValue());
+            $airResource = $part_r->getGraph()->resource($airUri);
+            $airResource->addResource('rdf:type', 'bdo:AgentInRole');
+            $airResource->addResource('bdo:role', $role);
+            $airResource->add('rdfs:label', $lit);
+            $eventResource->addResource('rdf:eventWho', $airResource);
+        }
     }
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
     if (!empty($location)) { // useful for xml debugging only
