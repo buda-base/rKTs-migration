@@ -111,7 +111,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             }
             $airUri = bnode_url("AIR", $part_r, $part_r, $event.$lit->getValue());
             $airResource = $part_r->getGraph()->resource($airUri);
-            $airResource->addResource('rdf:type', 'bdo:AgentInRole');
+            $airResource->addResource('rdf:type', 'bdo:AgentAsCreator');
             $airResource->addResource('bdo:role', $role);
             $airResource->add('rdfs:label', $lit);
             $eventResource->addResource('rdf:eventWho', $airResource);
