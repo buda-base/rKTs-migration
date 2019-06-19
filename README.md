@@ -8,6 +8,11 @@ To run the migration script first install the required dependencies:
 composer install
 ```
 
+and then
+```
+git submodule update
+```
+
 then either run the script with default options or look at the options in
 
 ```
