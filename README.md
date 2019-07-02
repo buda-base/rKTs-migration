@@ -2,10 +2,16 @@
 
 This script is only for internal purposes and requires non-public data to be run.
 
-To run the migration script first install the required dependencies:
+To run the migration script first install the required dependencies _in the rKTs-migration directory_:
 
 ```
 composer install
+```
+For help with this see [install composer](https://nomadphp.com/blog/13/How-do-I-install-composer-), for example.
+
+Several php packages are needed:
+```
+apt-get install php7.0-mbstring php7.0-zip php7.0-xml
 ```
 
 and then
@@ -13,8 +19,11 @@ and then
 git submodule update
 ```
 
-then either run the script with default options or look at the options in
-
+Running from the rKTs-migration directory:
+```
+./migrate.php -o ../rkts-out/
+```
+the final ```/``` is required. More options cam be seen via:
 ```
 ./migrate.php --help
 ```
