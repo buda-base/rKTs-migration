@@ -114,7 +114,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $airResource->addResource('rdf:type', 'bdo:AgentAsCreator');
             $airResource->addResource('bdo:role', $role);
             $airResource->add('rdfs:label', $lit);
-            $eventResource->addResource('rdf:eventWho', $airResource);
+            $eventResource->addResource('bdo:eventWho', $airResource);
         }
     }
     $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
