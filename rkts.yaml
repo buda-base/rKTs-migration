@@ -99,6 +99,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "T3157": "T3787" # D3812 = D4462 (error p. 686, not appearing in the erratum)
     "T3361": "T3362" # D4022 = D4023
     "K42": "K331" # From 84000
+    "K24": "K90" # by hand
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
