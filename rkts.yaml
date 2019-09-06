@@ -100,7 +100,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "T3361": "T3362" # D4022 = D4023
     "K42": "K331" # From 84000
     "K24": "K90" # by hand
-    "K86": "K149" # ?
+    # "K86": "K149" # ? length differ so maybe not...
     "K44-31": "K857"
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
