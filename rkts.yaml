@@ -28,6 +28,7 @@ useSkosLabels: false
 catalogueNumberingScheme: "rKTs"
 oneTitleInExpression: false
 KTMapping:
+    "1501": 3711 # found by hand
     "326": 3437 # indicated in Tohoku
     "821": 3744
     "815": 3743
@@ -100,6 +101,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "T3361": "T3362" # D4022 = D4023
     "K42": "K331" # From 84000
     "K24": "K90" # by hand
+    "K86": "K149" # ?
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
