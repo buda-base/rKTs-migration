@@ -87,13 +87,13 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     if (isset($gl_abstractUrl_catId[$url_expression])) {
         foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
-            $expression_r->addResource('bdo:workHasExpression', $text_url);
+            $expression_r->addResource('bdo:workHasDerivative', $text_url);
         }
     }
     $firstTitleLit = get_first_title_lit($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
-        $expression_r->addResource('bdo:workExpressionOf', $url_abstract);
+        $expression_r->addResource('bdo:workDerivativeOf', $url_abstract);
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
             $graph_abstract = new EasyRdf_Graph();
             $abstract_r = $graph_abstract->resource($url_abstract);
@@ -110,7 +110,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);
                 add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
-            $abstract_r->addResource('bdo:workHasExpression', $url_expression);
+            $abstract_r->addResource('bdo:workHasDerivative', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
             add_log_entry($abstract_r);
             rdf_to_ttl($config, $graph_abstract, $abstract_r->localName(), $bdrc);
