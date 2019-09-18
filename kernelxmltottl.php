@@ -87,7 +87,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     if (isset($gl_abstractUrl_catId[$url_expression])) {
         foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
-            $expression_r->addResource('bdo:workHasDerivative', $text_url);
+            $expression_r->addResource('bdo:workHasExpression', $text_url);
         }
     }
     $firstTitleLit = get_first_title_lit($item, $bdrc);
