@@ -94,7 +94,7 @@ require_once "editionxmltottl.php";
 
 $gl_abstractUrl_catId = [];
 
-$filesList = [ /*"chemdo", */ "derge", "stog", "narthang", "peking", "lhasa", "urga", "shey", "cone", "lithang", "ulaanbaatar" /* , "dolpo" */];
+$filesList = [ /*"chemdo", */ "derge" , "stog", "narthang", "peking", "lhasa", "urga", "shey", "cone", "lithang", "ulaanbaatar" /* , "dolpo" */];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file('rKTs/Kanjur/'.$fileName.'.xml');

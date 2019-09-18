@@ -117,8 +117,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $eventResource->addResource('bdo:eventWho', $airResource);
         }
     }
-    $location = get_text_loc($item->loc, $fileName, 'rkts_'.$rktsid);
-    if (!empty($location)) { // useful for xml debugging only
+    $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid);
+    if (!empty($location) && array_key_exists('section', $location)) { // useful for xml debugging only
         $current_section = '';
         if ($fileName == "chemdo") {
             $bvolnum = $location['bvolnum'];
