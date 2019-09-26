@@ -106,6 +106,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $abstract_r->addResource('rdf:type', 'bdo:AbstractWork');
             // TODO: some are from Chinese  
             $abstract_r->addResource('bdo:workLangScript', 'bdr:Sa');
+            $abstract_r->addLiteral('bdo:isRoot', true);
             if ($firstTitleLit) {
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);
                 add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
@@ -126,6 +127,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     $expression_r->addResource('bdo:workLangScript', 'bdr:BoTibt'); // TODO: some works are just sanskrit dharanis...
     $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), intval($id));
+    $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {
         $name = $child->getName();
         if ($name == "rkts" || $name == "rktst") continue;
