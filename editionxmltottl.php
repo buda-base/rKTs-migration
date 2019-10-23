@@ -131,6 +131,10 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         if ($parentId != null) {
             $url_semantic_section = $parentId;
         }
+        if ($url_semantic_section == null) {
+            print("error: no section url for ".$current_section);
+            return array($partnum, $location);
+        }
         $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
         $section_partTreeIndex = sprintf("%02d", $sectionIndex);
         if ($parentId == null && (!$section_r || $section_r->getUri() != $url_semantic_section)) {

@@ -70,6 +70,11 @@ function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
 }
 
 function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
+    global $gl_rkts_kmapping;
+    // if there's a mapping in the Kernel, we follow it
+    if (!$tengyur && array_key_exists(strval($rktsid), $gl_rkts_kmapping)) {
+        $rktsid = $gl_rkts_kmapping[$rktsid];
+    }
     // for bdrc, when the exact same text is in both Kangyur and Tengyur, we just take the Tengyur ID for the URL
     if ($bdrc && !$tengyur && array_key_exists(intval($rktsid), $config['KTMapping'])) {
         $rktsid = $config['KTMapping'][intval($rktsid)];

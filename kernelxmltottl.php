@@ -15,6 +15,24 @@ function get_first_title_lit($item, $bdrc) {
     return null;
 }
 
+function get_first_title_lits($item, $bdrc) {
+    $res = [];
+    $hasSkt = False;
+    $hasTib = False;
+    foreach ($item->children() as $tag => $child) {
+        $content = trim($child->__toString());
+        if (($tag == "sanskrit" || $tag == "skt") && !empty($content) && !$hasSkt) {
+            $res[] = normalize_lit($content, 'sa-x-iast', $bdrc);
+            $hasSkt = True;
+        }
+        if (($tag == "tibetan" || $tag == "tib") && !empty($content) && !$hasTib) {
+            $res[] = normalize_lit($content, 'bo-x-ewts', $bdrc);
+            $hasTib = True;
+        }
+    }
+    return $res;
+}
+
 function add_props($resource, $props, $propidx, $ontoproperty) {
     if (isset($props[$propidx])) {
         foreach($props[$propidx] as $object) {
@@ -51,14 +69,19 @@ $gl_KanToTenExpressions = [];
 $subitemtoitem = [];
 
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem;
-    if (isset($item->now) || isset($item->old) || $item->count() < 2)
-        return;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem, $gl_rkts_kmapping;
     if ($tengyur) {
         $id = $item->rktst->__toString();
     } else {
         $id = $item->rkts->__toString();
     }
+    if (isset($item->now)) {
+        $now = $item->now->__toString();
+        $gl_rkts_kmapping[$id] = $now;
+        return;
+    }
+    if ($item->count() < 2)
+        return;
     $storeAsDuplicate = false;
     $restoredFromDuplicate = false;
     $url_expression = id_to_url_expression($id, $config, $bdrc, $tengyur);
@@ -90,7 +113,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $expression_r->addResource('bdo:workHasExpression', $text_url);
         }
     }
-    $firstTitleLit = get_first_title_lit($item, $bdrc);
+    $firstTitleLits = get_first_title_lits($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
         $expression_r->addResource('bdo:workTranslationOf', $url_abstract);
@@ -107,7 +130,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             // TODO: some are from Chinese  
             $abstract_r->addResource('bdo:workLangScript', 'bdr:Inc');
             $abstract_r->addLiteral('bdo:isRoot', true);
-            if ($firstTitleLit) {
+            foreach ($firstTitleLits as $firstTitleLit) {
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);
                 add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
