@@ -96,6 +96,9 @@ require_once "editionxmltottl.php";
 
 $gl_abstractUrl_catId = [];
 
+$kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
+fillmappings($kernel_xml);
+
 $filesList = [ /*"chemdo", */ "derge" , "stog", "narthang", "peking", "lhasa", "urga", "shey", "cone", "lithang", "ulaanbaatar" /* , "dolpo" */];
 
 foreach ($filesList as $fileName) {
@@ -103,7 +106,6 @@ foreach ($filesList as $fileName) {
     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
 }
 
-$kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
 kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
 unset($kernel_xml);

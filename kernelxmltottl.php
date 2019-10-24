@@ -69,18 +69,13 @@ $gl_KanToTenExpressions = [];
 $subitemtoitem = [];
 
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
-    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem, $gl_rkts_kmapping;
+    global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem;
     if ($tengyur) {
         $id = $item->rktst->__toString();
     } else {
         $id = $item->rkts->__toString();
     }
-    if (isset($item->now)) {
-        $now = $item->now->__toString();
-        $gl_rkts_kmapping[$id] = $now;
-        return;
-    }
-    if ($item->count() < 2)
+    if (isset($item->now) || $item->count() < 2)
         return;
     $storeAsDuplicate = false;
     $restoredFromDuplicate = false;
@@ -209,5 +204,20 @@ function kernel_to_ttl($config, $xml, $global_graph_fd, $bdrc=False, $tengyur=Fa
     foreach($xml->item as $item) {
         kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc, $tengyur);
         //return;
+    }
+}
+
+function fillmappings($xml, $tengyur=False) {
+    global $gl_rkts_kmapping;
+    foreach($xml->item as $item) {
+        if (isset($item->now)) {
+            if ($tengyur) {
+                $id = $item->rktst->__toString();
+            } else {
+                $id = $item->rkts->__toString();
+            }
+            $now = $item->now->__toString();
+            $gl_rkts_kmapping[$id] = $now;
+        }
     }
 }
