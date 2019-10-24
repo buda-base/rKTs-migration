@@ -149,7 +149,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     }
     $expression_r->addResource('bdo:workLangScript', 'bdr:BoTibt'); // TODO: some works are just sanskrit dharanis...
-    $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), intval($id));
+    $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), $id);
     $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {
         $name = $child->getName();
