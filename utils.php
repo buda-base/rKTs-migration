@@ -609,15 +609,24 @@ function get_rkts_props() {
     return $res; 
 }
 
-function get_abstract_mapping() {
+function get_abstract_mapping($config) {
     $res = [];
     $filename = "abstract-rkts.csv";
+    $additionalmaps = [];
+    foreach ($config['KTMapping'] as $rktsk => $rktst) {
+        $additionalmaps['K'.$rktsk] = 'T'.$rktst;
+        $additionalmaps['T'.$rktst] = 'K'.$rktsk;
+    }
     $handle = fopen($filename, "r");
     if ($handle) {
         while (($line = fgets($handle)) !== false) {
             $map = explode(',', $line);
             if (!empty($map[1]) && strpos($map[1], '?') === false) {
-                $res[trim($map[1])] = trim($map[0]);
+                $rkts = trim($map[1]);
+                $res[$rkts] = trim($map[0]);
+                if (array_key_exists($rkts, $additionalmaps)) {
+                    $res[$additionalmaps[$rkts]] = trim($map[0]);
+                }
             }
         }
         fclose($handle);

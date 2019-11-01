@@ -90,7 +90,7 @@ $gl_rkts_kmapping = [];
 require_once "utils.php";
 
 $gl_rkts_props = get_rkts_props();
-$gl_rkts_abstract = get_abstract_mapping();
+$gl_rkts_abstract = get_abstract_mapping($config);
 
 require_once "editionxmltottl.php";
 
