@@ -127,7 +127,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $abstract_r->addLiteral('bdo:isRoot', true);
             foreach ($firstTitleLits as $firstTitleLit) {
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);
-                add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
+                //add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
             $abstract_r->addResource('bdo:workHasTranslation', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
@@ -177,7 +177,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         }
         $lit = normalize_lit($title, $langtag, $bdrc);
         if ($lit) {
-            add_title($expression_r, 'WorkBibliographicalTitle', $lit);
+            //add_title($expression_r, 'WorkBibliographicalTitle', $lit);
             if (!isset($seenLangs[$langtag])) {
                 $expression_r->add('skos:prefLabel', $lit);
             }
