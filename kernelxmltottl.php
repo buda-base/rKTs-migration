@@ -105,7 +105,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     if (isset($gl_abstractUrl_catId[$url_expression])) {
         foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
-            $expression_r->addResource('bdo:workHasExpression', $text_url);
+            $expression_r->addResource('bdo:workHasInstance', $text_url);
         }
     }
     $firstTitleLits = get_first_title_lits($item, $bdrc);
@@ -121,7 +121,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
-            $abstract_r->addResource('rdf:type', 'bdo:AbstractWork');
+            $abstract_r->addResource('rdf:type', 'bdo:Work'); // abstract
             // TODO: some are from Chinese  
             $abstract_r->addResource('bdo:workLangScript', 'bdr:Inc');
             $abstract_r->addLiteral('bdo:isRoot', true);
@@ -137,13 +137,14 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_graph_to_global($graph_abstract, $abstract_r->localName(), $global_graph_fd);
         }
     }
-    $expression_r->addResource('rdf:type', 'bdo:AbstractWork');
+    $expression_r->addResource('rdf:type', 'bdo:Work'); // abstract
     if ($bdrc) {
         $expression_r->addResource('adm:sameAsrKTs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     } else {
         $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     }
-    $expression_r->addResource('bdo:workLangScript', 'bdr:BoTibt'); // TODO: some works are just sanskrit dharanis...
+    //$expression_r->addResource('bdo:language', 'bdr:LangBo');
+    $expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
     $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), $id);
     $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {

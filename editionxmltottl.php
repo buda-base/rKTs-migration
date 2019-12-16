@@ -39,8 +39,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
-    $part_r->addResource('bdo:workExpressionOf', $url_parent_text);
-    $part_r->addResource('rdf:type', 'bdo:Work');
+    $part_r->addResource('bdo:workInstanceOf', $url_parent_text);
+    $part_r->addResource('rdf:type', 'bdo:Instance');
     $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
     // not sure the following blank is good, maybe this is too specific to this point in time and is not future proof... commenting
     // if (!$bdrc){
@@ -67,16 +67,20 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         if ($edition_info['confinfo']['EID'] == "D") {
             $bibliographicalTitleNode = add_title($part_r, 'WorkIncipitTitle', $lit);
         } else {
-            $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
+            $bibliographicalTitleNode = add_title($part_r, 'WorkTitle', $lit);
         }
     }
     $coltitle = trim($item->coltitle->__toString());
     if (!empty($coltitle) && $coltitle != "-") {
-        $lit = normalize_lit($coltitle, 'bo-x-ewts', $bdrc);
-        if (empty($tib)) {
-            $part_r->add('skos:prefLabel', $lit);
+        if ($tib != $coltitle) {
+            $lit = normalize_lit($coltitle, 'bo-x-ewts', $bdrc);
+            if (empty($tib)) {
+                $part_r->add('skos:prefLabel', $lit);
+            }
+            add_title($part_r, 'WorkColophonTitle', $lit, $bibliographicalTitleNode);
+        } else {
+            $bibliographicalTitleNode->addResource('rdf:type', 'bdo:WorkColophonTitle');
         }
-        add_title($part_r, 'WorkColophonTitle', $lit, $bibliographicalTitleNode);
     }
     $skttrans = trim($item->skttrans->__toString());
     if (!empty($skttrans) && $skttrans != "-") {
@@ -147,7 +151,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             }
             $graph_section = new EasyRdf_Graph();
             $section_r = $graph_section->resource($url_semantic_section);
-            $section_r->addResource('rdf:type', 'bdo:Work');
+            $section_r->addResource('rdf:type', 'bdo:Instance');
             $section_r->addResource('bdo:workPartOf', $url_broader_edition);
             $section_r->addLiteral('bdo:workPartIndex', $sectionIndex);
             $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
@@ -187,7 +191,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $chap_url = id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partnum, $bdrc);
             $graph_chap = new EasyRdf_Graph();
             $chap_r = $graph_chap->resource($chap_url);
-            $chap_r->addResource('rdf:type', 'bdo:Work');
+            $chap_r->addResource('rdf:type', 'bdo:Instance');
             $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
             $chap_r->addResource('bdo:workPartOf', $url_part);
             $chap_r->addLiteral('bdo:workPartIndex', $chapnum);
@@ -200,7 +204,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 //report_error($fileName, 'wrong chapter format', 'rkts_'.$rktsid, $chaptitle);
             }
             $lit = normalize_lit($chaptitle, 'bo-x-ewts', $bdrc);
-            add_title($chap_r, 'WorkOtherTitle', $lit);
+            add_title($chap_r, 'WorkTitle', $lit);
             $chap_r->addLiteral('skos:prefLabel', $lit);
             $location = get_chap_loc($chap->p->__toString(), $fileName, 'rkts_'.$rktsid);
             if ($location) {
@@ -348,7 +352,7 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     $url_edition = id_to_url_edition($eid, $config, $bdrc);
     $edition_r = $graph_edition->resource($url_edition);
-    $edition_r->addResource('rdf:type', 'bdo:Work');
+    $edition_r->addResource('rdf:type', 'bdo:Instance');
     $edition_name = $xml->name->__toString();
     $edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
     $edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
