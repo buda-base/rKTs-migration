@@ -14,9 +14,9 @@ Several php packages are needed:
 apt-get install php7.0-mbstring php7.0-zip php7.0-xml
 ```
 
-and then
+and then the first time
 ```
-git submodule update
+git submodule update --init
 ```
 
 Running from the rKTs-migration directory:
