@@ -153,6 +153,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $section_r = $graph_section->resource($url_semantic_section);
             $section_r->addResource('rdf:type', 'bdo:Instance');
             $section_r->addResource('bdo:workPartOf', $url_broader_edition);
+            $section_r->addResource('bdo:partRoot', $url_broader_edition);
             $section_r->addLiteral('bdo:workPartIndex', $sectionIndex);
             $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
             $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
@@ -169,6 +170,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         }
         $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
         $part_r->addResource('bdo:workPartOf', $url_semantic_section);
+        $part_r->addResource('bdo:partRoot', $url_broader_edition);
         add_location_simple($part_r, $location, $edition_info, $eid);
         //add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
         // foreach ($item->bampo as $bampo) {
@@ -194,6 +196,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $chap_r->addResource('rdf:type', 'bdo:Instance');
             $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
             $chap_r->addResource('bdo:workPartOf', $url_part);
+            $chap_r->addResource('bdo:partRoot', $url_broader_edition);
             $chap_r->addLiteral('bdo:workPartIndex', $chapnum);
             $chap_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex.'.'.sprintf("%02d", $chapnum));
             $part_r->addResource('bdo:workHasPart', $chap_url);
@@ -230,6 +233,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
         $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
         $part_r->addResource('bdo:workPartOf', $section_r);
+        $part_r->addResource('bdo:partRoot', $url_broader_edition);
         if ($item->loc != "") {
             $noteUri = bnode_url("NT", $part_r, $part_r, $item->loc);
             $noteNode = $part_r->getGraph()->resource($noteUri);
