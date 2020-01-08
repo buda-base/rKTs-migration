@@ -123,7 +123,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             }
             $abstract_r->addResource('rdf:type', 'bdo:Work'); // abstract
             // TODO: some are from Chinese  
-            $abstract_r->addResource('bdo:workLangScript', 'bdr:Inc');
+            $abstract_r->addResource('bdo:language', 'bdr:LangInc');
             $abstract_r->addLiteral('bdo:isRoot', true);
             foreach ($firstTitleLits as $firstTitleLit) {
                 $abstract_r->add('skos:prefLabel', $firstTitleLit);
