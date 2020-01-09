@@ -39,7 +39,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
-    $part_r->addResource('bdo:workInstanceOf', $url_parent_text);
+    $part_r->addResource('bdo:instanceOf', $url_parent_text);
     $part_r->addResource('rdf:type', 'bdo:Instance');
     $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
     // not sure the following blank is good, maybe this is too specific to this point in time and is not future proof... commenting
