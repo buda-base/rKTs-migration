@@ -97,7 +97,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $seenLangs = $stored_expr_data["seenLangs"];
         $restoredFromDuplicate = true;
     }
-    if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+    if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
         $props = $gl_rkts_props[$idwithletter];
         add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
         add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
@@ -115,7 +115,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
             $graph_abstract = new EasyRdf_Graph();
             $abstract_r = $graph_abstract->resource($url_abstract);
-            if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+            if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
                 $props = $gl_rkts_props[$idwithletter];
                 add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
                 add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');

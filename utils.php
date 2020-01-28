@@ -69,6 +69,21 @@ function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
+function has_bdrc_abstract($idwithletter, $config, $bdrc=False, $tengyur=False) {
+    global $gl_rkts_abstract;
+    if (!$bdrc)
+        return false;
+    if (isset($gl_rkts_abstract[$idwithletter])) {
+        return true;
+    }
+    // if the same text has different translations, we attach all the translations to the same abstract text:
+    if (isset($config['SameTextDifferentTranslation'][$idwithletter])) {
+        $otheridwithletter = $config['SameTextDifferentTranslation'][$idwithletter];
+        return isset($gl_rkts_abstract[$idwithletter]);
+    }
+    return false;
+}
+
 function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
     global $gl_rkts_kmapping;
     // if there's a mapping in the Kernel, we follow it
