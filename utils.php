@@ -62,23 +62,10 @@ function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
         $rktsid = substr($idwithletter, 1);
         $tengyur = ($idwithletter[0] == 'T');
     }
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.($tengyur ? 'Ten' : 'Kan');
-    return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
-}
-
-function id_to_url_abstract_indic($rktsid, $config, $bdrc=False, $tengyur=False) {
-    global $gl_rkts_abstract;
-    $idwithletter = ($tengyur ? 'T' : 'K').$rktsid;
-    // if the same text has different translations, we attach all the translations to the same abstract text:
-    if ($bdrc && isset($config['SameTextDifferentTranslation'][$idwithletter])) {
-        $idwithletter = $config['SameTextDifferentTranslation'][$idwithletter];
-        $rktsid = substr($idwithletter, 1);
-        $tengyur = ($idwithletter[0] == 'T');
-    }
     if ($bdrc && isset($gl_rkts_abstract[$idwithletter])) {
         return 'http://purl.bdrc.io/resource/'.$gl_rkts_abstract[$idwithletter];
     }
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractIndicUrlFormat'.($tengyur ? 'Ten' : 'Kan');
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.($tengyur ? 'Ten' : 'Kan');
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
