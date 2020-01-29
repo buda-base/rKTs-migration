@@ -7,7 +7,8 @@ To run the migration script first install the required dependencies _in the rKTs
 ```
 composer install
 ```
-For help with this see [install composer](https://nomadphp.com/blog/13/How-do-I-install-composer-), for example.
+
+For help with this see [install composer](https://nomadphp.com/blog/13/How-do-I-install-composer-), for example. It may be necessary to run ```composer.phar``` or ```php composer.phar``` depending on how the composer-setup.php leaves things.
 
 Several php packages are needed:
 ```
@@ -16,7 +17,7 @@ apt-get install php7.0-mbstring php7.0-zip php7.0-xml
 
 and then
 ```
-git submodule update
+git submodule update --init
 ```
 
 Running from the rKTs-migration directory:
