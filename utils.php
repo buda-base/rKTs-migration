@@ -7,8 +7,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 function bnode_url($facetprefix, $res, $rootres, $objectstr) {
     $data = $res->localName().$objectstr;
     $hash = hash('sha256', $data);
-    $hashpart = substr($hash, 0, 12);
-    return $res->getUri().'_'.$facetprefix.$hashpart;
+    $hashpart = substr($hash, 0, 6);
+    $uri = $res->getUri();
+    $local = $res->localName();
+    $prefix = substr($uri, 0, strlen($uri)-strlen($local));
+    return $prefix.$facetprefix.strtoupper($hashpart).'_'.$local;
 }
 
 function catalogue_index_xml_to_rdf($index, $edition_info, $tengyur) {

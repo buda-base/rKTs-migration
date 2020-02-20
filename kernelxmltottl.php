@@ -145,7 +145,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     //$expression_r->addResource('bdo:language', 'bdr:LangBo');
     $expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
-    $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), $id);
+    $idUri = bnode_url("ID", $expression_r, $expression_r, $id);
+    $idNode = $expression_r->getGraph()->resource($idUri);
+    $expression_r->addResource('bf:identifiedBy', $idNode);
+    $idNode->add('rdf:value', $id);
+    $idNode->addResource('rdf:type', 'bdr:RefrKTs'.($tengyur ? 'T' : 'K'));
     $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {
         $name = $child->getName();
@@ -156,6 +160,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $noteNode = $expression_r->getGraph()->resource($noteUri);
             $expression_r->addResource('bdo:note', $noteNode);
             $noteNode->add('bdo:noteText', $child->__toString());
+            $noteNode->addResource('rdf:type', "bdo:Note");
             continue;
         }
         if ($name == "subitem") {

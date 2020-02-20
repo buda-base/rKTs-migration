@@ -111,7 +111,7 @@ derge:
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
-  propSigla: "workKaTenSiglaD"
+  propSigla: "KaTenSiglaD"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
      {name: "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "a"]},
@@ -135,7 +135,7 @@ narthang:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaN"
+  propSigla: "KaTenSiglaN"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na"]},
@@ -158,7 +158,7 @@ peking:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaQ"
+  propSigla: "KaTenSiglaQ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "rgyud", volumes: ["om", "ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya"]},
@@ -174,7 +174,7 @@ lhasa:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaH"
+  propSigla: "KaTenSiglaH"
   volumeBdrcPageFirstFolioDefault: 5
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na"]},
@@ -194,7 +194,7 @@ urga:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaU"
+  propSigla: "KaTenSiglaU"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
@@ -216,7 +216,7 @@ shey:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeManuscript'
-  propSigla: "workKaTenSiglaZ"
+  propSigla: "KaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "ja", "nya", "ta", "tha", "da", "na"]},
@@ -237,7 +237,7 @@ cone:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaC"
+  propSigla: "KaTenSiglaC"
   volumeBdrcPageFirstFolioDefault: 5
   volumeMap: [
     {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "ya", "pa", "pha", "ba", "tsa", "ma", "tsha", "dza", "wa", "zha", "za", "'a"]},
@@ -257,7 +257,7 @@ lithang:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaJ"
+  propSigla: "KaTenSiglaJ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
@@ -283,7 +283,7 @@ ulaanbaatar:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeManuscript'
-  propSigla: "workKaTenSiglaV"
+  propSigla: "KaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "cha", "tha", "na", "pa"]},
@@ -310,7 +310,7 @@ stog:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaS"
+  propSigla: "KaTenSiglaS"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
      {name: "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma"]},
@@ -387,7 +387,7 @@ chemdo:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeTypeSet'
-  propSigla: "workKaTenSiglaA"
+  propSigla: "KaTenSiglaA"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
      {name: "'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da"]},
@@ -490,7 +490,7 @@ tanjurd:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaD"
+  propSigla: "KaTenSiglaD"
   volumeMap: [
     {name: "bstod tshogs", volumes: ["ka"]},
     {name: "rgyud 'grel", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "sa", "ha", "a", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu"]},
@@ -515,7 +515,7 @@ tanjurg:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaG"
+  propSigla: "KaTenSiglaG"
   volumeMap: []
 tanjurn:
   RID: ["MW22704"]
@@ -523,7 +523,7 @@ tanjurn:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaN"
+  propSigla: "KaTenSiglaN"
   volumeMap: []
 tanjurq:
   RID: ["MW1KG13126"]
@@ -531,5 +531,5 @@ tanjurq:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:ObjectTypeBlockPrint'
-  propSigla: "workKaTenSiglaQ"
+  propSigla: "KaTenSiglaQ"
   volumeMap: []

@@ -52,7 +52,13 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     //     $url_part_other = id_to_url_edition_text($rid, $rktsid, $config, $partnum, false);
     //     $part_r->addResource('owl:sameAs', $url_part_other);
     // }
-    $part_r->addLiteral('bdo:'.$edition_info['confinfo']['propSigla'], $catalogue_index);
+
+    $idUri = bnode_url("ID", $part_r, $part_r, $catalogue_index);
+    $idNode = $part_r->getGraph()->resource($idUri);
+    $part_r->addResource('bf:identifiedBy', $idNode);
+    $idNode->add('rdf:value', $catalogue_index);
+    $idNode->addResource('rdf:type', 'bdr:'.$edition_info['confinfo']['propSigla']);
+
     $colophon = $item->coloph;
     if (!empty($colophon->__toString())) {
         $lit = normalize_lit($colophon, 'bo-x-ewts', $bdrc);
