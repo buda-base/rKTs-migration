@@ -201,26 +201,26 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
         return;
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
-    $resource->addResource('bdo:workLocation', $locationNode);
-    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
-    $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
+    $resource->addResource('bdo:contentLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:ContentLocation");
+    $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
+    $locationNode->addResource('bdo:contentLocationWork', "http://purl.bdrc.io/resource/".$eid);
     $evolnum = $location['bvolnum'];
     if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
         $evolnum = $location['evolnum'];
-        $locationNode->add('bdo:workLocationEndVolume', intval($location['evolnum']));
+        $locationNode->add('bdo:contentLocationEndVolume', intval($location['evolnum']));
     }
     if (isset($location['blinenum'])) {
-        $locationNode->add('bdo:workLocationLine', $location['blinenum']);
+        $locationNode->add('bdo:contentLocationLine', $location['blinenum']);
     }
     if (isset($location['elinenum'])) {
-        $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
+        $locationNode->add('bdo:contentLocationEndLine', $location['elinenum']);
     }
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
-    $locationNode->add('bdo:workLocationPage', $bpagenum);
+    $locationNode->add('bdo:contentLocationPage', $bpagenum);
     if (isset($location['epagenum'])) {
         $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
-        $locationNode->add('bdo:workLocationEndPage', $epagenum);
+        $locationNode->add('bdo:contentLocationEndPage', $epagenum);
     }
 }
 
@@ -233,12 +233,12 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
     }
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
-    $resource->addResource('bdo:workLocation', $locationNode);
-    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
-    $locationNode->add('bdo:workLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:workLocationWork', "http://purl.bdrc.io/resource/".$eid);
+    $resource->addResource('bdo:contentLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:ContentLocation");
+    $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
+    $locationNode->addResource('bdo:contentLocationWork', "http://purl.bdrc.io/resource/".$eid);
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
-    $locationNode->add('bdo:workLocationPage', $bpagenum);
+    $locationNode->add('bdo:contentLocationPage', $bpagenum);
 }
 
 // same as before except that here location is the location of the last text of the section
@@ -248,76 +248,76 @@ function add_location_section_end($resource, $location, $edition_info, $eid) {
         report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate end location');
         return;
     }
-    $locationNode = $resource->getResource('bdo:workLocation');
+    $locationNode = $resource->getResource('bdo:contentLocation');
     if ($locationNode == null) {
         report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'no indication of beginning location');
         return;
     }
     $evolnum = $location['bvolnum'];
     if (isset($location['evolnum']) && !empty($location['evolnum'])) {
-        $locationNode->add('bdo:workLocationEndVolume', intval($location['evolnum']));
+        $locationNode->add('bdo:contentLocationEndVolume', intval($location['evolnum']));
         $evolnum = $location['evolnum'];
     } else {
-        $locationNode->add('bdo:workLocationEndVolume', intval($location['bvolnum']));
+        $locationNode->add('bdo:contentLocationEndVolume', intval($location['bvolnum']));
     }
     if (isset($location['epagenum'])) {
         $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
-        $locationNode->add('bdo:workLocationEndPage', $epagenum);
+        $locationNode->add('bdo:contentLocationEndPage', $epagenum);
     }
 }
 
 function add_location($resource, $location, $volumeMapWithUrls) {
     $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
-    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
-    $resource->addResource('bdo:workLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:ContentLocation");
+    $resource->addResource('bdo:contentLocation', $locationNode);
     if (isset($location['bvolnum'])) {
         // chemdo style
-        $locationNode->addResource('bdo:workLocationSchema', 'bdr:PageNumberingScheme');
-        $locationNode->add('bdo:workLocationPage', $location['bpagenum']);
+        $locationNode->addResource('bdo:contentLocationSchema', 'bdr:PageNumberingScheme');
+        $locationNode->add('bdo:contentLocationPage', $location['bpagenum']);
         if (isset($location['epagenum'])) {
-            $locationNode->add('bdo:workLocationEndPage', $location['epagenum']);
+            $locationNode->add('bdo:contentLocationEndPage', $location['epagenum']);
         }
         if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
-            $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_num($location['evolnum'], $volumeMapWithUrls));
+            $locationNode->addResource('bdo:contentLocationVolumeEnd', url_for_vol_num($location['evolnum'], $volumeMapWithUrls));
         }
         $volurl = url_for_vol_num($location['bvolnum'], $volumeMapWithUrls);
         if ($volurl)
-            $locationNode->addResource('bdo:workLocationVolume', $volurl);
+            $locationNode->addResource('bdo:contentLocationVolume', $volurl);
         else
             print_r($location);
         return;
     }
-    $locationNode->add('bdo:workLocationFolio', $location['bpagenum']);
-    $locationNode->add('bdo:workLocationLine', $location['blinenum']);
-    $locationNode->add('bdo:workLocationSide', $location['bpageside']);
+    $locationNode->add('bdo:contentLocationFolio', $location['bpagenum']);
+    $locationNode->add('bdo:contentLocationLine', $location['blinenum']);
+    $locationNode->add('bdo:contentLocationSide', $location['bpageside']);
     if (isset($location['epagenum'])) {
-        $locationNode->add('bdo:workLocationEndFolio', $location['epagenum']);
-        $locationNode->add('bdo:workLocationEndSide', $location['epageside']);
+        $locationNode->add('bdo:contentLocationEndFolio', $location['epagenum']);
+        $locationNode->add('bdo:contentLocationEndSide', $location['epageside']);
     }
     if (isset($location['elinenum'])) {
-        $locationNode->add('bdo:workLocationEndLine', $location['elinenum']);
+        $locationNode->add('bdo:contentLocationEndLine', $location['elinenum']);
     }
-    $locationNode->addResource('bdo:workLocationSchema', 'bdr:FolioNumberingScheme');
+    $locationNode->addResource('bdo:contentLocationSchema', 'bdr:FolioNumberingScheme');
     $section = $location['section'];
-    $locationNode->addResource('bdo:workLocationVolume', url_for_vol_name($section, $location['bvolname'], $volumeMapWithUrls));
+    $locationNode->addResource('bdo:contentLocationVolume', url_for_vol_name($section, $location['bvolname'], $volumeMapWithUrls));
     if (isset($location['evolname']) && !empty($location['evolname']) && $location['bvolname'] != $location['evolname']) {
-        $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_name($section, $location['evolname'], $volumeMapWithUrls));
+        $locationNode->addResource('bdo:contentLocationVolumeEnd', url_for_vol_name($section, $location['evolname'], $volumeMapWithUrls));
     }
 }
 
 function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
     $locationUri = bnode_url("WL", $resource, $resource, $sectionName);
     $locationNode = $resource->getGraph()->resource($locationUri);
-    $locationNode->addResource('rdf:type', "bdo:WorkLocation");
-    $resource->addResource('bdo:workLocation', $locationNode);
+    $locationNode->addResource('rdf:type', "bdo:ContentLocation");
+    $resource->addResource('bdo:contentLocation', $locationNode);
     foreach ($volumeMapWithUrls as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $section) {
             $bvolumeName = $sectionArr['volumes'][0];
             $evolumeName = $sectionArr['volumes'][count($sectionArr['volumes'])-1];
-            $locationNode->addResource('bdo:workLocationVolume', url_for_vol_name($sectionName, $bvolname, $volumeMapWithUrls));
+            $locationNode->addResource('bdo:contentLocationVolume', url_for_vol_name($sectionName, $bvolname, $volumeMapWithUrls));
             if ($bvolumeName != $evolumename) {
-                $locationNode->addResource('bdo:workLocationVolumeEnd', url_for_vol_name($section, $evolumename, $volumeMapWithUrls));
+                $locationNode->addResource('bdo:contentLocationVolumeEnd', url_for_vol_name($section, $evolumename, $volumeMapWithUrls));
             }
             break;
         }
@@ -329,7 +329,7 @@ function add_title($resource, $type, $lit, $sameTypeNode=null) {
     // if ($titleNode == null) {
     $nodeUri = bnode_url("TT", $resource, $resource, $type.$lit->getValue());
     $titleNode = $resource->getGraph()->resource($nodeUri);
-    $resource->addResource('bdo:workTitle', $titleNode);
+    $resource->addResource('bdo:hasTitle', $titleNode);
     //}
     $titleNode->add('rdfs:label', $lit);
     $titleNode->addResource('rdf:type', 'bdo:'.$type);

@@ -161,12 +161,12 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($name == "subitem") {
             $subitem = $child->__toString();
             $subitemtoitem[$subitem] = $id;
-            $expression_r->addResource('bdo:workHasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:hasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
             continue;
         }
         if (array_key_exists($id, $subitemtoitem)) {
             $parentid = $subitemtoitem[$id];
-            $expression_r->addResource('bdo:workPartOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:partOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
         }
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
