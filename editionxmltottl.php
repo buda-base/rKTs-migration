@@ -245,6 +245,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $noteNode = $part_r->getGraph()->resource($noteUri);
             $part_r->addResource('bdo:note', $noteNode);
             $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
+            $noteNode->addResource('rdf:type', 'bdo:Note');
         }
     }
     foreach ($item->note as $note) { // iterating on chapters
@@ -254,6 +255,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $noteNode = $part_r->getGraph()->resource($noteUri);
         $part_r->addResource('bdo:note', $noteNode);
         $noteNode->add('bdo:noteText', $note);
+        $noteNode->addResource('rdf:type', 'bdo:Note');
     }
     add_log_entry($part_r);
     rdf_to_ttl($config, $graph_part, $part_r->localName(), $bdrc);
