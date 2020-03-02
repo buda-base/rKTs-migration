@@ -143,8 +143,8 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     } else {
         $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     }
-    //$expression_r->addResource('bdo:language', 'bdr:LangBo');
-    $expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
+    $expression_r->addResource('bdo:language', 'bdr:LangBo');
+    //$expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
     $idUri = bnode_url("ID", $expression_r, $expression_r, $id);
     $idNode = $expression_r->getGraph()->resource($idUri);
     $expression_r->addResource('bf:identifiedBy', $idNode);
