@@ -369,7 +369,7 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     $edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
     $edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
     $edition_r->addResource('bdo:script', $edition_info['confinfo']['script']);
-    $edition_r->addResource('bdo:printType', $edition_info['confinfo']['printType']);
+    $edition_r->addResource('bdo:printMethod', $edition_info['confinfo']['printType']);
     if ($bdrc) {
         $edition_r->addResource('rdfs:seeAlso', id_to_url_edition($edition_info['confinfo']['EID'], $config, !$bdrc));
     } else {

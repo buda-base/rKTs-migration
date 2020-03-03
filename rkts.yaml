@@ -109,7 +109,7 @@ derge:
   EID: "D"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   duplicates: [7, 359, 460, 505, 675, 841, 842, 846, 1058]
   propSigla: "KaTenSiglaD"
   volumeMap: [
@@ -134,7 +134,7 @@ narthang:
   EID: "N"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaN"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -157,7 +157,7 @@ peking:
   EID: "Q"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaQ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -173,7 +173,7 @@ lhasa:
   EID: "H"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaH"
   volumeBdrcPageFirstFolioDefault: 5
   volumeMap: [
@@ -193,7 +193,7 @@ urga:
   EID: "U"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaU"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -215,7 +215,7 @@ shey:
   EID: "Z"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeManuscript'
+  printType: 'bdo:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -236,7 +236,7 @@ cone:
   EID: "C"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaC"
   volumeBdrcPageFirstFolioDefault: 5
   volumeMap: [
@@ -256,7 +256,7 @@ lithang:
   EID: "J"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaJ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -282,7 +282,7 @@ ulaanbaatar:
   EID: "V"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeManuscript'
+  printType: 'bdo:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -301,7 +301,7 @@ ulaanbaatar:
 #   RID: ["W1KG14700"]
 #   EID: "Do"
 #   langScript: 'bdr:BoDbuCan'
-#   printType: 'bdr:ObjectTypeManuscript'
+#   printType: 'bdo:PrintMethod_Manuscript'
 #   propSigla: "workKaTenSiglaDo"
 #   volumeBdrcPageFirstFolioDefault: 3
 stog:
@@ -309,7 +309,7 @@ stog:
   EID: "S"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaS"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
@@ -386,7 +386,7 @@ chemdo:
   EID: "A"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeTypeSet'
+  printType: 'bdo:PrintMethod_Offset'
   propSigla: "KaTenSiglaA"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
@@ -489,7 +489,7 @@ tanjurd:
   EID: "DT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaD"
   volumeMap: [
     {name: "bstod tshogs", volumes: ["ka"]},
@@ -514,7 +514,7 @@ tanjurg:
   EID: "GT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaG"
   volumeMap: []
 tanjurn:
@@ -522,7 +522,7 @@ tanjurn:
   EID: "NT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaN"
   volumeMap: []
 tanjurq:
@@ -530,6 +530,6 @@ tanjurq:
   EID: "QT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:ObjectTypeBlockPrint'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaQ"
   volumeMap: []
