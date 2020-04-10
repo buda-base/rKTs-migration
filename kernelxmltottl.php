@@ -126,7 +126,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $abstract_r->addResource('bdo:language', 'bdr:LangInc');
             $abstract_r->addLiteral('bdo:isRoot', true);
             foreach ($firstTitleLits as $firstTitleLit) {
-                $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                if ($firstTitleLit->getLang() == 'sa-x-iast') {
+                    $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                } else {
+                    $abstract_r->add('skos:altLabel', $firstTitleLit);
+                }
                 //add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
             $abstract_r->addResource('bdo:workHasTranslation', $url_expression);
@@ -185,7 +189,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($lit) {
             //add_title($expression_r, 'WorkBibliographicalTitle', $lit);
             if (!isset($seenLangs[$langtag])) {
-                $expression_r->add('skos:prefLabel', $lit);
+                if ($lit->getLang() == 'bo-x-ewts') {
+                    $expression_r->add('skos:prefLabel', $lit);
+                } else {
+                    $expression_r->add('skos:altLabel', $lit);
+                }
             }
         }
         $seenTitles[$title] = true;
