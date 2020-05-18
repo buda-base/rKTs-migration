@@ -187,13 +187,10 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         }
         $lit = normalize_lit($title, $langtag, $bdrc);
         if ($lit) {
-            //add_title($expression_r, 'WorkBibliographicalTitle', $lit);
-            if (!isset($seenLangs[$langtag])) {
-                if ($lit->getLang() == 'bo-x-ewts') {
-                    $expression_r->add('skos:prefLabel', $lit);
-                } else {
-                    $expression_r->add('skos:altLabel', $lit);
-                }
+            if (!isset($seenLangs[$langtag]) && $lit->getLang() == 'bo-x-ewts') {
+                $expression_r->add('skos:prefLabel', $lit);
+            } else {
+                $expression_r->add('skos:altLabel', $lit);
             }
         }
         $seenTitles[$title] = true;
