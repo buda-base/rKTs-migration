@@ -97,7 +97,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $seenLangs = $stored_expr_data["seenLangs"];
         $restoredFromDuplicate = true;
     }
-    if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+    if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
         $props = $gl_rkts_props[$idwithletter];
         add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
         add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
@@ -105,7 +105,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     if (isset($gl_abstractUrl_catId[$url_expression])) {
         foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
-            $expression_r->addResource('bdo:workHasExpression', $text_url);
+            $expression_r->addResource('bdo:workHasInstance', $text_url);
         }
     }
     $firstTitleLits = get_first_title_lits($item, $bdrc);
@@ -115,18 +115,22 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
             $graph_abstract = new EasyRdf_Graph();
             $abstract_r = $graph_abstract->resource($url_abstract);
-            if ($bdrc && isset($gl_rkts_props[$idwithletter])) {
+            if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
                 $props = $gl_rkts_props[$idwithletter];
                 add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
                 add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
-            $abstract_r->addResource('rdf:type', 'bdo:AbstractWork');
+            $abstract_r->addResource('rdf:type', 'bdo:Work'); // abstract
             // TODO: some are from Chinese  
-            $abstract_r->addResource('bdo:workLangScript', 'bdr:Inc');
+            $abstract_r->addResource('bdo:language', 'bdr:LangInc');
             $abstract_r->addLiteral('bdo:isRoot', true);
             foreach ($firstTitleLits as $firstTitleLit) {
-                $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                if ($firstTitleLit->getLang() == 'sa-x-iast') {
+                    $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                } else {
+                    $abstract_r->add('skos:altLabel', $firstTitleLit);
+                }
                 //add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
             $abstract_r->addResource('bdo:workHasTranslation', $url_expression);
@@ -137,14 +141,19 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 add_graph_to_global($graph_abstract, $abstract_r->localName(), $global_graph_fd);
         }
     }
-    $expression_r->addResource('rdf:type', 'bdo:AbstractWork');
+    $expression_r->addResource('rdf:type', 'bdo:Work'); // abstract
     if ($bdrc) {
         $expression_r->addResource('adm:sameAsrKTs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     } else {
         $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     }
-    $expression_r->addResource('bdo:workLangScript', 'bdr:BoTibt'); // TODO: some works are just sanskrit dharanis...
-    $expression_r->addLiteral('bdo:workRefrKTs'.($tengyur ? 'T' : 'K'), $id);
+    $expression_r->addResource('bdo:language', 'bdr:LangBo');
+    //$expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
+    $idUri = bnode_url("ID", $expression_r, $expression_r, $id);
+    $idNode = $expression_r->getGraph()->resource($idUri);
+    $expression_r->addResource('bf:identifiedBy', $idNode);
+    $idNode->add('rdf:value', $id);
+    $idNode->addResource('rdf:type', 'bdr:RefrKTs'.($tengyur ? 'T' : 'K'));
     $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {
         $name = $child->getName();
@@ -155,17 +164,18 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $noteNode = $expression_r->getGraph()->resource($noteUri);
             $expression_r->addResource('bdo:note', $noteNode);
             $noteNode->add('bdo:noteText', $child->__toString());
+            $noteNode->addResource('rdf:type', "bdo:Note");
             continue;
         }
         if ($name == "subitem") {
             $subitem = $child->__toString();
             $subitemtoitem[$subitem] = $id;
-            $expression_r->addResource('bdo:workHasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:hasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
             continue;
         }
         if (array_key_exists($id, $subitemtoitem)) {
             $parentid = $subitemtoitem[$id];
-            $expression_r->addResource('bdo:workPartOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:partOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
         }
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
@@ -177,9 +187,10 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         }
         $lit = normalize_lit($title, $langtag, $bdrc);
         if ($lit) {
-            //add_title($expression_r, 'WorkBibliographicalTitle', $lit);
-            if (!isset($seenLangs[$langtag])) {
+            if (!isset($seenLangs[$langtag]) && $lit->getLang() == 'bo-x-ewts') {
                 $expression_r->add('skos:prefLabel', $lit);
+            } else {
+                $expression_r->add('skos:altLabel', $lit);
             }
         }
         $seenTitles[$title] = true;

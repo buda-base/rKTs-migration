@@ -39,9 +39,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
-    $part_r->addResource('bdo:workExpressionOf', $url_parent_text);
-    $part_r->addResource('rdf:type', 'bdo:Work');
-    $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
+    $part_r->addResource('bdo:instanceOf', $url_parent_text);
+    $part_r->addResource('rdf:type', 'bdo:Instance');
+    $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
     // not sure the following blank is good, maybe this is too specific to this point in time and is not future proof... commenting
     // if (!$bdrc){
     //     foreach ($edition_info['confinfo']['RID'] as $rid) {
@@ -52,11 +52,17 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     //     $url_part_other = id_to_url_edition_text($rid, $rktsid, $config, $partnum, false);
     //     $part_r->addResource('owl:sameAs', $url_part_other);
     // }
-    $part_r->addLiteral('bdo:'.$edition_info['confinfo']['propSigla'], $catalogue_index);
+
+    $idUri = bnode_url("ID", $part_r, $part_r, $catalogue_index);
+    $idNode = $part_r->getGraph()->resource($idUri);
+    $part_r->addResource('bf:identifiedBy', $idNode);
+    $idNode->add('rdf:value', $catalogue_index);
+    $idNode->addResource('rdf:type', 'bdr:'.$edition_info['confinfo']['propSigla']);
+
     $colophon = $item->coloph;
     if (!empty($colophon->__toString())) {
         $lit = normalize_lit($colophon, 'bo-x-ewts', $bdrc);
-        $part_r->add('bdo:workColophon', $lit);
+        $part_r->add('bdo:colophon', $lit);
     }
     $tib = trim($item->tib->__toString());
     $bibliographicalTitleNode = null;
@@ -65,33 +71,37 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $part_r->add('skos:prefLabel', $lit);
         //if on derge, tib is the incipit title:
         if ($edition_info['confinfo']['EID'] == "D") {
-            $bibliographicalTitleNode = add_title($part_r, 'WorkIncipitTitle', $lit);
+            $bibliographicalTitleNode = add_title($part_r, 'IncipitTitle', $lit);
         } else {
-            $bibliographicalTitleNode = add_title($part_r, 'WorkBibliographicalTitle', $lit);
+            $bibliographicalTitleNode = add_title($part_r, 'Title', $lit);
         }
     }
     $coltitle = trim($item->coltitle->__toString());
     if (!empty($coltitle) && $coltitle != "-") {
-        $lit = normalize_lit($coltitle, 'bo-x-ewts', $bdrc);
-        if (empty($tib)) {
-            $part_r->add('skos:prefLabel', $lit);
+        if ($tib != $coltitle) {
+            $lit = normalize_lit($coltitle, 'bo-x-ewts', $bdrc);
+            if (empty($tib)) {
+                $part_r->add('skos:prefLabel', $lit);
+            }
+            add_title($part_r, 'ColophonTitle', $lit, $bibliographicalTitleNode);
+        } else {
+            $bibliographicalTitleNode->addResource('rdf:type', 'bdo:ColophonTitle');
         }
-        add_title($part_r, 'WorkColophonTitle', $lit, $bibliographicalTitleNode);
     }
     $skttrans = trim($item->skttrans->__toString());
     if (!empty($skttrans) && $skttrans != "-") {
         $lit = normalize_lit($skttrans, 'sa-x-ewts', $bdrc);
-        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+        add_title($part_r, 'IncipitTitle', $lit, $bibliographicalTitleNode);
     }
     $bsktrans = trim($item->bsktrans->__toString());
     if (!empty($bsktrans) && $bsktrans != "-") {
         $lit = normalize_lit($bsktrans, 'bsk-x-ewts', $bdrc);
-        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+        add_title($part_r, 'IncipitTitle', $lit, $bibliographicalTitleNode);
     }
     $zhtrans = trim($item->zhtrans->__toString());
     if (!empty($zhtrans)) {
         $lit = normalize_lit($zhtrans, 'zh-x-ewts', $bdrc);
-        add_title($part_r, 'WorkIncipitTitle', $lit, $bibliographicalTitleNode);
+        add_title($part_r, 'IncipitTitle', $lit, $bibliographicalTitleNode);
     }
     $events = [];
     foreach ($tag_to_event_role as $tag => $eventrole) {
@@ -104,7 +114,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 $nodeUri = bnode_url("EV", $part_r, $part_r, $event.$lit->getValue());
                 $eventResource = $part_r->getGraph()->resource($nodeUri);
                 $eventResource->addResource('rdf:type', $event);
-                $part_r->addResource('bdo:workEvent', $eventResource);
+                $part_r->addResource('bdo:instanceEvent', $eventResource);
                 $events[$event] = $eventResource;
             } else {
                 $eventResource = $events[$event];
@@ -147,24 +157,26 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             }
             $graph_section = new EasyRdf_Graph();
             $section_r = $graph_section->resource($url_semantic_section);
-            $section_r->addResource('rdf:type', 'bdo:Work');
-            $section_r->addResource('bdo:workPartOf', $url_broader_edition);
-            $section_r->addLiteral('bdo:workPartIndex', $sectionIndex);
-            $section_r->addResource('bdo:workPartType', 'bdr:WorkSection');
+            $section_r->addResource('rdf:type', 'bdo:Instance');
+            $section_r->addResource('bdo:partOf', $url_broader_edition);
+            $section_r->addResource('bdo:inRootInstance', $url_broader_edition);
+            $section_r->addLiteral('bdo:partIndex', $sectionIndex);
+            $section_r->addResource('bdo:partType', 'bdr:PartTypeSection');
             $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
-            $section_r->addLiteral('bdo:workPartTreeIndex', $section_partTreeIndex);
+            $section_r->addLiteral('bdo:partTreeIndex', $section_partTreeIndex);
             add_location_section_begin($section_r, $location, $edition_info, $eid);
         }
-        $section_part_count = $section_r->countValues('bdo:workHasPart');
-        $section_r->addResource('bdo:workHasPart', $part_r->getUri());
-        $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
-        $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
+        $section_part_count = $section_r->countValues('bdo:hasPart');
+        $section_r->addResource('bdo:hasPart', $part_r->getUri());
+        $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
+        $part_r->addLiteral('bdo:partIndex', $section_part_count+1);
         $part_partTreeIndex = $section_partTreeIndex.'.'.sprintf("%02d", $section_part_count+1);
         if ($thisPartTreeIndex != null) {
             $part_partTreeIndex = $thisPartTreeIndex;
         }
-        $part_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex);
-        $part_r->addResource('bdo:workPartOf', $url_semantic_section);
+        $part_r->addLiteral('bdo:partTreeIndex', $part_partTreeIndex);
+        $part_r->addResource('bdo:partOf', $url_semantic_section);
+        $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
         add_location_simple($part_r, $location, $edition_info, $eid);
         //add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
         // foreach ($item->bampo as $bampo) {
@@ -187,12 +199,13 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $chap_url = id_to_url_edition_text_chapter($eid, $rktsid, $chapnum, $config, $partnum, $bdrc);
             $graph_chap = new EasyRdf_Graph();
             $chap_r = $graph_chap->resource($chap_url);
-            $chap_r->addResource('rdf:type', 'bdo:Work');
-            $chap_r->addResource('bdo:workPartType', 'bdr:WorkChapter');
-            $chap_r->addResource('bdo:workPartOf', $url_part);
-            $chap_r->addLiteral('bdo:workPartIndex', $chapnum);
-            $chap_r->addLiteral('bdo:workPartTreeIndex', $part_partTreeIndex.'.'.sprintf("%02d", $chapnum));
-            $part_r->addResource('bdo:workHasPart', $chap_url);
+            $chap_r->addResource('rdf:type', 'bdo:Instance');
+            $chap_r->addResource('bdo:partType', 'bdr:PartTypeChapter');
+            $chap_r->addResource('bdo:partOf', $url_part);
+            $chap_r->addResource('bdo:inRootInstance', $url_broader_edition);
+            $chap_r->addLiteral('bdo:partIndex', $chapnum);
+            $chap_r->addLiteral('bdo:partTreeIndex', $part_partTreeIndex.'.'.sprintf("%02d", $chapnum));
+            $part_r->addResource('bdo:hasPart', $chap_url);
             $dotpos = strpos($chaptitle, ". ");
             if ($dotpos < 5) {
                 $chaptitle = substr($chaptitle, $dotpos+2);
@@ -200,7 +213,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 //report_error($fileName, 'wrong chapter format', 'rkts_'.$rktsid, $chaptitle);
             }
             $lit = normalize_lit($chaptitle, 'bo-x-ewts', $bdrc);
-            add_title($chap_r, 'WorkOtherTitle', $lit);
+            add_title($chap_r, 'Title', $lit);
             $chap_r->addLiteral('skos:prefLabel', $lit);
             $location = get_chap_loc($chap->p->__toString(), $fileName, 'rkts_'.$rktsid);
             if ($location) {
@@ -221,16 +234,18 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $tengyur, $url_part, $partTreeIndex);
         }
     } else { # couldn't read loc
-        $section_part_count = $section_r->countValues('bdo:workHasPart');
-        $section_r->addResource('bdo:workHasPart', $part_r->getUri());
-        $part_r->addResource('bdo:workPartType', 'bdr:WorkText');
-        $part_r->addLiteral('bdo:workPartIndex', $section_part_count+1);
-        $part_r->addResource('bdo:workPartOf', $section_r);
+        $section_part_count = $section_r->countValues('bdo:hasPart');
+        $section_r->addResource('bdo:hasPart', $part_r->getUri());
+        $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
+        $part_r->addLiteral('bdo:partIndex', $section_part_count+1);
+        $part_r->addResource('bdo:partOf', $section_r);
+        $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
         if ($item->loc != "") {
             $noteUri = bnode_url("NT", $part_r, $part_r, $item->loc);
             $noteNode = $part_r->getGraph()->resource($noteUri);
             $part_r->addResource('bdo:note', $noteNode);
             $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
+            $noteNode->addResource('rdf:type', 'bdo:Note');
         }
     }
     foreach ($item->note as $note) { // iterating on chapters
@@ -240,6 +255,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $noteNode = $part_r->getGraph()->resource($noteUri);
         $part_r->addResource('bdo:note', $noteNode);
         $noteNode->add('bdo:noteText', $note);
+        $noteNode->addResource('rdf:type', 'bdo:Note');
     }
     add_log_entry($part_r);
     rdf_to_ttl($config, $graph_part, $part_r->localName(), $bdrc);
@@ -273,7 +289,7 @@ function create_volume_map($edition_r, &$editionVolumeMap, $config, $edition_inf
     foreach ($editionVolumeMap as $sectionIdx => &$sectionArr) {
         $sectionUrl = get_url_for_vol_section($editionId, $sectionIdx+1, $config, $bdrc);
         $semantic_section_url = id_to_url_edition_section_part($eid, $config, $sectionIdx+1, $sectionIdx+1, $bdrc);
-        $edition_r->addResource('bdo:workHasPart', $semantic_section_url);
+        $edition_r->addResource('bdo:hasPart', $semantic_section_url);
         // if (!isset($editionVolumeMap['volnumInfo'])) {
         //     $editionVolumeMap['volnumInfo'] = [];
         //     $editionVolumeMap['volnumInfo'][0] = null;
@@ -348,12 +364,12 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     $url_edition = id_to_url_edition($eid, $config, $bdrc);
     $edition_r = $graph_edition->resource($url_edition);
-    $edition_r->addResource('rdf:type', 'bdo:Work');
+    $edition_r->addResource('rdf:type', 'bdo:Instance');
     $edition_name = $xml->name->__toString();
     $edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
     $edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
-    $edition_r->addResource('bdo:workLangScript', $edition_info['confinfo']['langScript']);
-    $edition_r->addResource('bdo:workPrintType', $edition_info['confinfo']['printType']);
+    $edition_r->addResource('bdo:script', $edition_info['confinfo']['script']);
+    $edition_r->addResource('bdo:printMethod', $edition_info['confinfo']['printType']);
     if ($bdrc) {
         $edition_r->addResource('rdfs:seeAlso', id_to_url_edition($edition_info['confinfo']['EID'], $config, !$bdrc));
     } else {

@@ -69,6 +69,7 @@ $config['opts'] = $getOpt;
 EasyRdf_Namespace::set('adm', 'http://purl.bdrc.io/ontology/admin/');
 EasyRdf_Namespace::set('bdg', 'http://purl.bdrc.io/graph/');
 EasyRdf_Namespace::set('bdo', 'http://purl.bdrc.io/ontology/core/');
+EasyRdf_Namespace::set('bf', 'http://id.loc.gov/ontologies/bibframe/');
 EasyRdf_Namespace::set('bdr', 'http://purl.bdrc.io/resource/');
 EasyRdf_Namespace::set('skos', 'http://www.w3.org/2004/02/skos/core#');
 EasyRdf_Namespace::set('bda', 'http://purl.bdrc.io/admindata/');

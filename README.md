@@ -7,7 +7,8 @@ To run the migration script first install the required dependencies _in the rKTs
 ```
 composer install
 ```
-For help with this see [install composer](https://nomadphp.com/blog/13/How-do-I-install-composer-), for example.
+
+For help with this see [install composer](https://nomadphp.com/blog/13/How-do-I-install-composer-), for example. It may be necessary to run ```composer.phar``` or ```php composer.phar``` depending on how the composer-setup.php leaves things.
 
 Several php packages are needed:
 ```
