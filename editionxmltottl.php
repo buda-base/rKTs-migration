@@ -53,10 +53,10 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     //     $part_r->addResource('owl:sameAs', $url_part_other);
     // }
 
-    $idUri = bnode_url("ID", $part_r, $part_r, $catalogue_index);
+    $idUri = bnode_url("ID", $part_r, $part_r, $item->ref);
     $idNode = $part_r->getGraph()->resource($idUri);
     $part_r->addResource('bf:identifiedBy', $idNode);
-    $idNode->add('rdf:value', $catalogue_index);
+    $idNode->add('rdf:value', $item->ref);
     $idNode->addResource('rdf:type', 'bdr:'.$edition_info['confinfo']['propSigla']);
 
     $colophon = $item->coloph;
