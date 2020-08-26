@@ -112,7 +112,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     $firstTitleLits = get_first_title_lits($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
-        $expression_r->addResource('bdo:workTranslationOf', $url_abstract);
+        $expression_r->addResource('bdo:workHasParallelsIn', $url_abstract);
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
             $graph_abstract = new EasyRdf_Graph();
             $abstract_r = $graph_abstract->resource($url_abstract);
