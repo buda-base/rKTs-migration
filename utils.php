@@ -524,6 +524,7 @@ $name_to_bcp = [
     'sktuni' => 'sa-Deva',
     'sanskrit' => 'sa-x-iast',
     'StandardSanskrit' => 'sa-x-iast',
+    'English84000' => 'en',
     'skt' => 'sa-x-iast',
     'mongolian' => 'cmg-x-poppe-simpl',
     'mng' => 'cmg-x-poppe-simpl',

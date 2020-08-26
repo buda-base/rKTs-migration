@@ -108,6 +108,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $expression_r->addResource('bdo:workHasInstance', $text_url);
         }
     }
+    $abstract_r = null;
     $firstTitleLits = get_first_title_lits($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
@@ -129,11 +130,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 if ($firstTitleLit->getLang() == 'sa-x-iast') {
                     $abstract_r->add('skos:prefLabel', $firstTitleLit);
                 } else {
-                    $abstract_r->add('skos:altLabel', $firstTitleLit);
+                    //$abstract_r->add('skos:altLabel', $firstTitleLit);
                 }
                 //add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
-            $abstract_r->addResource('bdo:workHasTranslation', $url_expression);
+            $abstract_r->addResource('bdo:workHasParallelsIn', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
             add_log_entry($abstract_r);
             rdf_to_ttl($config, $graph_abstract, $abstract_r->localName(), $bdrc);
@@ -189,7 +190,9 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($lit) {
             if (!isset($seenLangs[$langtag]) && $lit->getLang() == 'bo-x-ewts') {
                 $expression_r->add('skos:prefLabel', $lit);
-            } else {
+            } elseif ($lit->getLang() == 'sa-x-iast' && $abstract_r != null) {
+                $abstract_r->add('skos:altLabel', $lit);
+            } elseif ($lit->getLang() != 'en') {
                 $expression_r->add('skos:altLabel', $lit);
             }
         }
