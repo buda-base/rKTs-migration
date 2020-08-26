@@ -129,6 +129,8 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             foreach ($firstTitleLits as $firstTitleLit) {
                 if ($firstTitleLit->getLang() == 'sa-x-iast') {
                     $abstract_r->add('skos:prefLabel', $firstTitleLit);
+                    $titletotest = strtolower(str_replace(array("-", " "), "", $firstTitleLit->getValue()));
+                    $seenTitles[$titletotest] = true;
                 } else {
                     //$abstract_r->add('skos:altLabel', $firstTitleLit);
                 }
@@ -137,9 +139,6 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
             $abstract_r->addResource('bdo:workHasParallelsIn', $url_expression);
             //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
             add_log_entry($abstract_r);
-            rdf_to_ttl($config, $graph_abstract, $abstract_r->localName(), $bdrc);
-            if (!$bdrc)
-                add_graph_to_global($graph_abstract, $abstract_r->localName(), $global_graph_fd);
         }
     }
     $expression_r->addResource('rdf:type', 'bdo:Work'); // abstract
@@ -182,8 +181,12 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
             continue;
         $title = trim($child->__toString());
-        if (!$restoredFromDuplicate && isset($seenTitles[$title])) {
-            report_error('kernel', 'duplicate', 'rkts_'.$id, 'title "'.$title.'" appears more than once');
+        $titletotest = $title;
+        if ($langtag == 'sa-x-iast') {
+            $titletotest = strtolower(str_replace(array("-", " "), "", $title));
+        }
+        if (!$restoredFromDuplicate && isset($seenTitles[$titletotest])) {
+            //report_error('kernel', 'duplicate', 'rkts_'.$id, 'title "'.$title.'" appears more than once');
             continue;
         }
         $lit = normalize_lit($title, $langtag, $bdrc);
@@ -196,8 +199,13 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 $expression_r->add('skos:altLabel', $lit);
             }
         }
-        $seenTitles[$title] = true;
+        $seenTitles[$titletotest] = true;
         $seenLangs[$langtag] = true;
+    }
+    if ($abstract_r != null) {
+        rdf_to_ttl($config, $graph_abstract, $abstract_r->localName(), $bdrc);
+        if (!$bdrc)
+            add_graph_to_global($graph_abstract, $abstract_r->localName(), $global_graph_fd);
     }
     if ($storeAsDuplicate) {
         $gl_KanToTenExpressions[$idtostore] = [
@@ -217,7 +225,6 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
 function kernel_to_ttl($config, $xml, $global_graph_fd, $bdrc=False, $tengyur=False) {
     foreach($xml->item as $item) {
         kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc, $tengyur);
-        //return;
     }
 }
 
