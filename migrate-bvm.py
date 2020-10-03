@@ -80,14 +80,30 @@ def migrate_one_file(iilname, fpath, iglname):
     try:
         with open(fpath) as json_file:
             rkjson = json.load(json_file)
-    except:
-        print("can't open "+str(fpath))
+    except Exception as e:
+        print("can't open "+str(fpath)+" "+str(e))
         return None
     volqname = "bdr:"+iglname
     ilist = get_img_list(iilname, iglname)
     ilistfidx = {}
+    previousi = 0
     for iinfo in ilist:
-        ilistfidx[iinfo["filename"]] = {}
+        fname = iinfo["filename"]
+        ilistfidx[fname] = {}
+        dotidx = fname.rfind('.')
+        if dotidx == -1:
+            print(iglname+": strange filename: "+fname)
+            previousi = 0
+        else:
+            potentialnum = fname[dotidx-4:dotidx]
+            try:
+                i = int(potentialnum)
+                if previousi != 0 and i != previousi + 1:
+                    print(iglname+": non-contiguous imagelist"+fname)
+                previousi = i
+            except:
+                print(iglname+": strange filename: "+fname)
+                previousi = 0
     res["for-volume"] = volqname
     if iilname in ESUKHIA_ATTR_RIDS:
         res["attribution"] = get_lgstr_arr("Data provided by Esukhia under the CC0 license", "en")
@@ -118,6 +134,8 @@ def migrate_one_file(iilname, fpath, iglname):
         seenpg[ps].append(pg)
         lastpg = pg
         imgdata = rkdata["file"]
+        if imgdata == "missing":
+            continue
         dblcolidx = imgdata.find("::")
         if dblcolidx < 0:
             print(iglname+"("+idxstr+"): can't understand "+imgdata)
