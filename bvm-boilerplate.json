@@ -1,0 +1,30 @@
+{
+    "spec-version": "0.1.0",
+    "status": "released",
+    "viewing-direction": "top-to-bottom",
+    "pagination": [
+        {
+            "id": "pgfolios",
+            "type": "folios"
+        }
+    ],
+    "default-view": "view1",
+    "view": {
+        "view1": {
+            "imagelist": []
+        }
+    },
+    "appData": {
+        "bvmt": {
+            "metadata-for-bvmt-ver": "0.1.0",
+            "default-vol-string-lang": "bo"
+        }
+    },
+    "changes": [
+        {
+            "time": "2020-10-03T11:35:30Z",
+            "user": "bdu:U1653882847",
+            "message": {"@value": "migration from rKTs data", "@language": "en"}
+        }
+    ]
+}
