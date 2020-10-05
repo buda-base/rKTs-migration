@@ -74,7 +74,114 @@ def comparepg(pg1,pg2):
         return duplcmp
     return 0
 
+def fix_one_file(iilname, fpath, iglname):
+    if iilname in ESUKHIA_ATTR_RIDS:
+        return
+    rkjson = None
+    try:
+        with open(fpath) as json_file:
+            rkjson = json.load(json_file)
+    except Exception as e:
+        print("can't open "+str(fpath)+" "+str(e))
+        return None
+    volqname = "bdr:"+iglname
+    ilist = get_img_list(iilname, iglname)
+    ilistfidx = {}
+    previousi = 0
+    regularfilelist = True
+    imgidx = 0
+    nbimages = len(ilist)
+    for iinfo in ilist:
+        fname = iinfo["filename"]
+        ilistfidx[fname] = {"idx": imgidx}
+        imgidx += 1
+        if fname.endswith("json"):
+            nbimages -= 1
+            continue
+        dotidx = fname.rfind('.')
+        if dotidx == -1:
+            print(iglname+": strange filename: "+fname)
+            previousi = 0
+            regularfilelist = False
+        else:
+            potentialnum = fname[dotidx-4:dotidx]
+            try:
+                i = int(potentialnum)
+                if previousi != 0 and i != previousi + 1:
+                    print(iglname+": non-contiguous imagelist"+fname)
+                    regularfilelist = False
+                previousi = i
+            except:
+                print(iglname+": strange filename: "+fname)
+                previousi = 0
+                regularfilelist = False
+    if regularfilelist:
+        return
+    print("fixing "+str(fpath))
+    # first some error checking and gathering the various sections
+    sortedkeys = sorted(rkjson.keys(), key=lambda x: int(x))
+    nbimagesused = 0
+    diff = None
+    haschanges = False
+    for idxstr in sortedkeys:
+        rkdata = rkjson[idxstr]
+        imgdata = rkdata["file"]
+        if imgdata == "missing":
+            continue
+        nbimagesused += 1
+        dblcolidx = imgdata.find("::")
+        if dblcolidx < 0:
+            print(iglname+"("+idxstr+"): can't understand "+imgdata)
+        fname = imgdata[dblcolidx+2:]
+        # in some cases the first images have been adjusted, so we ignore shifts in the image list before image number 4:
+        #if int(idxstr) < 5:
+        #    continue
+        dotidx = fname.find(".")
+        fnamenums = fname[dotidx-4:dotidx]
+        fnamenum = None
+        try:
+            fnamenum = int(fnamenums)
+        except:
+            print(iglname+"("+idxstr+"): can't find number of "+fname)
+            continue
+        if diff is None:
+            if fname not in ilistfidx:
+                print(iglname+"("+idxstr+"): file not in list: "+fname)
+                continue
+            fileidx = ilistfidx[fname]["idx"]
+            diff = fnamenum - fileidx
+            print("computing a diff of "+str(diff))
+            continue
+        if fnamenum-diff >= len(ilist):
+            print(iglname+"("+idxstr+"):using too many files: "+fname)
+            continue
+        theoreticalfname = ilist[fnamenum-diff]["filename"]
+        if theoreticalfname != fname:
+            #print(iglname+"("+idxstr+"): renaming : "+fname+" into "+theoreticalfname)
+            newimgdata = imgdata[:dblcolidx+2]+theoreticalfname
+            rkdata["file"] = newimgdata
+            haschanges = True
+    if haschanges:
+        print("writing "+iglname+".fixed.json")
+        write_rkts_json(iglname+".fixed.json", rkjson)
+    else:
+        print("no change, a bit odd...")
+
+def write_rkts_json(fname, rkjson):
+    with open(fname, 'w') as json_file:
+        json_file.write("{\n")
+        first = True
+        sortedkeys = sorted(rkjson.keys(), key=lambda x: int(x))
+        for idxstr in sortedkeys:
+            if not first:
+                json_file.write(",\n")
+            rkdata = rkjson[idxstr]
+            json_file.write('"%s":{"pagination":"%s","psection":"%s","file":"%s"}' % (idxstr,rkdata["pagination"],rkdata["psection"],rkdata["file"]))
+            first = False
+        json_file.write('\n}')
+
 def migrate_one_file(iilname, fpath, iglname):
+    print("migrating "+str(fpath))
     res = copy.deepcopy(BVM_BOILERPLATE)
     rkjson = None
     try:
@@ -104,7 +211,7 @@ def migrate_one_file(iilname, fpath, iglname):
             except:
                 print(iglname+": strange filename: "+fname)
                 previousi = 0
-    res["for-volume"] = volqname
+    res["imggroup"] = volqname
     if iilname in ESUKHIA_ATTR_RIDS:
         res["attribution"] = get_lgstr_arr("Data provided by Esukhia under the CC0 license", "en")
     else:
@@ -123,6 +230,9 @@ def migrate_one_file(iilname, fpath, iglname):
         if ps not in psections:
             psections.append(ps)
             seenpg[ps] = []
+            if "sections" not in res:
+                res["sections"] = []
+            res["sections"].append({"id": ps,"name":{"@value": ps, "@language": "bo-x-ewts"}})
         pg = rkdata["pagination"]
         match = PG_RE.match(pg)
         if not match:
@@ -140,16 +250,49 @@ def migrate_one_file(iilname, fpath, iglname):
         if dblcolidx < 0:
             print(iglname+"("+idxstr+"): can't understand "+imgdata)
         fname = imgdata[dblcolidx+2:]
-        if fname not in ilistfidx:
+        igname = imgdata[4:dblcolidx]
+        if igname != iglname:
+            print(iglname+"("+idxstr+"): file not in imagegroup: "+imgdata)
+        elif fname not in ilistfidx:
             print(iglname+"("+idxstr+"): file not in list: "+fname)
         elif "seen" in ilistfidx[fname]:
             print(iglname+"("+idxstr+"): file used twice: "+fname)
         else:
             ilistfidx[fname]["seen"] = True
-    for fname, fdata in ilistfidx.items():
+    insertafter = {}
+    lastseen = None
+    lastfname = None
+    afterfirstseen = False
+    for i, iinfo in enumerate(ilist):
+        fname = iinfo["filename"]
+        lastfname = fname
+        fdata = ilistfidx[fname]
         if "seen" not in fdata:
             print(iglname+": file not used: "+fname)
-    for idxstr in sortedkeys:
+            # adding first files to the bvm if they're not in the list
+            if not afterfirstseen:
+                resimgdata = {}
+                resimglist.append(resimgdata)
+                resimgdata["filename"] = fname
+                # a bit risque but it seems to work
+                if i < 3:
+                    add_tag(resimgdata, "T0005")
+                    resimgdata["display"] = False
+            else:
+                if lastseen not in insertafter:
+                    insertafter[lastseen] = []
+                insertafter[lastseen].append(fname)
+        else:
+            afterfirstseen = True
+            lastseen = fname
+
+    # removing the final entry so that we display the final images:
+    finalimages = []
+    if lastseen == lastfname and lastseen in insertafter:
+        finalimage = insertafter[lastseen]
+        insertafter[lastseen] = None
+
+    for i, idxstr  in enumerate(sortedkeys):
         rkdata = rkjson[idxstr]
         resimgdata = {}
         resimglist.append(resimgdata)
@@ -159,6 +302,8 @@ def migrate_one_file(iilname, fpath, iglname):
             add_tag(resimgdata, "T0016")
             # TODO: of previous one?
         resimgdata["pagination"] = {"pgfolios": {"value": pagination}}
+        if "psection" in rkdata and rkdata["psection"]:
+            resimgdata["pagination"]["pgfolios"]["section"] = rkdata["psection"]
         imgdata = rkdata["file"]
         # TODO: make sure that when there's a missing, both sides are missing
         if "missing" in imgdata:
@@ -166,9 +311,23 @@ def migrate_one_file(iilname, fpath, iglname):
             continue
         dblcolidx = imgdata.find("::")
         if dblcolidx > -1:
-            resimgdata["filename"] = imgdata[dblcolidx+2:]
+            fname = imgdata[dblcolidx+2:]
+            resimgdata["filename"] = fname
+            igname = imgdata[4:dblcolidx]
+            if igname != iglname:
+                resimgdata["imggroup"] = igname
+            if fname in insertafter:
+                for afterfname in insertafter[fname]:
+                    resimgdata2 = {}
+                    resimglist.append(resimgdata2)
+                    resimgdata2["filename"] = afterfname
+                    resimgdata2["display"] = False
         if "note" in rkdata and rkdata["note"] != "" and rkdata["note"] != "None":
             resimgdata = get_lgstr_arr(rkdata["note"], guess_lt(rkdata["note"]))
+    for fname in finalimages:
+        resimgdata = {}
+        resimglist.append(resimgdata)
+        resimgdata["filename"] = fname
     return res
 
 def add_tag(imgdata, tagid):
@@ -207,20 +366,31 @@ def main():
     Path(OUTPUT_DIR).mkdir(exist_ok=True)
     with open('bvm-boilerplate.json') as json_file:
         BVM_BOILERPLATE = json.load(json_file)
+    #for fname in ["../rKTs/paginations/3CN20612/3CN20712.json"]: #glob.glob('../rKTs/paginations/**/*.json'):
     for fname in glob.glob('../rKTs/paginations/**/*.json'):
-        print("migrating "+fname)
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
+        #fix_one_file(iilname, p, iglname)
+        #migrate_one_file(iilname, p, iglname)
         res = migrate_one_file(iilname, p, iglname)
         if res is None:
             continue
         bvmhash = hashlib.md5(iglname.encode("utf8")).hexdigest()[:2]
+        print(iglname+":"+bvmhash)
         Path(OUTPUT_DIR+'/'+bvmhash).mkdir(exist_ok=True)
         with open(OUTPUT_DIR+'/'+bvmhash+'/'+iglname+'.json', 'w') as json_file:
-            json.dump(res, json_file, sort_keys=True, indent=2)
+            try:
+                json.dump(res, json_file, indent=2, sort_keys=True)
+            except:
+                print(res)
+                return
+        return
 
 # vol31 = 916
 # curl -X PUT -H Content-Type:application/json -T output/pagination/I4CZ75258.json -G https://iiifpres-dev.bdrc.io/bvm/ig:bdr:I4CZ75258
+
+#for i in range(1,491):
+#    print('"%d":{"pagination":"%s%s","psection":"\'dul ba","file":"bdr:I1GS66182::I1GS661820%0.3d.tif"},' % (i,int((i+1)/2),i%2 and "a" or "b",i+5))
 
 main()
