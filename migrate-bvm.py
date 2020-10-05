@@ -8,7 +8,7 @@ import copy
 import glob
 
 S3 = boto3.client('s3')
-IL_DIR = "output/il-cache"
+IL_DIR = "il-cache"
 BVM_BOILERPLATE = {}
 ESUKHIA_ATTR_RIDS = ["W1GS66030", "W1KG13126", "W22704", "W23702", "W23703", "W2KG209989"]
 PG_RE = re.compile(r"^(?P<folionum>x|\d+)(?P<duplind>'*)(?P<side>[ab])(?P<certaintyind>\??)(?P<detailind>\(d\d*\))?")
@@ -224,15 +224,14 @@ def migrate_one_file(iilname, fpath, iglname):
     lastpg = ""
     # first some error checking and gathering the various sections
     sortedkeys = sorted(rkjson.keys(), key=lambda x: int(x))
+    if len(sortedkeys) == 0:
+        return
     for idxstr in sortedkeys:
         rkdata = rkjson[idxstr]
         ps = "psection" in rkdata and rkdata["psection"] or ""
         if ps not in psections:
             psections.append(ps)
             seenpg[ps] = []
-            if "sections" not in res:
-                res["sections"] = []
-            res["sections"].append({"id": ps,"name":{"@value": ps, "@language": "bo-x-ewts"}})
         pg = rkdata["pagination"]
         match = PG_RE.match(pg)
         if not match:
@@ -259,6 +258,10 @@ def migrate_one_file(iilname, fpath, iglname):
             print(iglname+"("+idxstr+"): file used twice: "+fname)
         else:
             ilistfidx[fname]["seen"] = True
+    if len(psections) > 1:
+        res["sections"] = []
+        for ps in psections:
+            res["sections"].append({"id": ps,"name":{"@value": ps, "@language": "bo-x-ewts"}})
     insertafter = {}
     lastseen = None
     lastfname = None
@@ -302,7 +305,7 @@ def migrate_one_file(iilname, fpath, iglname):
             add_tag(resimgdata, "T0016")
             # TODO: of previous one?
         resimgdata["pagination"] = {"pgfolios": {"value": pagination}}
-        if "psection" in rkdata and rkdata["psection"]:
+        if "psection" in rkdata and rkdata["psection"] and len(psections) > 1:
             resimgdata["pagination"]["pgfolios"]["section"] = rkdata["psection"]
         imgdata = rkdata["file"]
         # TODO: make sure that when there's a missing, both sides are missing
@@ -371,8 +374,7 @@ def main():
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
-        #fix_one_file(iilname, p, iglname)
-        #migrate_one_file(iilname, p, iglname)
+        # res = fix_one_file(iilname, p, iglname)
         res = migrate_one_file(iilname, p, iglname)
         if res is None:
             continue
@@ -381,11 +383,10 @@ def main():
         Path(OUTPUT_DIR+'/'+bvmhash).mkdir(exist_ok=True)
         with open(OUTPUT_DIR+'/'+bvmhash+'/'+iglname+'.json', 'w') as json_file:
             try:
-                json.dump(res, json_file, indent=2, sort_keys=True)
+                json.dump(res, json_file, indent=1, sort_keys=True, separators=(",",":"))
             except:
                 print(res)
                 return
-        return
 
 # vol31 = 916
 # curl -X PUT -H Content-Type:application/json -T output/pagination/I4CZ75258.json -G https://iiifpres-dev.bdrc.io/bvm/ig:bdr:I4CZ75258
