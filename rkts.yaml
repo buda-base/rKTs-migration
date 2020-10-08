@@ -104,7 +104,8 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
-  RID: ["MW22084", "MW4CZ5369", "MW30532"]
+  RID: ["MW22084", "MW4CZ5369", "MW30532", "MW3CN20612"]
+  file: "catalogs/22084.xml"
   EID: "D"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -130,6 +131,7 @@ derge:
   volumeBdrcPageFirstFolioDefault: 3
 narthang:
   RID: ["MW22703"]
+  file: "catalogs/22703.xml"
   EID: "N"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -153,6 +155,7 @@ narthang:
     ]
 peking:
   RID: ["MW1PD96684"]
+  file: "catalogs/1PD96684.xml"
   EID: "Q"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -169,6 +172,7 @@ peking:
     ]
 lhasa:
   RID: ["MW26071"]
+  file: "catalogs/26071.xml"
   EID: "H"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -189,6 +193,7 @@ lhasa:
     ]
 urga:
   RID: ["MW29468"]
+  file: "catalogs/29468.xml"
   EID: "U"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -211,10 +216,11 @@ urga:
     ]
 shey:
   RID: ["MW1PD127393"]
+  file: "catalogs/1PD127393.xml"
   EID: "Z"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdo:PrintMethod_Manuscript'
+  printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -232,6 +238,7 @@ shey:
     ]
 cone:
   RID: ["MW1PD96685"]
+  file: "catalogs/1PD96685.xml"
   EID: "C"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -251,7 +258,8 @@ cone:
     {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
     ]
 lithang:
-  RID: ["MW4CZ7445", "MW4PD3142"]
+  RID: ["MW4CZ7445"] #, "MW4PD3142"]
+  file: "catalogs/4CZ7445.xml"
   EID: "J"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -278,10 +286,11 @@ lithang:
     ]
 ulaanbaatar:
   RID: ["MW1KG14700"]
+  file: "catalogs/zzz in progress/ulaanbaatar.xml"
   EID: "V"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdo:PrintMethod_Manuscript'
+  printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
   volumeMap: [
@@ -300,11 +309,12 @@ ulaanbaatar:
 #   RID: ["W1KG14700"]
 #   EID: "Do"
 #   langScript: 'bdr:BoDbuCan'
-#   printType: 'bdo:PrintMethod_Manuscript'
+#   printType: 'bdr:PrintMethod_Manuscript'
 #   propSigla: "workKaTenSiglaDo"
 #   volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["MW22083"]
+  file: "catalogs/22083.xml"
   EID: "S"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -382,10 +392,11 @@ stog:
   duplicates: [""]
 chemdo:
   RID: ["MW1PD96682"]
+  file: "catalogs/zzz in progress/chemdo.xml"
   EID: "A"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
-  printType: 'bdo:PrintMethod_Offset'
+  printType: 'bdr:PrintMethod_Offset'
   propSigla: "KaTenSiglaA"
   volumeMap: [
      {name: "'dul ba", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa"]},
@@ -485,6 +496,7 @@ chemdo:
     "104": 35
 tanjurd:
   RID: ["MW23703"]
+  file: "catalogs/23703.xml"
   EID: "DT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -510,6 +522,7 @@ tanjurd:
   volumeBdrcPageFirstFolioDefault: 3
 tanjurg:
   RID: ["MW23702"]
+  file: "catalogs/23702.xml"
   EID: "GT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -519,6 +532,7 @@ tanjurg:
 tanjurn:
   RID: ["MW22704"]
   EID: "NT"
+  file: "catalogs/zzz in progress/tanjurn.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -527,8 +541,45 @@ tanjurn:
 tanjurq:
   RID: ["MW1KG13126"]
   EID: "QT"
+  file: "catalogs/zzz in progress/tanjurq.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaQ"
+  volumeMap: []
+egoo:
+  RID: ["MW1KG12671"]
+  EID: "EG"
+  file: "catalogs/1KG12671.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaEg"
+  volumeMap: []
+phugdrak:
+  RID: ["MW1KG13607"]
+  EID: "F"
+  file: "catalogs/1KG13607.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaF"
+  volumeMap: []
+goldenmustang:
+  RID: ["MW3CN1302"]
+  EID: "Cx"
+  file: "catalogs/3CN1302.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaCx"
+  volumeMap: []
+hemishe:
+  RID: ["MW4CZ45313"]
+  EID: "He"
+  file: "catalogs/4CZ45313.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaHe"
   volumeMap: []
