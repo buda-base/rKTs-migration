@@ -127,7 +127,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $eventResource->addResource('bdo:eventWho', $airResource);
         }
     }
-    $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid);
+    $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid, $eid);
     if (!empty($location) && array_key_exists('section', $location)) { // useful for xml debugging only
         $current_section = '';
         if ($fileName == "chemdo") {
@@ -136,6 +136,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $current_section = $volinfos['sectionName'];
         } else {
             $current_section = $location['section'];
+            if ($current_section == null) {
+                $current_section = $location['bpsection'];
+            }
         }
         $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
         if ($parentId != null) {
@@ -220,7 +223,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 $location['section'] = $current_section;
                 if ($fileName == 'chamdo' && empty($location['bvolname']))
                     $location['bvolname'] = $bvolname;
-                add_location_simple($chap_r, $location, $edition_info);
+                add_location_simple($chap_r, $location, $edition_info, $eid);
             }
             rdf_to_ttl($config, $graph_chap, $chap_r->localName(), $bdrc);
             if (!$bdrc)
@@ -365,9 +368,9 @@ function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid
     $url_edition = id_to_url_edition($eid, $config, $bdrc);
     $edition_r = $graph_edition->resource($url_edition);
     $edition_r->addResource('rdf:type', 'bdo:Instance');
-    $edition_name = $xml->name->__toString();
-    $edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
-    $edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
+    //$edition_name = $xml->name->__toString();
+    //$edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
+    //$edition_r->addLiteral('skos:prefLabel', $edition_name, 'en');
     $edition_r->addResource('bdo:script', $edition_info['confinfo']['script']);
     $edition_r->addResource('bdo:printMethod', $edition_info['confinfo']['printType']);
     if ($bdrc) {

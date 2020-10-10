@@ -180,9 +180,104 @@ function url_for_vol_num($volumenum, $volumeMapWithUrls) {
     return $res;
 }
 
-function folio_side_to_pagenum($folionum, $side, $volnum, $edition_info) {
+function gz_get_contents($path){
+    $data = '';
+    $file = @gzopen($path, 'rb', false);
+    if($file) {
+        while (!gzeof($file)) {
+            $data .= gzread($file, 1024);
+        }
+        gzclose($file);
+    }
+    return $data;
+}
+
+$lastjsonbname = null;
+$lastjson = null;
+
+function get_json($eid, $jsonbname) {
+    $res = [];
+    $baseeid = substr($eid, 2);
+    $path = "rKTs/paginations/".$baseeid."/".$jsonbname.".json";
+    $jsons = file_get_contents($path);
+    $jsonobj = json_decode($jsons, true);
+    //print_r($jsonobj);
+    if (substr($jsonbname,0,1) != "I") {
+        $jsonbpath = "I".$jsonbname;
+    } else {
+        $jsonbpath = $jsonbname;
+    }
+    ksort($jsonobj);
+    $pathil = "il-cache/".$jsonbpath.".json.gz";
+    $jsonils = gz_get_contents($pathil);
+    $jsonilobj = json_decode($jsonils, true);
+    //print_r($jsonilobj);
+    $fnametoimgnum = [];
+    foreach ($jsonilobj as $idx => $value) {
+        $imgnum = $idx+1;
+        $fnametoimgnum[$value["filename"]] = $imgnum;
+    }
+    //print_r($fnametoimgnum);
+    $attachtonext = [];
+    foreach ($jsonobj as $value) {
+        $psection = array_key_exists("psection", $value) ? $value["psection"] : "default";
+        $pg = $value["pagination"];
+        $fullfile = $value["file"];
+        if ($fullfile == "missing") {
+            $attachtonextval = [];
+            $attachtonextval["psection"] = $psection;
+            $attachtonextval["pg"] = $pg;
+            $attachtonext[] = $attachtonextval;
+            continue;
+        }
+        $fname = explode("::", $fullfile)[1];
+        $imgnum = $fnametoimgnum[$fname];
+        if (!array_key_exists($psection, $res)) {
+            $res[$psection] = [];
+        }
+        $res[$psection][$pg] = $imgnum;
+        foreach ($attachtonext as $attachtonextval) {
+            $psection = $attachtonextval["psection"];
+            if (!array_key_exists($psection, $res)) {
+                $res[$psection] = [];
+            }
+            $res[$psection][$attachtonextval["pg"]] = $imgnum;
+        }
+        $attachtonext = [];
+    }
+    foreach ($attachtonext as $attachtonextval) {
+        $psection = $attachtonextval["psection"];
+        if (!array_key_exists($psection, $res)) {
+            $res[$psection] = [];
+        }
+        $res[$psection][$attachtonextval["pg"]] = $imgnum;
+    }
+    return $res;
+}
+
+function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection, $eid, $edition_info) {
+    global $lastjson, $lastjsonbname;
     if ($side == null || empty($side))
         return $folionum;
+    if ($jsonbname) {
+        $json = null;
+        if ($jsonbname == $lastjsonbname) {
+            $json = $lastjson;
+        } else {
+            $json = get_json($eid, $jsonbname);
+            $lastjson = $json;
+            $lastjsonbname  = $jsonbname;
+        }
+        if (!$psection) {
+            $psection = "default";
+        }
+        //print_r($json);
+        if (!array_key_exists($psection, $json)) {
+            $psection = array_keys($json)[0];
+        }
+        $pgs = $json[$psection];
+        return $pgs[$folionum.$side];
+    }
     $toadd = 0;
     if ($side == 'b')
         $toadd=1;
@@ -219,10 +314,10 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
     if (isset($location['elinenum'])) {
         $locationNode->add('bdo:contentLocationEndLine', $location['elinenum']);
     }
-    $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
+    $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $location['bjson'], $location['bpsection'], $eid, $edition_info);
     $locationNode->add('bdo:contentLocationPage', $bpagenum);
     if (isset($location['epagenum'])) {
-        $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
+        $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $location['ejson'], $location['epsection'], $eid, $edition_info);
         $locationNode->add('bdo:contentLocationEndPage', $epagenum);
     }
 }
@@ -240,7 +335,7 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
     $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".$eid);
-    $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $edition_info);
+    $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $location['bjson'], $location['bpsection'], $eid, $edition_info);
     $locationNode->add('bdo:contentLocationPage', $bpagenum);
 }
 
@@ -264,7 +359,7 @@ function add_location_section_end($resource, $location, $edition_info, $eid) {
         $locationNode->add('bdo:contentLocationEndVolume', intval($location['bvolnum']));
     }
     if (isset($location['epagenum'])) {
-        $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $edition_info);
+        $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $location['ejson'], $location['epsection'], $eid, $edition_info);
         $locationNode->add('bdo:contentLocationEndPage', $epagenum);
     }
 }
@@ -346,7 +441,7 @@ function report_error($file, $type, $id, $message) {
 $allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu", "hi", "dzu", "wu", "zhu", "'u", "ru", "lu", "shu", "su", "hu", "u", "ke", "ge", "nge", "ce", "che", "je", "te", "de", "pe", "phe", "tshe", "dze", "we", "zhe", "ze", "ye", "re", "le", "she", "se", "he", "ko", "ngo", "co", "jo", "nyo", "to", "tho", "no", "po", "zu", "yu", "A", "khe", "nye", "the", "ne", "tse", "'e", "kho", "go", "cho", "do", "pho", "bo", "mo", "" ];
 
 $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
-$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?(?: \(vol\. (?P<bvolnum>\d+)(?:-(?P<evolnum>\d+))?)?/';
+$pattern_loc = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]+) (?P<bpageline>[0-9ab]+)\??(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?\??(?: \(vol\. (?P<bvolnum>\d+)(?:\-(?P<evolnum>\d+))?)?/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
 $pattern_vol = '/^(?P<section>[^,]+), (?P<bvolname>[^ ]*)$/';
@@ -358,28 +453,41 @@ $pattern_loc_simple_small = '/^(?:(?P<bvolnum>\d+)\.)?(?P<bpagenum>\d+)(?:-(?:(?
 $volumeMap = [];
 $currentSection = null;
 
-function get_text_loc($item, $fileName, $id) {
+function get_text_loc($item, $fileName, $id, $eid) {
     global $allowed_vol_letters, $pattern_vol, $pattern_pagerange_simple;
-    // if the first loc has just one child (a string), then we return the legacy loc finding
-    if ($item->loc && (!$item->loc->children() || count($item->loc->children()) == 1)) {
-        return get_text_loc_str($item->loc, $fileName, $id);
-    }
-    // first matching first loc completely, then we'll do last
-    $matches_tmp = [];
-    preg_match($pattern_vol, $item->loc->vol, $matches_tmp);
-    $matches = $matches_tmp;
-    preg_match($pattern_pagerange_simple, $item->loc->p, $matches_tmp);
-    $matches = array_merge($matches, $matches_tmp);
-    $matches['bvolnum'] = intval($item->loc->voln);
-    $matches['evolnum'] = intval($item->loc->voln);
     $i = 0;
+    $firstloc = null;
     $lastloc = null;
     foreach ($item->loc as $loc) {
+        if ($loc->set && $loc->set != $eid) {
+            continue;
+        }
+        if ($i == 0) {
+            $firstloc = $loc;
+        }
         $i += 1;
         $lastloc = $loc;
     }
+    if (!$firstloc) {
+        return;
+    }
+    // if the first loc has just one child (a string), then we return the legacy loc finding
+    if ($item->loc && (!$firstloc->children() || count($firstloc->children()) == 1)) {
+        return get_text_loc_str($firstloc, $fileName, $id);
+    }
+    // first matching first loc completely, then we'll do last
+    $matches_tmp = [];
+    preg_match($pattern_vol, $firstloc->vol, $matches_tmp);
+    $matches = $matches_tmp;
+    preg_match($pattern_pagerange_simple, $firstloc->p, $matches_tmp);
+    $matches = array_merge($matches, $matches_tmp);
+    $matches['bvolnum'] = intval($firstloc->voln);
+    $matches['bpsection'] = intval($firstloc->psection);
+    $matches['bjson'] = $firstloc->json;
+    $matches['evolnum'] = intval($lastloc->voln);
+    $matches['ejson'] = $lastloc->json;
+    $matches['epsection'] = intval($lastloc->psection);
     if ($i > 1) {
-        $matches['evolnum'] = intval($loc->voln);
         $lastmatches = [];
         preg_match($pattern_vol, $lastloc->vol, $lastmatches);
         $matches['evolname'] = $lastmatches['bvolname'];
@@ -443,7 +551,7 @@ function set_pageline(&$matches, $str, $fileName, $id) {
     $matches_bpageline = [];
     preg_match($pattern_small_loc, $matches['bpageline'], $matches_bpageline);
     if (empty($matches_bpageline)) {
-        report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$str.'"');
+        report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$matches['bpageline'].'"');
         return $matches;
     }
     $matches['bpagenum'] = intval($matches_bpageline['pagenum']);
@@ -454,7 +562,7 @@ function set_pageline(&$matches, $str, $fileName, $id) {
         $matches_epageline = [];
         preg_match($pattern_small_loc, $matches['epageline'], $matches_epageline);
         if (empty($matches_epageline)) {
-            report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$str.'"');
+            report_error($fileName, 'invalid_loc', $id, 'cannot understand pagenum in string "'.$matches['epageline'].'"');
             return $matches;
         }
         $matches['epagenum'] = intval($matches_epageline['pagenum']);
