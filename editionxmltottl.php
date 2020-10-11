@@ -237,18 +237,22 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $tengyur, $url_part, $partTreeIndex);
         }
     } else { # couldn't read loc
-        $section_part_count = $section_r->countValues('bdo:hasPart');
-        $section_r->addResource('bdo:hasPart', $part_r->getUri());
-        $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
-        $part_r->addLiteral('bdo:partIndex', $section_part_count+1);
-        $part_r->addResource('bdo:partOf', $section_r);
-        $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
-        if ($item->loc != "") {
-            $noteUri = bnode_url("NT", $part_r, $part_r, $item->loc);
-            $noteNode = $part_r->getGraph()->resource($noteUri);
-            $part_r->addResource('bdo:note', $noteNode);
-            $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
-            $noteNode->addResource('rdf:type', 'bdo:Note');
+        if ($section_r == null) {
+            print("no section_r for ".$part_r);
+        } else {
+            $section_part_count = $section_r->countValues('bdo:hasPart');
+            $section_r->addResource('bdo:hasPart', $part_r->getUri());
+            $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
+            $part_r->addLiteral('bdo:partIndex', $section_part_count+1);
+            $part_r->addResource('bdo:partOf', $section_r);
+            $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
+            if ($item->loc != "") {
+                $noteUri = bnode_url("NT", $part_r, $part_r, $item->loc);
+                $noteNode = $part_r->getGraph()->resource($noteUri);
+                $part_r->addResource('bdo:note', $noteNode);
+                $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
+                $noteNode->addResource('rdf:type', 'bdo:Note');
+            }
         }
     }
     foreach ($item->note as $note) { // iterating on chapters
@@ -408,8 +412,10 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
         list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur);
         //return;
     }
-    add_location_section_end($section_r, $lastloc, $edition_info, $eid);
-    rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
-    if (!$bdrc)
-        add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+    if ($section_r) {
+        add_location_section_end($section_r, $lastloc, $edition_info, $eid);
+        rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
+        if (!$bdrc)
+            add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+    }
 }

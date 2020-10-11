@@ -36,6 +36,7 @@ TODO:
 - remove shejawa?
 - replace 'a -> A
 - replace pad ma -> pad+ma, pandi -> paN+Di
+- <ref>Kq762</ref> is in the wrong volume (fixing it isn't obvious at all)
 
 Questions:
 - why the note "17 chapters" in dergue.xml for rKTs1 while there are 36?

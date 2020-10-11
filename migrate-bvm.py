@@ -370,12 +370,12 @@ def main():
     with open('bvm-boilerplate.json') as json_file:
         BVM_BOILERPLATE = json.load(json_file)
     #for fname in ["../rKTs/paginations/3CN20612/3CN20712.json"]: #glob.glob('../rKTs/paginations/**/*.json'):
-    for fname in glob.glob('../rKTs/paginations/**/*.json'):
+    for fname in glob.glob('rKTs/paginations/**/*.json'):
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
-        # res = fix_one_file(iilname, p, iglname)
-        res = migrate_one_file(iilname, p, iglname)
+        res = fix_one_file(iilname, p, iglname)
+        #res = migrate_one_file(iilname, p, iglname)
         if res is None:
             continue
         bvmhash = hashlib.md5(iglname.encode("utf8")).hexdigest()[:2]
@@ -391,7 +391,8 @@ def main():
 # vol31 = 916
 # curl -X PUT -H Content-Type:application/json -T output/pagination/I4CZ75258.json -G https://iiifpres-dev.bdrc.io/bvm/ig:bdr:I4CZ75258
 
-#for i in range(1,491):
-#    print('"%d":{"pagination":"%s%s","psection":"\'dul ba","file":"bdr:I1GS66182::I1GS661820%0.3d.tif"},' % (i,int((i+1)/2),i%2 and "a" or "b",i+5))
+#for i in range(1,138):
+    #print('"%d":{"pagination":"%s%s","psection":"\'dul ba","file":"bdr:I1KG9871::I1KG98710%0.3d.tif"},' % (i,int((i+1)/2),i%2 and "a" or "b",i+2))
+    #print('"%d":{"pagination":"%s%s","psection":"dkar chag","file":"bdr:I1KG9976::I1KG9976%0.3d.jpg"},' % (i,int((i+1)/2),i%2 and "a" or "b", i+2))
 
 main()

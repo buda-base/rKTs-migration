@@ -104,7 +104,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
-  RID: ["MW22084", "MW4CZ5369", "MW30532", "MW3CN20612"]
+  RID: ["MW22084", "MW4CZ5369" ] #, "MW3CN20612"]
   file: "catalogs/22084.xml"
   EID: "D"
   langScript: 'bdr:BoDbuCan'
@@ -156,7 +156,7 @@ narthang:
 peking:
   RID: ["MW1PD96684"]
   file: "catalogs/1PD96684.xml"
-  EID: "Q"
+  EID: "Kq"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -286,7 +286,7 @@ lithang:
     ]
 ulaanbaatar:
   RID: ["MW1KG14700"]
-  file: "catalogs/zzz in progress/ulaanbaatar.xml"
+  file: "zzz in progress/Kanjur/ulaanbaatar.xml"
   EID: "V"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -392,7 +392,7 @@ stog:
   duplicates: [""]
 chemdo:
   RID: ["MW1PD96682"]
-  file: "catalogs/zzz in progress/chemdo.xml"
+  file: "zzz in progress/Kanjur/chemdo.xml"
   EID: "A"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -532,7 +532,7 @@ tanjurg:
 tanjurn:
   RID: ["MW22704"]
   EID: "NT"
-  file: "catalogs/zzz in progress/tanjurn.xml"
+  file: "zzz in progress/Tanjur/tanjurn.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -541,7 +541,7 @@ tanjurn:
 tanjurq:
   RID: ["MW1KG13126"]
   EID: "QT"
-  file: "catalogs/zzz in progress/tanjurq.xml"
+  file: "zzz in progress/Tanjur/tanjurq.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'

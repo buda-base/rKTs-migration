@@ -213,9 +213,11 @@ function get_json($eid, $jsonbname) {
     $jsonilobj = json_decode($jsonils, true);
     //print_r($jsonilobj);
     $fnametoimgnum = [];
+    $lastimgnum = null;
     foreach ($jsonilobj as $idx => $value) {
         $imgnum = $idx+1;
         $fnametoimgnum[$value["filename"]] = $imgnum;
+        $lastimgnum = $imgnum;
     }
     //print_r($fnametoimgnum);
     $attachtonext = [];
@@ -252,6 +254,7 @@ function get_json($eid, $jsonbname) {
         }
         $res[$psection][$attachtonextval["pg"]] = $imgnum;
     }
+    $res["zzlastimgnum"] = $lastimgnum;
     return $res;
 }
 
@@ -274,8 +277,15 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection,
         //print_r($json);
         if (!array_key_exists($psection, $json)) {
             $psection = array_keys($json)[0];
+            if ($psection == "zzlastimgnum") {
+                $psection = array_keys($json)[1];
+            }
         }
         $pgs = $json[$psection];
+        if (!array_key_exists($folionum.$side, $pgs)) {
+            print("warning: can't find ".$folionum.$side." in ".$jsonbname." for ".$eid);
+            return $json["zzlastimgnum"];
+        }
         return $pgs[$folionum.$side];
     }
     $toadd = 0;
@@ -344,6 +354,9 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
 function add_location_section_end($resource, $location, $edition_info, $eid) {
     if (!isset($location['bvolnum']) && !isset($location['evolnum'])) {
         report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate end location');
+        return;
+    }
+    if (!$resource) {
         return;
     }
     $locationNode = $resource->getResource('bdo:contentLocation');
