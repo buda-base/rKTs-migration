@@ -25,21 +25,23 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     } else {
         $rktsid = $item->rkts;
     }
-    if ($rktsid == '-')
-        return;
+    if ($rktsid == '-' || $rktsid == "new" || $rktsid == "?" || $rktsid == "new?" )
+        $rktsid = null;
     $partnum = $lastpartnum+1;
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info, $tengyur);
-    $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $tengyur);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
     $url_part = id_to_url_edition_text($eid, $catalogue_index, $config, $partnum, $bdrc);
-    if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
-        $gl_abstractUrl_catId[$url_parent_text] = [];
-    }
-    array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
-    $part_r->addResource('bdo:instanceOf', $url_parent_text);
+    if ($rktsid) {
+        $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $tengyur);
+        if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
+            $gl_abstractUrl_catId[$url_parent_text] = [];
+        }
+        array_push($gl_abstractUrl_catId[$url_parent_text], $url_part);
+        $part_r->addResource('bdo:instanceOf', $url_parent_text);
+    }
     $part_r->addResource('rdf:type', 'bdo:Instance');
     $part_r->addResource('bdo:partType', 'bdr:PartTypeText');
     // not sure the following blank is good, maybe this is too specific to this point in time and is not future proof... commenting
