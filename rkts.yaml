@@ -569,6 +569,7 @@ phugdrak:
 goldenmustang:
   RID: ["MW3CN1302"]
   EID: "Cx"
+  hassections: False
   file: "catalogs/3CN1302.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'

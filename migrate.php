@@ -100,23 +100,23 @@ $gl_abstractUrl_catId = [];
 $kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 fillmappings($kernel_xml);
 
-$filesList = [ "derge" , "egoo", "ulaanbaatar" ,  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "goldenmustang", "hemishe" ];
+$filesList = [ "goldenmustang" /*, "derge" , "egoo", "ulaanbaatar" ,  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "hemishe" */];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true);
 }
 
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
-kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
-unset($kernel_xml);
+// kernel_to_ttl($config, $kernel_xml, $global_graph_fd);
+// kernel_to_ttl($config, $kernel_xml, $global_graph_fd, true);
+// unset($kernel_xml);
 
 //$gl_abstractUrl_catId = []; // do not uncomment, would break texts that are common to Tengyur and Kangyur
 
-// $filesListT = ["tanjurd"/*, "tanjurg", "tanjurn", "tanjurq"*/];
+$filesList = [ "tanjurd" , /* "tanjurg", "tanjurn", "tanjurq" */ ];
 
-// foreach ($filesListT as $fileName) {
-//     $edition_xml = simplexml_load_file('rKTs/Tanjur/'.$fileName.'.xml');
+// foreach ($filesList as $fileName) {
+//     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
 //     editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true, true);
 // }
 
@@ -125,4 +125,4 @@ unset($kernel_xml);
 // kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, true);
 // unset($kernelt_xml);
 
-// fclose($global_graph_fd);
+fclose($global_graph_fd);

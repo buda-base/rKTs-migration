@@ -98,6 +98,10 @@ function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
         $rktsid = $config['KTMapping'][intval($rktsid)];
         $tengyur = true;
     }
+    if (substr(strval($rktsid),0,1) == "T") {
+        $tengyur = True;
+        $rktsid = substr(strval($rktsid),1);
+    } 
     $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat'.($tengyur ? 'Ten' : 'Kan');
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
@@ -199,6 +203,7 @@ function get_json($eid, $jsonbname) {
     $res = [];
     $baseeid = substr($eid, 2);
     $path = "rKTs/paginations/".$baseeid."/".$jsonbname.".json";
+    print($path);
     $jsons = file_get_contents($path);
     $jsonobj = json_decode($jsons, true);
     //print_r($jsonobj);
@@ -209,6 +214,7 @@ function get_json($eid, $jsonbname) {
     }
     ksort($jsonobj);
     $pathil = "il-cache/".$jsonbpath.".json.gz";
+    print($pathil);
     $jsonils = gz_get_contents($pathil);
     $jsonilobj = json_decode($jsonils, true);
     //print_r($jsonilobj);
@@ -244,6 +250,7 @@ function get_json($eid, $jsonbname) {
                 $res[$psection] = [];
             }
             $res[$psection][$attachtonextval["pg"]] = $imgnum;
+            //print("attaching ".$attachtonextval["pg"]." to ".$imgnum."\n");
         }
         $attachtonext = [];
     }
@@ -264,7 +271,7 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection,
         return $folionum;
     if ($jsonbname) {
         $json = null;
-        if ($jsonbname == $lastjsonbname) {
+        if (strval($jsonbname) == strval($lastjsonbname)) {
             $json = $lastjson;
         } else {
             $json = get_json($eid, $jsonbname);
@@ -282,6 +289,11 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection,
             }
         }
         $pgs = $json[$psection];
+        if (!array_key_exists($folionum.$side, $pgs)) {
+            if ($folionum.$side == "1a") {
+                $side = "b";
+            }
+        }
         if (!array_key_exists($folionum.$side, $pgs)) {
             print("warning: can't find ".$folionum.$side." in ".$jsonbname." for ".$eid);
             return $json["zzlastimgnum"];
@@ -453,15 +465,15 @@ function report_error($file, $type, $id, $message) {
 
 $allowed_vol_letters = ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "a", "wa", "za", "zha", "'a", "dza", "tsha", "tsa", "ya", "ra", "sha", "ha", "aM", "aH", "e", "waM", "sa", "la", "shrI", "ki", "khi", "gi", "ngi", "ci", "chi", "ji", "nyi", "ti", "thi", "di", "ni", "pi", "phi", "bi", "mi", "tsi", "tshi", "dzi", "wi", "zhi", "zi", "'i", "yi", "ri", "li", "shi", "si", "i", "ku", "khu", "gu", "ngu", "cu", "chu", "ju", "nyu", "tu", "thu", "du", "nu", "pu", "phu", "bu", "mu", "tsu", "tshu", "hi", "dzu", "wu", "zhu", "'u", "ru", "lu", "shu", "su", "hu", "u", "ke", "ge", "nge", "ce", "che", "je", "te", "de", "pe", "phe", "tshe", "dze", "we", "zhe", "ze", "ye", "re", "le", "she", "se", "he", "ko", "ngo", "co", "jo", "nyo", "to", "tho", "no", "po", "zu", "yu", "A", "khe", "nye", "the", "ne", "tse", "'e", "kho", "go", "cho", "do", "pho", "bo", "mo", "", "oM" ];
 
-$pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?/';
+$pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?\??/';
 $pattern_loc = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]+))? (?P<bpageline>[0-9ab]+)\??(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?\??(?: \(vol\. (?P<bvolnum>\d+)(?:\-(?P<evolnum>\d+))?)?/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
 $pattern_vol = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]*))?$/';
-$pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)-(?P<epageline>[0-9ab]+)$/';
+$pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)\??-(?P<epageline>[0-9ab]+)$/';
 
-$pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+) ?- ?(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
-$pattern_loc_simple_small = '/^(?:(?P<bvolnum>\d+)\.)?(?P<bpagenum>\d+)(?:-(?:(?P<evolnum>\d+)\.)?(?P<epagenum>\d+))?$/';
+$pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)\?, ?- ?(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
+$pattern_loc_simple_small = '/^(?:(?P<bvolnum>\d+)\.)?(?P<bpagenum>\d+)\??(?:-(?:(?P<evolnum>\d+)\.)?(?P<epagenum>\d+))?$/';
 
 $volumeMap = [];
 $currentSection = null;
