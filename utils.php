@@ -324,7 +324,7 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".$eid);
+    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".substr($eid,1));
     $evolnum = $location['bvolnum'];
     if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
         $evolnum = $location['evolnum'];
@@ -356,7 +356,7 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".$eid);
+    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".substr($eid,1));
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $location['bjson'], $location['bpsection'], $eid, $edition_info);
     $locationNode->add('bdo:contentLocationPage', $bpagenum);
 }
