@@ -551,6 +551,7 @@ egoo:
   RID: ["MW1KG12671"]
   EID: "EG"
   file: "catalogs/1KG12671.xml"
+  hassections: False
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'

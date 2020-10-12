@@ -374,8 +374,8 @@ def main():
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
-        res = fix_one_file(iilname, p, iglname)
-        #res = migrate_one_file(iilname, p, iglname)
+        #res = fix_one_file(iilname, p, iglname)
+        res = migrate_one_file(iilname, p, iglname)
         if res is None:
             continue
         bvmhash = hashlib.md5(iglname.encode("utf8")).hexdigest()[:2]

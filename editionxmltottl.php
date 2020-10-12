@@ -18,7 +18,7 @@ $tag_to_event_role = [
     'revisor3' => ['bdr:R0ER0023', 'bdo:ThirdRevisedEvent']
 ];
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False, $parentId=null, $thisPartTreeIndex=null) {
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False, $parentId=null, $thisPartTreeIndex=null, $hassections=true) {
     global $gl_abstractUrl_catId , $tag_to_event_role;
     if ($tengyur) {
         $rktsid = $item->rktst;
@@ -140,34 +140,48 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 $current_section = $location['bpsection'];
             }
         }
-        $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc);
-        if ($parentId != null) {
-            $url_semantic_section = $parentId;
-        }
-        if ($url_semantic_section == null) {
-            print("error: no section url for ".$current_section);
-            return array($partnum, $location);
-        }
-        $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
-        $section_partTreeIndex = sprintf("%02d", $sectionIndex);
-        if ($parentId == null && (!$section_r || $section_r->getUri() != $url_semantic_section)) {
-            if ($section_r) {
-                if ($lastloc != null && !empty($lastloc))
-                    add_location_section_end($section_r, $lastloc, $edition_info, $eid);
-                rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
-                if (!$bdrc)
-                    add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+        if ($hassections) {
+            $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);
+            if (!$sectionIndex) {
+                if (!$section_r) {
+                    $sectionIndex = 1;
+                } else {
+                    print($section_r->getLiteral('bdo:partIndex'));
+                    $sectionIndex = intval($section_r->getLiteral('bdo:partIndex')->getValue());
+                    $curSectionName = strval($section_r->getLiteral('skos:prefLabel')->getValue());
+                    if (normalize_lit($current_section, 'bo-x-ewts', $bdrc) != $curSectionName) {
+                        $sectionIndex += 1;
+                    }
+                }
             }
-            $graph_section = new EasyRdf_Graph();
-            $section_r = $graph_section->resource($url_semantic_section);
-            $section_r->addResource('rdf:type', 'bdo:Instance');
-            $section_r->addResource('bdo:partOf', $url_broader_edition);
-            $section_r->addResource('bdo:inRootInstance', $url_broader_edition);
-            $section_r->addLiteral('bdo:partIndex', $sectionIndex);
-            $section_r->addResource('bdo:partType', 'bdr:PartTypeSection');
-            $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
-            $section_r->addLiteral('bdo:partTreeIndex', $section_partTreeIndex);
-            add_location_section_begin($section_r, $location, $edition_info, $eid);
+            $url_semantic_section = get_url_section_part($current_section, $edition_info['confinfo']['volumeMap'], $eid, $config, $bdrc, $sectionIndex);
+            if ($parentId != null) {
+                $url_semantic_section = $parentId;
+            }
+            if ($url_semantic_section == null) {
+                print("error: no section url for ".$current_section);
+                return array($partnum, $location);
+            }
+            $section_partTreeIndex = sprintf("%02d", $sectionIndex);
+            if ($parentId == null && (!$section_r || $section_r->getUri() != $url_semantic_section)) {
+                if ($section_r) {
+                    if ($lastloc != null && !empty($lastloc))
+                        add_location_section_end($section_r, $lastloc, $edition_info, $eid);
+                    rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
+                    if (!$bdrc)
+                        add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+                }
+                $graph_section = new EasyRdf_Graph();
+                $section_r = $graph_section->resource($url_semantic_section);
+                $section_r->addResource('rdf:type', 'bdo:Instance');
+                $section_r->addResource('bdo:partOf', $url_broader_edition);
+                $section_r->addResource('bdo:inRootInstance', $url_broader_edition);
+                $section_r->addLiteral('bdo:partIndex', $sectionIndex);
+                $section_r->addResource('bdo:partType', 'bdr:PartTypeSection');
+                $section_r->addLiteral('skos:prefLabel', normalize_lit($current_section, 'bo-x-ewts', $bdrc));
+                $section_r->addLiteral('bdo:partTreeIndex', $section_partTreeIndex);
+                add_location_section_begin($section_r, $location, $edition_info, $eid);
+            }
         }
         $section_part_count = $section_r->countValues('bdo:hasPart');
         $section_r->addResource('bdo:hasPart', $part_r->getUri());
@@ -178,7 +192,11 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $part_partTreeIndex = $thisPartTreeIndex;
         }
         $part_r->addLiteral('bdo:partTreeIndex', $part_partTreeIndex);
-        $part_r->addResource('bdo:partOf', $url_semantic_section);
+        if ($hassections) {
+            $part_r->addResource('bdo:partOf', $url_semantic_section);
+        } else {
+            $part_r->addResource('bdo:partOf', $section_r);
+        }
         $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
         add_location_simple($part_r, $location, $edition_info, $eid);
         //add_location($part_r, $location, $edition_info['confinfo']['volumeMap']);
@@ -271,13 +289,13 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     return array($partnum, $location) ;
 }
 
-function get_url_section_part($sectionName, $editionVolumeMap, $eid, $config, $bdrc=False) {
+function get_url_section_part($sectionName, $editionVolumeMap, $eid, $config, $bdrc=False, $sectionIdxInOutline=1) {
     foreach ($editionVolumeMap as $sectionIdx => $sectionArr) {
         if ($sectionArr['name'] == $sectionName) {
             return id_to_url_edition_section_part($eid, $config, $sectionIdx+1, $sectionIdx+1, $bdrc);
         }
     }
-    return null;
+    return id_to_url_edition_section_part($eid, $config, $sectionIdxInOutline, $sectionIdxInOutline, $bdrc);
 }
 
 function get_SectionIndex($sectionName, $editionVolumeMap) {
@@ -366,11 +384,8 @@ function get_base_edition_info($config, $xml, $fileName) {
     return $edition_info;
 }
 
-function write_edition_ttl($config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False, $tengyur=False) {
-    $graph_edition = new EasyRdf_Graph();
-    $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
-    $url_edition = id_to_url_edition($eid, $config, $bdrc);
-    $edition_r = $graph_edition->resource($url_edition);
+function write_edition_ttl($edition_r, $config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False, $tengyur=False) {
+    $graph_edition = $edition_r->getGraph();
     $edition_r->addResource('rdf:type', 'bdo:Instance');
     //$edition_name = $xml->name->__toString();
     //$edition_name .= " ".($tengyur ? "Tengyur" : "Kangyur");
@@ -404,18 +419,26 @@ function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False
 function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False, $tengyur=False) {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
-    write_edition_ttl($config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
     $lastpartnum = $bdrc ? count($edition_info['confinfo']['volumeMap']) : 0;
+    $hassections = array_key_exists("hassections", $edition_info['confinfo']) ? !!boolval($edition_info['confinfo']["hassections"]) : true ;
+    $graph_edition = new EasyRdf_Graph();
+    $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
+    $url_edition = id_to_url_edition($eid, $config, $bdrc);
+    $edition_r = $graph_edition->resource($url_edition);
     $lastloc = null;
     $section_r = null;
+    if (!$hassections) {
+        $section_r = $edition_r;
+    }
     foreach($xml->item as $item) {
-        list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur);
+        list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur, null, null, $hassections);
         //return;
     }
-    if ($section_r) {
+    if ($hassections) {
         add_location_section_end($section_r, $lastloc, $edition_info, $eid);
         rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
         if (!$bdrc)
             add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
     }
+    write_edition_ttl($edition_r, $config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
 }
