@@ -280,7 +280,7 @@ def migrate_one_file(iilname, fpath, iglname):
                 # a bit risque but it seems to work
                 if i < 3:
                     add_tag(resimgdata, "T0005")
-                    resimgdata["display"] = False
+                    resimgdata["hidden"] = True
             else:
                 if lastseen not in insertafter:
                     insertafter[lastseen] = []
@@ -324,7 +324,7 @@ def migrate_one_file(iilname, fpath, iglname):
                     resimgdata2 = {}
                     resimglist.append(resimgdata2)
                     resimgdata2["filename"] = afterfname
-                    resimgdata2["display"] = False
+                    resimgdata2["hidden"] = True
         if "note" in rkdata and rkdata["note"] != "" and rkdata["note"] != "None":
             resimgdata = get_lgstr_arr(rkdata["note"], guess_lt(rkdata["note"]))
     for fname in finalimages:

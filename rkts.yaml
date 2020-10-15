@@ -104,7 +104,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
-  RID: ["MW22084", "MW4CZ5369" ] #, "MW3CN20612"]
+  RID: ["MW22084", "MW4CZ5369", "MW3CN20612"]
   file: "catalogs/22084.xml"
   EID: "D"
   langScript: 'bdr:BoDbuCan'
