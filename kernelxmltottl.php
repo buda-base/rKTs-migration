@@ -158,9 +158,29 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     foreach ($item->children() as $child) {
         $name = $child->getName();
         if ($name == "rkts" || $name == "rktst") continue;
-        if (empty($child->__toString())) continue;
+        if (empty($child->__toString()) && $name != "cmp") {
+            continue;
+        }
         if ($name == "section") continue;
         if ($name == "English84000") continue;
+        if ($name == "cmp") {
+            $rtype = $child->type->__toString();
+            $ref = $child->ref->__toString();
+            $rktsref = id_to_url_expression(substr($ref, 1), $config, $bdrc, substr($ref, 0, 1) == "T");
+            if ($rtype == "parallel") {
+                $expression_r->addResource('bdo:workHasParallelsIn', $rktsref);
+            }
+            if ($rtype == "parallel-part") {
+                $expression_r->addResource('bdo:workHasParallelPartsIn', $rktsref);
+            }
+            if ($rtype == "extract") {
+                $expression_r->addResource('bdo:workExtractOf', $rktsref);
+            }
+            if ($rtype == "translation-taisho") {
+                $expression_r->addResource('bdo:workHasTranslation', "bdr:WA0TT".$ref);
+            }
+            continue;
+        }
         if ($name == "note") {
             $noteUri = bnode_url("NT", $expression_r, $expression_r, $child->__toString());
             $noteNode = $expression_r->getGraph()->resource($noteUri);
