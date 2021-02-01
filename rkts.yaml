@@ -286,7 +286,7 @@ lithang:
     ]
 ulaanbaatar:
   RID: ["MW1KG14700"]
-  file: "zzz in progress/Kanjur/ulaanbaatar.xml"
+  file: "catalogs/1KG14700.xml"
   EID: "V"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -532,7 +532,7 @@ tanjurg:
 tanjurn:
   RID: ["MW22704"]
   EID: "NT"
-  file: "zzz in progress/Tanjur/tanjurn.xml"
+  file: "catalogs/22704.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -541,7 +541,7 @@ tanjurn:
 tanjurq:
   RID: ["MW1KG13126"]
   EID: "QT"
-  file: "zzz in progress/Tanjur/tanjurq.xml"
+  file: "catalogs/1KG13126.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'

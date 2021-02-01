@@ -100,7 +100,7 @@ $gl_abstractUrl_catId = [];
 $kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 fillmappings($kernel_xml);
 
-$filesList = [ "goldenmustang" , "derge" , "egoo", "ulaanbaatar" ,  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "hemishe" ];
+$filesList = [ "goldenmustang" , "derge" , "egoo", "ulaanbaatar" ,  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "hemishe"  ];
 
 //$filesList = [ "goldenmustang" ];
 
@@ -115,7 +115,7 @@ unset($kernel_xml);
 
 //$gl_abstractUrl_catId = []; // do not uncomment, would break texts that are common to Tengyur and Kangyur
 
-$filesList = [ "tanjurd" , /* "tanjurg", "tanjurn", "tanjurq" */ ];
+$filesList = [ "tanjurg", "tanjurn", "tanjurd", "tanjurq" ];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
