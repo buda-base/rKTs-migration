@@ -148,7 +148,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
                 if (!$section_r) {
                     $sectionIndex = 1;
                 } else {
-                    print($section_r->getLiteral('bdo:partIndex'));
+                    //print($section_r->getLiteral('bdo:partIndex'));
                     $sectionIndex = intval($section_r->getLiteral('bdo:partIndex')->getValue());
                     $curSectionName = strval($section_r->getLiteral('skos:prefLabel')->getValue());
                     if (normalize_lit($current_section, 'bo-x-ewts', $bdrc) != $curSectionName) {
@@ -437,10 +437,14 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
         //return;
     }
     if ($hassections) {
+        if (!$section_r) {
+            print("null section_r");
+        } else {
         add_location_section_end($section_r, $lastloc, $edition_info, $eid);
         rdf_to_ttl($config, $section_r->getGraph(), $section_r->localName(), $bdrc);
         if (!$bdrc)
             add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
+        }
     }
     write_edition_ttl($edition_r, $config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
 }

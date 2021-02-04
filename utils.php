@@ -364,11 +364,11 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
 // same as before except that here location is the location of the last text of the section
 // location is the location of the first text of the section
 function add_location_section_end($resource, $location, $edition_info, $eid) {
-    if (!isset($location['bvolnum']) && !isset($location['evolnum'])) {
-        report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate end location');
+    if (!$resource) {
         return;
     }
-    if (!$resource) {
+    if (!isset($location['bvolnum']) && !isset($location['evolnum'])) {
+        report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate end location');
         return;
     }
     $locationNode = $resource->getResource('bdo:contentLocation');
@@ -483,8 +483,9 @@ function get_text_loc($item, $fileName, $id, $eid) {
     $i = 0;
     $firstloc = null;
     $lastloc = null;
+
     foreach ($item->loc as $loc) {
-        if ($loc->set && $loc->set != $eid) {
+        if ($loc->set && "MW".$loc->set != $eid && $loc->set != $eid && "M".$loc->set != $eid) {
             continue;
         }
         if ($i == 0) {

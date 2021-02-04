@@ -100,9 +100,8 @@ $gl_abstractUrl_catId = [];
 $kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 fillmappings($kernel_xml);
 
-$filesList = [ "goldenmustang" , "derge" , "egoo", "ulaanbaatar" ,  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "hemishe"  ];
+$filesList = [ "goldenmustang" , "derge" , "egoo",  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "hemishe" /*, "ulaanbaatar" */ ];
 
-//$filesList = [ "goldenmustang" ];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
