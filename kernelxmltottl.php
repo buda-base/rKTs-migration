@@ -177,7 +177,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 $expression_r->addResource('bdo:workExtractOf', $rktsref);
             }
             if ($rtype == "translation-taisho") {
-                $expression_r->addResource('bdo:workHasTranslation', "bdr:WA0TT".$ref);
+                $expression_r->addResource('bdo:workTranslationOf', "bdr:WA0TTET".$ref);
             }
             continue;
         }
