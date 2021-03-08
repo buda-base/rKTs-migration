@@ -102,6 +102,9 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
         add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
         add_props_creator($expression_r, $props, 're', 'bdr:R0ER0023');
+        add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
+        add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
+        add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
     }
     if (isset($gl_abstractUrl_catId[$url_expression])) {
         foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
