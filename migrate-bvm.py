@@ -370,7 +370,9 @@ def main():
     with open('bvm-boilerplate.json') as json_file:
         BVM_BOILERPLATE = json.load(json_file)
     #for fname in ["../rKTs/paginations/3CN20612/3CN20712.json"]: #glob.glob('../rKTs/paginations/**/*.json'):
-    for fname in glob.glob('rKTs/paginations/**/*.json'):
+    for fname in glob.glob('rKTs/Collections/**/**/*.json'):
+        if "sets" in fname or "vol" in fname:
+            continue
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
