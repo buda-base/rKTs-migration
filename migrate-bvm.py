@@ -373,6 +373,8 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
+        if "EAP" in fname or "Toyobunko" in fname or "dkbc" in fname:
+            continue
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
