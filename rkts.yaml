@@ -484,7 +484,7 @@ chemdo:
 tanjurd:
   RID: ["MW23703"]
   file: "Collections/D Derge Tanjur/D.xml"
-  EID: "DT"
+  EID: "D"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -518,7 +518,7 @@ tanjurg:
   volumeMap: []
 tanjurn:
   RID: ["MW22704", "MW2KG5015"]
-  EID: "NT"
+  EID: "N"
   file: "Collections/N Narthang Tanjur/N.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -527,7 +527,7 @@ tanjurn:
   volumeMap: []
 tanjurq:
   RID: ["MW1KG13126"]
-  EID: "QT"
+  EID: "Q"
   file: "Collections/Q Peking Tanjur/Q.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'

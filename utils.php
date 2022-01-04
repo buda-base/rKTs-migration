@@ -16,8 +16,6 @@ function bnode_url($facetprefix, $res, $rootres, $objectstr) {
 
 function catalogue_index_xml_to_rdf($index, $edition_info, $tengyur) {
     $edlen = strlen($edition_info['confinfo']['EID']);
-    if ($tengyur)
-        $edlen -= 1; // Tengyur editions end with an additional T
     $index = substr($index, $edlen);
     $index = str_replace(["(", ".", ","], "-", $index);
     $index = str_replace(")", "", $index);
