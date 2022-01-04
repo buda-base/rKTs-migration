@@ -105,7 +105,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     #"K483": "K485" # probable, should be studied...
 derge:
   RID: ["MW22084", "MW4CZ5369", "MW3CN20612"]
-  file: "catalogs/22084.xml"
+  file: "Collections/D Derge Kanjur/D.xml"
   EID: "D"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -130,8 +130,8 @@ derge:
      ]
   volumeBdrcPageFirstFolioDefault: 3
 narthang:
-  RID: ["MW22703"]
-  file: "catalogs/22703.xml"
+  RID: ["MW22703", "MW2KG5014"]
+  file: "Collections/N Narthang Kanjur/N.xml"
   EID: "N"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -155,7 +155,7 @@ narthang:
     ]
 peking:
   RID: ["MW1PD96684"]
-  file: "catalogs/1PD96684.xml"
+  file: "Collections/Kq Peking 1737 Kanjur/Kq.xml"
   EID: "Kq"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -172,7 +172,7 @@ peking:
     ]
 lhasa:
   RID: ["MW26071"]
-  file: "catalogs/26071.xml"
+  file: "Collections/H Lhasa Kanjur/H.xml"
   EID: "H"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -193,7 +193,7 @@ lhasa:
     ]
 urga:
   RID: ["MW29468"]
-  file: "catalogs/29468.xml"
+  file: "Catalog/U Urga Kanjur/U.xml"
   EID: "U"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -216,7 +216,7 @@ urga:
     ]
 shey:
   RID: ["MW1PD127393"]
-  file: "catalogs/1PD127393.xml"
+  file: "Collections/Z Shey Kanjur/Z.xml"
   EID: "Z"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -238,7 +238,7 @@ shey:
     ]
 cone:
   RID: ["MW1PD96685"]
-  file: "catalogs/1PD96685.xml"
+  file: "Collections/C Cone Kanjur/C.xml"
   EID: "C"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -259,7 +259,7 @@ cone:
     ]
 lithang:
   RID: ["MW4CZ7445"] #, "MW4PD3142"]
-  file: "catalogs/4CZ7445.xml"
+  file: "Collections/J Lithang Kanjur/J.xml"
   EID: "J"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -286,7 +286,7 @@ lithang:
     ]
 ulaanbaatar:
   RID: ["MW1KG14700"]
-  file: "catalogs/1KG14700.xml"
+  file: "Collections/V Ulaanbaatar Kanjur/V.xml"
   EID: "V"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -314,7 +314,7 @@ ulaanbaatar:
 #   volumeBdrcPageFirstFolioDefault: 3
 stog:
   RID: ["MW22083"]
-  file: "catalogs/22083.xml"
+  file: "Collections/S Stog Kanjur/S.xml"
   EID: "S"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -379,7 +379,7 @@ stog:
   duplicates: [""]
 chemdo:
   RID: ["MW1PD96682"]
-  file: "zzz in progress/Kanjur/chemdo.xml"
+  file: "Collections/A dPe bsdur ma Kanjur/A.xml"
   EID: "A"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -483,7 +483,7 @@ chemdo:
     "104": 35
 tanjurd:
   RID: ["MW23703"]
-  file: "catalogs/23703.xml"
+  file: "Collections/D Derge Tanjur/D.xml"
   EID: "DT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -509,7 +509,7 @@ tanjurd:
   volumeBdrcPageFirstFolioDefault: 3
 tanjurg:
   RID: ["MW23702"]
-  file: "catalogs/23702.xml"
+  file: "Collections/G Golden Tanjur/G.xml"
   EID: "GT"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -519,7 +519,7 @@ tanjurg:
 tanjurn:
   RID: ["MW22704", "MW2KG5015"]
   EID: "NT"
-  file: "catalogs/22704.xml"
+  file: "Collections/N Narthang Tanjur/N.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -528,7 +528,7 @@ tanjurn:
 tanjurq:
   RID: ["MW1KG13126"]
   EID: "QT"
-  file: "catalogs/1KG13126.xml"
+  file: "Collections/Q Peking Tanjur/Q.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -537,7 +537,7 @@ tanjurq:
 egoo:
   RID: ["MW1KG12671"]
   EID: "EG"
-  file: "catalogs/1KG12671.xml"
+  file: "Collections/Eg Egoo Collection/Eg.xml"
   hassections: False
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -547,7 +547,7 @@ egoo:
 phugdrak:
   RID: ["MW1KG13607"]
   EID: "F"
-  file: "catalogs/1KG13607.xml"
+  file: "Collections/F Phugbrag Kanjur/F.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
@@ -557,7 +557,7 @@ goldenmustang:
   RID: ["MW3CN1302"]
   EID: "Cx"
   hassections: False
-  file: "catalogs/3CN1302.xml"
+  file: "Collections/Cx Charang Kanjur/Cx.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
@@ -566,9 +566,18 @@ goldenmustang:
 hemishe:
   RID: ["MW4CZ45313"]
   EID: "He"
-  file: "catalogs/4CZ45313.xml"
+  file: "Collections/He Hemis I Kanjur/He.xml"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaHe"
+  volumeMap: []
+ragya:
+  RID: ["MW2PD17098"]
+  EID: "R"
+  file: "Collections/R Ragya Kanjur/R.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaHe"
   volumeMap: []

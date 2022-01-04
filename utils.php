@@ -199,11 +199,12 @@ function gz_get_contents($path){
 $lastjsonbname = null;
 $lastjson = null;
 
-function get_json($eid, $jsonbname) {
+function get_json($eid, $jsonbname, $edition_info) {
     $res = [];
     $baseeid = substr($eid, 2);
-    $path = "rKTs/paginations/".$baseeid."/".$jsonbname.".json";
-    print($path);
+    $file = $edition_info['confinfo']['file'];
+    $dir = substr( $file, 0, strrpos( $file, "/" ) + 1 );
+    $path = "rKTs/".$dir.$baseeid."/".$jsonbname.".json";
     $jsons = file_get_contents($path);
     $jsonobj = json_decode($jsons, true);
     //print_r($jsonobj);
@@ -274,7 +275,7 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection,
         if (strval($jsonbname) == strval($lastjsonbname)) {
             $json = $lastjson;
         } else {
-            $json = get_json($eid, $jsonbname);
+            $json = get_json($eid, $jsonbname, $edition_info);
             $lastjson = $json;
             $lastjsonbname  = $jsonbname;
         }
