@@ -213,7 +213,7 @@ function get_json($eid, $jsonbname, $edition_info) {
     }
     ksort($jsonobj);
     $pathil = "il-cache/".$jsonbpath.".json.gz";
-    print($pathil);
+    //print($pathil);
     $jsonils = gz_get_contents($pathil);
     $jsonilobj = json_decode($jsonils, true);
     //print_r($jsonilobj);
@@ -266,8 +266,12 @@ function get_json($eid, $jsonbname, $edition_info) {
 
 function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection, $eid, $edition_info) {
     global $lastjson, $lastjsonbname;
-    if ($side == null || empty($side))
-        return $folionum;
+    if ($side == null || empty($side)) {
+        if ($eid == "MW1PD96682")
+            $side = "";
+        else
+            return $folionum;
+    }
     if ($jsonbname) {
         $json = null;
         if (strval($jsonbname) == strval($lastjsonbname)) {
@@ -337,6 +341,11 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
     }
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $location['bjson'], $location['bpsection'], $eid, $edition_info);
     $locationNode->add('bdo:contentLocationPage', $bpagenum);
+    // TODO: this shows a few errors that I don't understand...
+    /*if (!$location["ejson"]) {
+        print($resource);
+        print_r($location);
+    }*/
     if (isset($location['epagenum'])) {
         $epagenum = folio_side_to_pagenum($location['epagenum'], $location['epageside'], $evolnum, $location['ejson'], $location['epsection'], $eid, $edition_info);
         $locationNode->add('bdo:contentLocationEndPage', $epagenum);
@@ -406,8 +415,6 @@ function add_location($resource, $location, $volumeMapWithUrls) {
         $volurl = url_for_vol_num($location['bvolnum'], $volumeMapWithUrls);
         if ($volurl)
             $locationNode->addResource('bdo:contentLocationVolume', $volurl);
-        else
-            print_r($location);
         return;
     }
     $locationNode->add('bdo:contentLocationFolio', $location['bpagenum']);
@@ -472,7 +479,7 @@ $pattern_vol = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]*))?$/';
 $pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)\??-(?P<epageline>[0-9ab]+)$/';
 
 $pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)\?, ?- ?(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
-$pattern_loc_simple_small = '/^(?:(?P<bvolnum>\d+)\.)?(?P<bpagenum>\d+)\??(?:-(?:(?P<evolnum>\d+)\.)?(?P<epagenum>\d+))?$/';
+$pattern_loc_simple_small = '/^(?P<bpagenum>\d+)-(?P<epagenum>\d+)$/';
 
 $volumeMap = [];
 $currentSection = null;
@@ -498,7 +505,7 @@ function get_text_loc($item, $fileName, $id, $eid) {
     }
     // if the first loc has just one child (a string), then we return the legacy loc finding
     if ($item->loc && (!$firstloc->children() || count($firstloc->children()) == 1)) {
-        return get_text_loc_str($firstloc, $fileName, $id);
+        return get_text_loc_str($firstloc, $fileName, $id, $eid);
     }
     // first matching first loc completely, then we'll do last
     $matches_tmp = [];
@@ -523,8 +530,11 @@ function get_text_loc($item, $fileName, $id, $eid) {
         report_error($fileName, 'invalid_loc', $id, 'cannot understand string "'.$item.'"');
         return [];
     }
-    if ($fileName == "chemdo")
+    if ($fileName == "chemdo") {
+        $matches["bpagenum"] = intval($matches["bpageline"]);
+        $matches["epagenum"] = intval($matches["epageline"]);
         return $matches;
+    }
     if (!in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$item->__toString().'", invalid volume name "'.$matches['bvolname'].'"');
     }
@@ -535,12 +545,12 @@ function get_text_loc($item, $fileName, $id, $eid) {
     return $matches;
 }
 
-function get_text_loc_str($str, $fileName, $id) {
-    global $allowed_vol_letters, $pattern_loc, $pattern_small_loc, $pattern_loc_simple;
+function get_text_loc_str($str, $fileName, $id, $eid) {
+    global $allowed_vol_letters, $pattern_loc, $pattern_small_loc, $pattern_loc_simple, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
     if ($fileName == "chemdo") {
-        preg_match($pattern_loc_simple, $str, $matches);    
+        preg_match($pattern_loc_simple_small, $str, $matches);    
     } else {
         preg_match($pattern_loc, $str, $matches);
     }

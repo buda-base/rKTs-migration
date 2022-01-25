@@ -25,9 +25,12 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     } else {
         $rktsid = $item->rkts;
     }
-    if ($rktsid == '-' || $rktsid == "new" || $rktsid == "?" || $rktsid == "new?" )
+    if ($rktsid == "" || $rktsid == '-' || $rktsid == "new" || $rktsid == "?" || $rktsid == "new?" )
         $rktsid = null;
     $partnum = $lastpartnum+1;
+    if ($item->ref == "A") {
+        return array($lastpartnum, $lastloc) ;
+    }
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
     $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info, $tengyur);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
@@ -131,16 +134,9 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     }
     $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid, $eid);
     if (!empty($location) && array_key_exists('section', $location)) { // useful for xml debugging only
-        $current_section = '';
-        if ($fileName == "chemdo") {
-            $bvolnum = $location['bvolnum'];
-            $volinfos = $edition_info['confinfo']['volumeMap']['volnumInfo'][$bvolnum];
-            $current_section = $volinfos['sectionName'];
-        } else {
-            $current_section = $location['section'];
-            if ($current_section == null) {
-                $current_section = $location['bpsection'];
-            }
+        $current_section = $location['section'];
+        if ($current_section == null) {
+            $current_section = $location['bpsection'];
         }
         if ($hassections) {
             $sectionIndex = get_SectionIndex($current_section, $edition_info['confinfo']['volumeMap']);

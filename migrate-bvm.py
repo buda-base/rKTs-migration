@@ -12,6 +12,7 @@ IL_DIR = "il-cache"
 BVM_BOILERPLATE = {}
 ESUKHIA_ATTR_RIDS = ["W1GS66030", "W1KG13126", "W22704", "W23702", "W23703", "W2KG209989"]
 PG_RE = re.compile(r"^(?P<folionum>x|\d+)(?P<duplind>'*)(?P<side>[ab])(?P<certaintyind>\??)(?P<detailind>\(d\d*\))?")
+PG_RE_simple = re.compile(r"^\d+$")
 OUTPUT_DIR = "../buda-volume-manifests"
 
 # TODO:
@@ -182,7 +183,11 @@ def write_rkts_json(fname, rkjson):
 
 def migrate_one_file(iilname, fpath, iglname):
     print("migrating "+str(fpath))
+    simplemode = False
     res = copy.deepcopy(BVM_BOILERPLATE)
+    if "1PD96682" in str(fpath):
+        simplemode = True
+        res["pagination"][0]["type"] = "simple"
     rkjson = None
     try:
         with open(fpath) as json_file:
@@ -233,11 +238,16 @@ def migrate_one_file(iilname, fpath, iglname):
             psections.append(ps)
             seenpg[ps] = []
         pg = rkdata["pagination"]
-        match = PG_RE.match(pg)
-        if not match:
-            print(iglname+"("+idxstr+"): "+pg+" looks invalid")
-        elif lastpg and comparepg(lastpg, pg) > -1:
-            print(iglname+"("+idxstr+"): "+pg+" before "+lastpg)
+        if simplemode:
+            match = PG_RE_simple.match(pg)
+            if not match:
+                print(iglname+"("+idxstr+"): "+pg+" looks invalid")
+        else:
+            match = PG_RE.match(pg)
+            if not match:
+                print(iglname+"("+idxstr+"): "+pg+" looks invalid")
+            elif lastpg and comparepg(lastpg, pg) > -1:
+                print(iglname+"("+idxstr+"): "+pg+" before "+lastpg)
         if pg in seenpg[ps]:
             print(iglname+"("+idxstr+"): possible duplicate in "+iglname+": "+pg)
         seenpg[ps].append(pg)

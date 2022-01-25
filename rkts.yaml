@@ -104,7 +104,7 @@ SameTextDifferentTranslation: # all come from Tohoku and 84000
     "K654": "K655" # From Tarthang Tulku's catalog
     #"K483": "K485" # probable, should be studied...
 derge:
-  RID: ["MW22084", "MW4CZ5369", "MW3CN20612"]
+  RID: ["MW22084", "MW4CZ5369", "MW3CN20612", "MW30532"]
   file: "Collections/D Derge Kanjur/D.xml"
   EID: "D"
   langScript: 'bdr:BoDbuCan'
@@ -403,84 +403,6 @@ chemdo:
      {name: "dkar chag", volumes: ["dkar chag"]},
      {name: "gzhungs phran sna tshogs", volumes: ["oM"]},
      ]
-  volumeBdrcPageThirdPageDefault: 19,
-  volumeBdrcPageThirdPage:
-    "1": 20
-    "2": 22
-    "3": 22
-    "4": 20
-    "5": 22
-    "6": 22
-    "7": 22
-    "8": 20
-    "9": 32
-    "10": 22
-    "11": 20
-    "12": 28
-    "13": 28
-    "26": 11
-    "30": 21
-    "31": 21
-    "33": 21
-    "34": 27
-    "35": 21
-    "39": 21
-    "40": 21
-    "42": 22
-    "43": 23
-    "44": 23
-    "46": 22
-    "48": 21
-    "49": 21
-    "50": 21
-    "52": 17
-    "53": 17
-    "54": 21
-    "55": 23
-    "56": 23
-    "57": 21
-    "58": 21
-    "59": 23
-    "60": 21
-    "61": 25
-    "62": 23
-    "63": 21
-    "64": 23
-    "65": 3
-    "66": 23
-    "68": 23
-    "69": 23
-    "70": 23
-    "71": 23
-    "72": 27
-    "74": 21
-    "76": 21
-    "77": 29
-    "78": 31
-    "79": 38
-    "80": 33
-    "81": 34
-    "82": 27
-    "83": 37
-    "84": 23
-    "85": 28
-    "86": 23
-    "87": 26
-    "88": 29
-    "89": 23
-    "90": 32
-    "91": 39
-    "92": 21
-    "93": 29
-    "94": 27
-    "95": 25
-    "96": 33
-    "97": 39
-    "98": 47
-    "101": 3
-    "102": 29
-    "103": 27
-    "104": 35
 tanjurd:
   RID: ["MW23703"]
   file: "Collections/D Derge Tanjur/D.xml"
