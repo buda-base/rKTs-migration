@@ -476,7 +476,7 @@ $pattern_loc = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]+))? (?P<bpageline>[0-
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
 $pattern_vol = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]*))?$/';
-$pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)\??-(?P<epageline>[0-9ab]+)$/';
+$pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)\??-(?P<epageline>[0-9ab]+|\?)$/';
 
 $pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)\?, ?- ?(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
 $pattern_loc_simple_small = '/^(?P<bpagenum>\d+)-(?P<epagenum>\d+)$/';
@@ -513,6 +513,12 @@ function get_text_loc($item, $fileName, $id, $eid) {
     $matches = $matches_tmp;
     preg_match($pattern_pagerange_simple, $firstloc->p, $matches_tmp);
     $matches = array_merge($matches, $matches_tmp);
+    if (strlen($matches['epageline']) > 0 && substr($matches['epageline'], -1) == "?") {
+        $matches['epageline'] = substr($matches['epageline'], 0, -1);
+    }
+    if (strlen($matches['bpageline']) > 0 && substr($matches['bpageline'], -1) == "?") {
+        $matches['bpageline'] = substr($matches['bpageline'], 0, -1);
+    }
     $matches['bvolnum'] = intval($firstloc->voln);
     $matches['bpsection'] = intval($firstloc->psection);
     $matches['bjson'] = $firstloc->json;
