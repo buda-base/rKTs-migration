@@ -520,11 +520,11 @@ function get_text_loc($item, $fileName, $id, $eid) {
         $matches['bpageline'] = substr($matches['bpageline'], 0, -1);
     }
     $matches['bvolnum'] = intval($firstloc->voln);
-    $matches['bpsection'] = intval($firstloc->psection);
-    $matches['bjson'] = $firstloc->json;
+    $matches['bpsection'] = strval($firstloc->psection);
+    $matches['bjson'] = strval($firstloc->json);
     $matches['evolnum'] = intval($lastloc->voln);
-    $matches['ejson'] = $lastloc->json;
-    $matches['epsection'] = intval($lastloc->psection);
+    $matches['ejson'] = strval($lastloc->json);
+    $matches['epsection'] = strval($lastloc->psection);
     if ($i > 1) {
         $lastmatches = [];
         preg_match($pattern_vol, $lastloc->vol, $lastmatches);
