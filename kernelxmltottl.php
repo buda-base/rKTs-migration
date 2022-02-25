@@ -146,7 +146,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     }
     $expression_r->addResource('rdf:type', 'bdo:Work'); // abstract
     if ($bdrc) {
-        $expression_r->addResource('adm:sameAsrKTs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
+        $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     } else {
         $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
     }
