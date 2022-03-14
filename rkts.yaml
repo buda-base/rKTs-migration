@@ -403,6 +403,15 @@ chemdo:
      {name: "dkar chag", volumes: ["dkar chag"]},
      {name: "gzhungs phran sna tshogs", volumes: ["oM"]},
      ]
+chemdot:
+  RID: ["MW1PD95844"]
+  file: "Collections/A dPe bsdur ma Tanjur/A.xml"
+  EID: "AT"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Offset'
+  propSigla: "KaTenSiglaA"
+  volumeMap: []
 tanjurd:
   RID: ["MW23703"]
   file: "Collections/D Derge Tanjur/D.xml"

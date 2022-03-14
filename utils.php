@@ -267,7 +267,7 @@ function get_json($eid, $jsonbname, $edition_info) {
 function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection, $eid, $edition_info) {
     global $lastjson, $lastjsonbname;
     if ($side == null || empty($side)) {
-        if ($eid == "MW1PD96682")
+        if ($eid == "MW1PD96682" || $eid == "MW1PD95844")
             $side = "";
         else
             return $folionum;
@@ -536,7 +536,7 @@ function get_text_loc($item, $fileName, $id, $eid) {
         report_error($fileName, 'invalid_loc', $id, 'cannot understand string "'.$item.'"');
         return [];
     }
-    if ($fileName == "chemdo") {
+    if ($fileName == "chemdo" || $fileName == "chemdot") {
         $matches["bpagenum"] = intval($matches["bpageline"]);
         $matches["epagenum"] = intval($matches["epageline"]);
         return $matches;
@@ -555,7 +555,7 @@ function get_text_loc_str($str, $fileName, $id, $eid) {
     global $allowed_vol_letters, $pattern_loc, $pattern_small_loc, $pattern_loc_simple, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    if ($fileName == "chemdo") {
+    if ($fileName == "chemdo" || $fileName == "chemdot") {
         preg_match($pattern_loc_simple_small, $str, $matches);    
     } else {
         preg_match($pattern_loc, $str, $matches);
@@ -564,7 +564,7 @@ function get_text_loc_str($str, $fileName, $id, $eid) {
         report_error($fileName, 'invalid_loc', $id, 'cannot understand string "'.$str.'"');
         return [];
     }
-    if ($fileName == "chemdo")
+    if ($fileName == "chemdo" || $fileName == "chemdot")
         return $matches;
     if (!in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'", invalid volume number "'.$matches['bvolname'].'"');
@@ -617,7 +617,7 @@ function get_bampo_loc($str, $fileName, $id) {
     global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    if ($fileName == "chemdo") {
+    if ($fileName == "chemdo" || $fileName == "chemdot") {
         preg_match($pattern_loc_simple_small, $str, $matches);
     } else {
         preg_match($pattern_bampo_chap_loc, $str, $matches);
@@ -626,10 +626,10 @@ function get_bampo_loc($str, $fileName, $id) {
         report_error($fileName, 'invalid_bampo_loc', $id, 'cannot understand bampo->p string "'.$str.'"');
         return [];
     }
-    if ($fileName != "chemdo" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
+    if ($fileName != "chemdo" && $fileName != "chemdot" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'" (bampo loc), invalid volume number "'.$matches['b volname'].'"');
     }
-    if ($fileName != "chemdo")
+    if ($fileName != "chemdo" && $fileName != "chemdot")
         set_pageline($matches, $str, $fileName, $id);
     return $matches;
 }
@@ -638,7 +638,7 @@ function get_chap_loc($str, $fileName, $id) {
     global $allowed_vol_letters, $pattern_bampo_chap_loc, $pattern_small_loc, $pattern_loc_simple_small;
     // ex: 'dul ba, ka 1b1-nga 302a5 (vol. 1-4)
     $matches = [];
-    if ($fileName == "chemdo") {
+    if ($fileName == "chemdo" || $fileName == "chemdot") {
         preg_match($pattern_loc_simple_small, $str, $matches);    
     } else {
         preg_match($pattern_bampo_chap_loc, $str, $matches);
@@ -647,10 +647,10 @@ function get_chap_loc($str, $fileName, $id) {
         report_error($fileName, 'invalid_chap_loc', $id, 'cannot understand chap->p string "'.$str.'"');
         return [];
     }
-    if ($fileName != "chemdo" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
+    if ($fileName != "chemdo" && $fileName != "chemdot" && !empty($matches['bvolname']) && !in_array($matches['bvolname'], $allowed_vol_letters)) {
         report_error($fileName, 'invalid_loc', $id, 'in "'.$str.'" (chap loc), invalid volume number "'.$matches['bvolname'].'"');
     }
-    if ($fileName != "chemdo")
+    if ($fileName != "chemdo" && $fileName != "chemdot")
         set_pageline($matches, $str, $fileName, $id);
     return $matches;
 }

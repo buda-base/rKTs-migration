@@ -114,7 +114,7 @@ unset($kernel_xml);
 
 //$gl_abstractUrl_catId = []; // do not uncomment, would break texts that are common to Tengyur and Kangyur
 
-$filesList = [ "tanjurg", "tanjurn", "tanjurd", "tanjurq" ];
+$filesList = [ "chemot", "tanjurg", "tanjurn", "tanjurd", "tanjurq" ];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);

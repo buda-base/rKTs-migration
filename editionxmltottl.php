@@ -206,7 +206,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         // }
         $chapnum = 0;
         $bvolname = '';
-        if ($fileName != 'chemdo')
+        if ($fileName != 'chemdo' && $fileName != 'chemdot')
             $bvolname = $location['bvolname'];
         foreach ($item->chap as $chap) { // iterating on chapters
             if (!$config['migrateChapters']) break;
