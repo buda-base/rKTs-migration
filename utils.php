@@ -475,7 +475,7 @@ $pattern_small_loc = '/(?P<pagenum>\d+)(?P<ab>[ab])(?P<linenum>\d+)?\??/';
 $pattern_loc = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]+))? (?P<bpageline>[0-9ab]+)\??(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?\??(?: \(vol\. (?P<bvolnum>\d+)(?:\-(?P<evolnum>\d+))?)?/';
 $pattern_bampo_chap_loc = '/^(?:(?P<bvolname>[^ ]+) )?(?P<bpageline>[0-9ab]+)(?:\-((?P<evolname>[^ ]+) )?(?P<epageline>[0-9ab]+))?$/';
 
-$pattern_vol = '/^(?P<section>[^,]+)(?:, (?P<bvolname>[^ ]*))?$/';
+$pattern_vol = '/^(?P<section>[^,]+)(?:, (?P<bvolname>.*))?$/';
 $pattern_pagerange_simple = '/^(?P<bpageline>[0-9ab]+)\??-(?P<epageline>[0-9ab]+|\?)$/';
 
 $pattern_loc_simple = '/^(?P<bvolnum>\d+)\.(?P<bpagenum>\d+)\?, ?- ?(?P<evolnum>\d+)\.(?P<epagenum>\d+)$/';
