@@ -245,18 +245,7 @@ cone:
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaC"
   volumeBdrcPageFirstFolioDefault: 5
-  volumeMap: [
-    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "ya", "pa", "pha", "ba", "tsa", "ma", "tsha", "dza", "wa", "zha", "za", "'a"]},
-    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH"]},
-    {name: "'bum", volumes: ["ka", "ma"]},
-    {name: "nyi khri", volumes: ["ka", "nga"]},
-    {name: "brgyad stong", volumes: ["ka"]},
-    {name: "sna tshogs", volumes: ["ka"]},
-    {name: "khri brgyad", volumes: ["ka", "ga"]},
-    {name: "khri pa", volumes: ["ga", "nga"]},
-    {name: "phal chen", volumes: ["ka", "cha"]},
-    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
-    ]
+  volumeMap: []
 lithang:
   RID: ["MW4CZ7445"] #, "MW4PD3142"]
   file: "Collections/J Lithang Kanjur/J.xml"
