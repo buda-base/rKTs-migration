@@ -252,6 +252,8 @@ def migrate_one_file(iilname, fpath, iglname):
             print(iglname+"("+idxstr+"): possible duplicate in "+iglname+": "+pg)
         seenpg[ps].append(pg)
         lastpg = pg
+        if "file" not in rkdata:
+            continue
         imgdata = rkdata["file"]
         if imgdata == "missing":
             continue
@@ -317,6 +319,8 @@ def migrate_one_file(iilname, fpath, iglname):
         resimgdata["pagination"] = {"pgfolios": {"value": pagination}}
         if "psection" in rkdata and rkdata["psection"] and len(psections) > 1:
             resimgdata["pagination"]["pgfolios"]["section"] = rkdata["psection"]
+        if "file" not in rkdata:
+            continue
         imgdata = rkdata["file"]
         # TODO: make sure that when there's a missing, both sides are missing
         if "missing" in imgdata:
@@ -383,7 +387,7 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
-        if "EAP" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname:
+        if "EAP" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
             continue
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
