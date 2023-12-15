@@ -387,7 +387,7 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
-        if "EAP" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
+        if "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
             continue
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
