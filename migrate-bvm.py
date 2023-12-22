@@ -185,7 +185,7 @@ def migrate_one_file(iilname, fpath, iglname):
     print("migrating "+str(fpath))
     simplemode = False
     res = copy.deepcopy(BVM_BOILERPLATE)
-    if "1PD96682" in str(fpath) or "1PD95844" in str(fpath):
+    if "1PD96682" in str(fpath) or "1PD95844" in str(fpath) or "3CN895" in str(fpath) or "1BL1" in str(fpath):
         simplemode = True
         res["pagination"][0]["type"] = "simple"
     rkjson = None
@@ -387,7 +387,7 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
-        if "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
+        if "1BL6" in fname or "WPT" in fname or "Pelliot" in fname  or "3CN3207" in fname or "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
             continue
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
