@@ -18,10 +18,12 @@ $tag_to_event_role = [
     'revisor3' => ['bdr:R0ER0023', 'bdo:ThirdRevisedEvent']
 ];
 
-function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $tengyur=False, $parentId=null, $thisPartTreeIndex=null, $hassections=true) {
+function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $edition="K", $parentId=null, $thisPartTreeIndex=null, $hassections=true) {
     global $gl_abstractUrl_catId , $tag_to_event_role;
-    if ($tengyur) {
+    if ($edition == "T") {
         $rktsid = $item->rktst;
+    } elseif ($edition == "G") {
+        $rktsid = $item->rktsg;
     } else {
         $rktsid = $item->rkts;
     }
@@ -32,13 +34,13 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         return array($lastpartnum, $lastloc) ;
     }
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'];
-    $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info, $tengyur);
+    $catalogue_index = catalogue_index_xml_to_rdf($item->ref, $edition_info, $edition);
     $url_broader_edition = id_to_url_edition($eid, $config, $bdrc);
     $url_part = id_to_url_edition_text($eid, $catalogue_index, $config, $partnum, $bdrc);
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
     if ($rktsid) {
-        $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $tengyur);
+        $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $edition);
         if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
             $gl_abstractUrl_catId[$url_parent_text] = [];
         }
@@ -108,6 +110,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         $lit = normalize_lit($zhtrans, 'zh-x-ewts', $bdrc);
         add_title($part_r, 'IncipitTitle', $lit, $bibliographicalTitleNode);
     }
+    /*
     $events = [];
     foreach ($tag_to_event_role as $tag => $eventrole) {
         $event = $eventrole[1];
@@ -131,7 +134,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $airResource->add('rdfs:label', $lit);
             $eventResource->addResource('bdo:eventWho', $airResource);
         }
-    }
+    }*/
     $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid, $eid);
     if (!empty($location) && array_key_exists('section', $location)) { // useful for xml debugging only
         $current_section = $location['section'];
@@ -250,7 +253,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $subitemlastloc = null;
             $subitempartnum += 1;
             $partTreeIndex = $part_partTreeIndex.'.'.sprintf("%02d", $subitempartnum);
-            list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $tengyur, $url_part, $partTreeIndex);
+            list($partnum, $subitemlastloc) = edition_item_to_ttl($config, $subitem, $global_graph_fd, $edition_info, $fileName, $subitempartnum, $subitemlastloc, $part_r, $eid, $bdrc, $edition, $url_part, $partTreeIndex);
         }
     } else { # couldn't read loc
         if ($section_r == null) {
@@ -382,7 +385,7 @@ function get_base_edition_info($config, $xml, $fileName) {
     return $edition_info;
 }
 
-function write_edition_ttl($edition_r, $config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False, $tengyur=False) {
+function write_edition_ttl($edition_r, $config, &$edition_info, $global_graph_fd, $xml, $eid=null, $bdrc=False) {
     $graph_edition = $edition_r->getGraph();
     $edition_r->addResource('rdf:type', 'bdo:Instance');
     //$edition_name = $xml->name->__toString();
@@ -404,17 +407,17 @@ function write_edition_ttl($edition_r, $config, &$edition_info, $global_graph_fd
         add_graph_to_global($graph_edition, $edition_r->localName(), $global_graph_fd);
 }
 
-function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False, $tengyur=False) {
+function editions_to_ttl($config, $xml, $global_graph_fd, $fileName, $bdrc=False, $edition="K") {
     if ($bdrc) {
         foreach ($config[$fileName]['RID'] as $rid) {
-            edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $rid, $bdrc, $tengyur);
+            edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $rid, $bdrc, $edition);
         }
     } else {
-        edition_to_ttl($config, $xml, $global_graph_fd, $fileName, null, $bdrc, $tengyur);
+        edition_to_ttl($config, $xml, $global_graph_fd, $fileName, null, $bdrc, $edition);
     }
 }
 
-function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False, $tengyur=False) {
+function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $bdrc=False, $edition="K") {
     $edition_info = get_base_edition_info($config, $xml, $fileName);
     $eid = $bdrc ? $eid : $edition_info['confinfo']['EID'] ;
     $lastpartnum = $bdrc ? count($edition_info['confinfo']['volumeMap']) : 0;
@@ -429,7 +432,7 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
         $section_r = $edition_r;
     }
     foreach($xml->item as $item) {
-        list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $tengyur, null, null, $hassections);
+        list($lastpartnum, $lastloc) = edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, $section_r, $eid, $bdrc, $edition, null, null, $hassections);
         //return;
     }
     if ($hassections) {
@@ -442,5 +445,5 @@ function edition_to_ttl($config, $xml, $global_graph_fd, $fileName, $eid=null, $
             add_graph_to_global($section_r->getGraph(), $section_r->localName(), $global_graph_fd);
         }
     }
-    write_edition_ttl($edition_r, $config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc, $tengyur);
+    write_edition_ttl($edition_r, $config, $edition_info, $global_graph_fd, $xml, $eid, $bdrc);
 }

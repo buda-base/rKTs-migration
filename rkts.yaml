@@ -3,6 +3,8 @@ rKTsAbstractUrlFormatKan: "http://purl.rkts.eu/resource/WKA%GID"
 rKTsExpressionUrlFormatKan: "http://purl.rkts.eu/resource/WKT%GID"
 rKTsAbstractUrlFormatTen: "http://purl.rkts.eu/resource/WTA%GID"
 rKTsExpressionUrlFormatTen: "http://purl.rkts.eu/resource/WTT%GID"
+rKTsAbstractUrlFormatNG: "http://purl.rkts.eu/resource/WNGA%GID"
+rKTsExpressionUrlFormatNG: "http://purl.rkts.eu/resource/WNGT%GID"
 rKTsEditionUrlFormat: "http://purl.rkts.eu/resource/WE%EID"
 rKTsTextUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID"
 rKTsSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_S%SNUM"
@@ -14,6 +16,8 @@ bdrcAbstractUrlFormatKan: "http://purl.bdrc.io/resource/WA0RKI%GID"
 bdrcExpressionUrlFormatKan: "http://purl.bdrc.io/resource/WA0RK%GID"
 bdrcAbstractUrlFormatTen: "http://purl.bdrc.io/resource/WA0RTI%GID"
 bdrcExpressionUrlFormatTen: "http://purl.bdrc.io/resource/WA0RT%GID"
+bdrcAbstractUrlFormatNG: "http://purl.bdrc.io/resource/WA0RGI%GID"
+bdrcExpressionUrlFormatNG: "http://purl.bdrc.io/resource/WA0RG%GID"
 bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%EID"
 bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_%GID"
 bdrcSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_S%SNUM"
@@ -154,8 +158,8 @@ narthang:
     {name: "kha skong", volumes: [""]},
     ]
 peking:
-  RID: ["MW1PD96684"]
-  file: "Collections/Kq Peking 1737 Kanjur/Kq.xml"
+  RID: ["MW1PD96684", "MW3CN1094"]
+  file: "Collections/Q Peking 1737 Kanjur/Q.xml"
   EID: "Kq"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -192,7 +196,7 @@ lhasa:
     {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha"]},
     ]
 urga:
-  RID: ["MW29468"]
+  RID: ["MW29468", "MW1BL4"]
   file: "Catalog/U Urga Kanjur/U.xml"
   EID: "U"
   langScript: 'bdr:BoDbuCan'
@@ -200,20 +204,7 @@ urga:
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaU"
   volumeBdrcPageFirstFolioDefault: 3
-  volumeMap: [
-    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
-    {name: "'bum", volumes: ["ka", "a"]},
-    {name: "nyi khri", volumes: ["ka", "a"]},
-    {name: "khri brgyad", volumes: ["ka", "ga"]},
-    {name: "khri pa", volumes: ["ga", "nga"]},
-    {name: "brgyad stong", volumes: ["ka"]},
-    {name: "sna tshogs", volumes: ["ka"]},
-    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH", "ki"]},
-    {name: "rgyud", volumes: ["ga", "nga", "tha", "na", "pa", "pha", "ba", "ma", "wa"]},
-    {name: "rnying rgyud", volumes: ["ka", "ga"]},
-    {name: "gzungs", volumes: ["e", "waM"]},
-    ]
+  volumeMap: []
 shey:
   RID: ["MW1PD127393"]
   file: "Collections/Z Shey Kanjur/Z.xml"
@@ -223,19 +214,7 @@ shey:
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaZ"
   volumeBdrcPageFirstFolioDefault: 3
-  volumeMap: [
-    {name: "'dul ba", volumes: ["ka", "nga", "ca", "ja", "nya", "ta", "tha", "da", "na"]},
-    {name: "'bum", volumes: ["ka", "na"]},
-    {name: "nyi khri", volumes: ["ka", "nga"]},
-    {name: "khri rgyad", volumes: ["ka", "ga"]},
-    {name: "khri pa", volumes: ["ka", "kha"]},
-    {name: "brgyad stong", volumes: ["ka"]},
-    {name: "sras sna tshogs", volumes: ["ka"]},
-    {name: "phal chen", volumes: ["ka"]},
-    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "cha"]},
-    {name: "mdo", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "ra", "la", "sha", "ha", "a", "ki", "ngi", "ci", "chi", "ji"]},
-    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha"]},
-    ]
+  volumeMap: []
 cone:
   RID: ["MW1PD96685"]
   file: "Collections/C Cone Kanjur/C.xml"
@@ -255,24 +234,7 @@ lithang:
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
   propSigla: "KaTenSiglaJ"
   volumeBdrcPageFirstFolioDefault: 3
-  volumeMap: [
-    {name: "'dul ba", volumes: ["ka", "nga", "ca", "nya", "ta", "tha", "da", "na", "pa"]},
-    {name: "'bum", volumes: ["ka", "a"]},
-    {name: "nyi khri", volumes: ["ka", "nga"]},
-    {name: "khri brgyad", volumes: ["ka", "ga"]},
-    {name: "khri pa", volumes: ["ga", "nga"]},
-    {name: "brgyad stong", volumes: ["ka"]},
-    {name: "sna tshogs", volumes: ["ka"]},
-    {name: "mdo sde", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-    {name: "padma dkar po", volumes: ["ja"]},
-    {name: "mdo sde", volumes: ["nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha", "za", "'a", "ya", "sha", "sa", "ha", "a", "aM", "aH"]},
-    {name: "phal chen", volumes: ["ka", "cha"]},
-    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-    {name: "rgyud 'bum", volumes: ["ka", "kha", "ga", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "ba", "ma", "tsa", "tsha", "dza", "wa", "zha"]},
-    {name: "rgyud gzung 'dus", volumes: ["za"]},
-    {name: "rgyud 'bum", volumes: ["'a", "ya"]},
-    {name: "dri med 'od", volumes: ["A"]},
-    ]
+  volumeMap: []
 ulaanbaatar:
   RID: ["MW1KG14700"]
   file: "Collections/V Ulaanbaatar Kanjur/V.xml"
@@ -282,18 +244,7 @@ ulaanbaatar:
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaV"
   volumeBdrcPageFirstFolioDefault: 3
-  volumeMap: [
-    {name: "'dul ba", volumes: ["ka", "nga", "ca", "cha", "tha", "na", "pa"]},
-    {name: "'bum", volumes: ["ka", "ma"]},
-    {name: "nyi khri", volumes: ["ka", "nga"]},
-    {name: "khri brgyad", volumes: ["ka", "ga"]},
-    {name: "khri pa", volumes: ["ka", "kha"]},
-    {name: "dkon brtsegs", volumes: ["ka", "kha", "ga", "nga", "ca", "cha"]},
-    {name: "mdo sde", volumes: ["ka", "kha", "nga", "ca", "cha", "ja", "nya", "ta", "tha", "da", "na", "pa", "pha", "dza", "ba", "ma", "ya", "tsa", "tsha", "wa", "zha", "za", "sa", "'a", "ra", "la", "sha", "ha", "a", "ki", "ngi", "ci", "chi", "ji"]},
-    {name: "myang 'das", volumes: ["ka", "ga"]},
-    {name: "rnying rgyud", volumes: ["ka", "kha", "ga"]},
-    {name: "rgyud", volumes: ["ka", "kha", "ga", "nga", "ca", "ja", "cha", "nya", "ta", "tha", "da", "pa", "na", "pha", "ba", "ma", "tsa", "tsha"]},
-    ]
+  volumeMap: []
 # dolpo:
 #   RID: ["W1KG14700"]
 #   EID: "Do"
@@ -492,6 +443,24 @@ hemishe:
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaHe"
   volumeMap: []
+hemishi:
+  RID: ["MW4CZ45314"]
+  EID: "Hi"
+  file: "Collections/Hi Hemis II Kanjur/Hi.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaHi"
+  volumeMap: []
+hemishg:
+  RID: ["MW4CZ45315"]
+  EID: "Hg"
+  file: "Collections/Hg Hemis Golden Collection/Hg.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaHg"
+  volumeMap: []
 ragya:
   RID: ["MW2PD17098"]
   EID: "R"
@@ -499,5 +468,115 @@ ragya:
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
-  propSigla: "KaTenSiglaHe"
+  propSigla: "KaTenSiglaR"
   volumeMap: []
+tashiyangtse:
+  RID: ["MW2KG209840"]
+  EID: "Ty"
+  file: "Collections/Ty Tashiyangtse Kanjur/Ty.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaTy"
+  volumeMap: []
+go:
+  RID: ["MW2KG5016"]
+  EID: "Go"
+  file: "Collections/Go Gondhla Collection/Go.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGo"
+  volumeMap: []
+ba:
+  RID: ["MW8LS15931"]
+  EID: "Bd"
+  file: "Collections/Bd Bardan Collection/Bd.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaBd"
+  volumeMap: []
+ng:
+  RID: ["MW2KG229028"]
+  EID: "Ng"
+  file: "Collections/Ng Namgyal Collection/Ng.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaBd"
+  volumeMap: []
+#n:
+#  RID: ["MW22703"]
+#  EID: "N"
+#  file: "Collections/Ne Newark Kanjur/Ne.xml"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  propSigla: "KaTenSiglaBd"
+#  volumeMap: []
+gaz:
+  RID: ["MW1KG11703"]
+  EID: "Gaz"
+  file: "Collections/Gaz a 'dzom par ma/Gaz.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGaz"
+  volumeMap: []
+gbm:
+  RID: ["MW2PD19897"]
+  EID: "Gbm"
+  file: "Collections/Gbm rnying rgyud bris ma/Gbm.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGbm"
+  volumeMap: []
+gbr:
+  RID: ["MW21519"]
+  EID: "Gbr"
+  file: "Collections/Gbr bai ro'i rgyud 'bum/Gbr.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGbr"
+  volumeMap: []
+gcd:
+  RID: ["MW21520"]
+  EID: "Gcd"
+  file: "Collections/Gcd rnying ma rgyud bcu bdun/Gcd.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGcd"
+  volumeMap: []
+#ggb:
+#  RID: ["MW21939"]
+#  EID: "Ggb"
+#  file: "Collections/Ggb rnying ma rgyud 'bum/Ggb.xml"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  propSigla: "KaTenSiglaGgb"
+#  volumeMap: []
+gkh:
+  RID: ["MW2PD17382"]
+  EID: "Gkh"
+  file: "Collections/Gkh khams rnying rgyud/Gkh.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGkh"
+  volumeMap: []
+gpb:
+  RID: ["MW1KG14783"]
+  EID: "Gpb"
+  file: "Collections/Gpb snga 'gyur rgyud 'bum phyogs bsgrigs/Gpb.xml"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaGpb"
+  volumeMap: []
+
+# Gkk, Gsg, Gtb, ta, Ggk

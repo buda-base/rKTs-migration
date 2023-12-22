@@ -40,3 +40,6 @@ TODO:
 
 Questions:
 - why the note "17 chapters" in dergue.xml for rKTs1 while there are 36?
+
+- http://www.rkts.org/sqleditor/readme.php
+- 	http://www.rkts.org/sqleditor/login.php

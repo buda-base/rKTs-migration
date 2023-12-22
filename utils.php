@@ -14,7 +14,7 @@ function bnode_url($facetprefix, $res, $rootres, $objectstr) {
     return $prefix.$facetprefix.strtoupper($hashpart).'_'.$local;
 }
 
-function catalogue_index_xml_to_rdf($index, $edition_info, $tengyur) {
+function catalogue_index_xml_to_rdf($index, $edition_info) {
     $edlen = strlen($edition_info['confinfo']['EID']);
     $index = substr($index, $edlen);
     $index = str_replace(["(", ".", ","], "-", $index);
@@ -54,23 +54,31 @@ function rdf_ci_to_url($id) {
     }
 }
 
-function id_to_url_abstract($rktsid, $config, $bdrc=False, $tengyur=False) {
+function edition_to_param_name($edition) {
+    if ($edition == "T")
+        return "Ten";
+    if ($edition == "K")
+        return "Kan";
+    return "NG";
+}
+
+function id_to_url_abstract($rktsid, $config, $bdrc=False, $edition="K") {
     global $gl_rkts_abstract;
-    $idwithletter = ($tengyur ? 'T' : 'K').$rktsid;
+    $idwithletter = $edition.$rktsid;
     // if the same text has different translations, we attach all the translations to the same abstract text:
     if ($bdrc && isset($config['SameTextDifferentTranslation'][$idwithletter])) {
         $idwithletter = $config['SameTextDifferentTranslation'][$idwithletter];
         $rktsid = substr($idwithletter, 1);
-        $tengyur = ($idwithletter[0] == 'T');
+        $edition = $idwithletter[0];
     }
     if ($bdrc && isset($gl_rkts_abstract[$idwithletter])) {
         return 'http://purl.bdrc.io/resource/'.$gl_rkts_abstract[$idwithletter];
     }
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.($tengyur ? 'Ten' : 'Kan');
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'AbstractUrlFormat'.(edition_to_param_name($edition));
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
-function has_bdrc_abstract($idwithletter, $config, $bdrc=False, $tengyur=False) {
+function has_bdrc_abstract($idwithletter, $config, $bdrc=False) {
     global $gl_rkts_abstract;
     if (!$bdrc)
         return false;
@@ -85,22 +93,25 @@ function has_bdrc_abstract($idwithletter, $config, $bdrc=False, $tengyur=False) 
     return false;
 }
 
-function id_to_url_expression($rktsid, $config, $bdrc=False, $tengyur=False) {
+function id_to_url_expression($rktsid, $config, $bdrc=False, $edition="K") {
     global $gl_rkts_kmapping;
     // if there's a mapping in the Kernel, we follow it
-    if (!$tengyur && array_key_exists(strval($rktsid), $gl_rkts_kmapping)) {
+    if ($edition == "K" && array_key_exists(strval($rktsid), $gl_rkts_kmapping)) {
         $rktsid = $gl_rkts_kmapping[strval($rktsid)];
     }
     // for bdrc, when the exact same text is in both Kangyur and Tengyur, we just take the Tengyur ID for the URL
-    if ($bdrc && !$tengyur && array_key_exists(intval($rktsid), $config['KTMapping'])) {
+    if ($bdrc && $edition == "K" && array_key_exists(intval($rktsid), $config['KTMapping'])) {
         $rktsid = $config['KTMapping'][intval($rktsid)];
-        $tengyur = true;
+        $edition = "T";
     }
     if (substr(strval($rktsid),0,1) == "T") {
-        $tengyur = True;
+        $edition = "T";
+        $rktsid = substr(strval($rktsid),1);
+    } elseif (substr(strval($rktsid),0,1) == "G") {
+        $edition = "G";
         $rktsid = substr(strval($rktsid),1);
     } 
-    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat'.($tengyur ? 'Ten' : 'Kan');
+    $paramName = ($bdrc ? 'bdrc' : 'rKTs').'ExpressionUrlFormat'.(edition_to_param_name($edition));
     return str_replace('%GID', id_to_str($rktsid), $config[$paramName]);
 }
 
@@ -113,8 +124,8 @@ function id_to_url_edition_text($eid, $ci, $config, $partnum, $bdrc=False) {
     // ci is catalogue index, should be unique in the edition
     if ($bdrc) {
         $estr = str_replace('%EID', $eid, $config['bdrcTextUrlFormat']);
-        return str_replace('%GID', rdf_ci_to_url($ci), $estr);
-        //return str_replace('%PNUM', id_to_str($partnum), $estr);
+        $estr = str_replace('%GID', rdf_ci_to_url($ci), $estr);
+        return str_replace("-", "_", $estr);
     } else {
         $estr = str_replace('%EID', $eid, $config['rKTsTextUrlFormat']);
         return str_replace('%GID', rdf_ci_to_url($ci), $estr);

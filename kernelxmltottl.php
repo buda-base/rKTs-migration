@@ -68,10 +68,12 @@ $gl_KanToTenExpressions = [];
 
 $subitemtoitem = [];
 
-function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $tengyur=False) {
+function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edition="K") {
     global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem;
-    if ($tengyur) {
+    if ($edition == "K") {
         $id = $item->rktst->__toString();
+    } elseif ($edition == "G") {
+        $id = $item->rktstg->__toString();
     } else {
         $id = $item->rkts->__toString();
     }
@@ -79,17 +81,17 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         return;
     $storeAsDuplicate = false;
     $restoredFromDuplicate = false;
-    $url_expression = id_to_url_expression($id, $config, $bdrc, $tengyur);
+    $url_expression = id_to_url_expression($id, $config, $bdrc, $edition);
     $graph_expression = new EasyRdf_Graph();
     $expression_r = $graph_expression->resource($url_expression);
     $seenTitles = [];
     $seenLangs = [];
-    if ($bdrc && !$tengyur && isset($config['KTMapping'][intval($id)])) {
+    if ($bdrc && $edition == "K" && isset($config['KTMapping'][intval($id)])) {
         $storeAsDuplicate = true;
         $idtostore = intval($config['KTMapping'][intval($id)]);
     }
-    $idwithletter = ($tengyur ? 'T' : 'K').$id;
-    if ($bdrc && $tengyur && isset($gl_KanToTenExpressions[intval($id)])) {
+    $idwithletter = $edition.$id;
+    if ($bdrc && $edition == "T" && isset($gl_KanToTenExpressions[intval($id)])) {
         $stored_expr_data = $gl_KanToTenExpressions[intval($id)];
         $expression_r = $stored_expr_data["res"];
         $graph_expression = $stored_expr_data["graph"];
@@ -97,7 +99,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         $seenLangs = $stored_expr_data["seenLangs"];
         $restoredFromDuplicate = true;
     }
-    if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
+    if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $edition)) {
         $props = $gl_rkts_props[$idwithletter];
         add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
         add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
@@ -114,12 +116,12 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     $abstract_r = null;
     $firstTitleLits = get_first_title_lits($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
-        $url_abstract = id_to_url_abstract($id, $config, $bdrc, $tengyur);
+        $url_abstract = id_to_url_abstract($id, $config, $bdrc, $edition);
         $expression_r->addResource('bdo:workHasParallelsIn', $url_abstract);
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
             $graph_abstract = new EasyRdf_Graph();
             $abstract_r = $graph_abstract->resource($url_abstract);
-            if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $tengyur)) {
+            if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $edition)) {
                 $props = $gl_rkts_props[$idwithletter];
                 add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
                 add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
@@ -140,15 +142,15 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
                 //add_title($abstract_r, 'WorkBibliographicalTitle', $firstTitleLit);
             }
             $abstract_r->addResource('bdo:workHasParallelsIn', $url_expression);
-            //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $tengyur));
+            //$abstract_r->addResource('owl:sameAs', id_to_url_abstract($id, $config, !$bdrc, $edition));
             add_log_entry($abstract_r);
         }
     }
     $expression_r->addResource('rdf:type', 'bdo:Work'); // abstract
     if ($bdrc) {
-        $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
+        $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $edition));
     } else {
-        $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $tengyur));
+        $expression_r->addResource('owl:sameAs', id_to_url_expression($id, $config, !$bdrc, $edition));
     }
     $expression_r->addResource('bdo:language', 'bdr:LangBo');
     //$expression_r->addResource('bdo:script', 'bdr:ScriptTibt');
@@ -156,11 +158,11 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
     $idNode = $expression_r->getGraph()->resource($idUri);
     $expression_r->addResource('bf:identifiedBy', $idNode);
     $idNode->add('rdf:value', $id);
-    $idNode->addResource('rdf:type', 'bdr:RefrKTs'.($tengyur ? 'T' : 'K'));
+    $idNode->addResource('rdf:type', 'bdr:RefrKTs'.$edition);
     $expression_r->addLiteral('bdo:isRoot', true);
     foreach ($item->children() as $child) {
         $name = $child->getName();
-        if ($name == "rkts" || $name == "rktst") continue;
+        if ($name == "rkts" || $name == "rktst" || $name == "rktsg") continue;
         if (empty($child->__toString()) && $name != "cmp") {
             continue;
         }
@@ -195,12 +197,12 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         if ($name == "subitem") {
             $subitem = $child->__toString();
             $subitemtoitem[$subitem] = $id;
-            $expression_r->addResource('bdo:hasPart', id_to_url_expression($subitem, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:hasPart', id_to_url_expression($subitem, $config, $bdrc, $edition));
             continue;
         }
         if (array_key_exists($id, $subitemtoitem)) {
             $parentid = $subitemtoitem[$id];
-            $expression_r->addResource('bdo:partOf', id_to_url_expression($parentid, $config, $bdrc, $tengyur));
+            $expression_r->addResource('bdo:partOf', id_to_url_expression($parentid, $config, $bdrc, $edition));
         }
         $langtag = $name_to_bcp[$name];
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
@@ -247,18 +249,20 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $teng
         add_graph_to_global($graph_expression, $expression_r->localName(), $global_graph_fd);
 }
 
-function kernel_to_ttl($config, $xml, $global_graph_fd, $bdrc=False, $tengyur=False) {
+function kernel_to_ttl($config, $xml, $global_graph_fd, $bdrc=False, $edition="K") {
     foreach($xml->item as $item) {
-        kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc, $tengyur);
+        kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc, $edition);
     }
 }
 
-function fillmappings($xml, $tengyur=False) {
+function fillmappings($xml, $edition="K") {
     global $gl_rkts_kmapping;
     foreach($xml->item as $item) {
         if (isset($item->now)) {
-            if ($tengyur) {
+            if ($edition == "T") {
                 $id = $item->rktst->__toString();
+            } elseif ($edition == "G") {
+                $id = $item->rktsg->__toString();
             } else {
                 $id = $item->rkts->__toString();
             }
