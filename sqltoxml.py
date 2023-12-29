@@ -1,6 +1,6 @@
-from mysql.connector import connect, Error
+#from mysql.connector import connect
 from xml.sax.saxutils import escape
-
+from mariadb import connect
 
 def export_kernel():
     sc = connect( host="localhost", user="rkts", password="rkts", database="rkts")
@@ -40,6 +40,8 @@ def export_nlm():
             text_file.write("\"%s\",\"%s\"\n" % (nlmid, rkts))
 
 def get_locations_xml(ref):
+    if ref is None:
+        return ''
     sc = connect( host="localhost", user="rkts", password="rkts", database="rkts")
     cursor = sc.cursor()
     query = "select setid, vol, sec, debp, debf, debl, finp, finf, finl from locations where ref='%s'" % ref
@@ -47,15 +49,20 @@ def get_locations_xml(ref):
     res = ''
     for row in cursor:
         res += '<loc><set>%s</set><json>%s</json><psection>%s</psection><p>%s%s%d-%s%s%d</p></loc>' % (row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8])
+    cursor.close()
+    sc.close()
     return res
 
 def export_catalogs():
     sc = connect( host="localhost", user="rkts", password="rkts", database="rkts")
     cursor = sc.cursor()
-    query = "select coll, ref, rktsTyp, rkts, tib, skt, coloph, colophTitle, margin from catalog where rktsTyp = 'T' order by ref asc"
+    query = "select coll, ref, rktsTyp, rkts, tib, skt, coloph, colophTitle, margin, rnb from catalog where rktsTyp = 'G' order by rnb asc"
     cursor.execute(query)
+    rows = cursor.fetchall()
+    cursor.close()
+    sc.close()
     res = {}
-    for row in cursor:
+    for row in rows:
         if row[0] not in res:
             res[row[0]] = '<?xml version="1.0" encoding="UTF-8"?><outline>'
         location_str = get_locations_xml(row[1])
