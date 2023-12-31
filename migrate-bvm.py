@@ -134,6 +134,9 @@ def fix_one_file(iilname, fpath, iglname):
         if dblcolidx < 0:
             print(iglname+"("+idxstr+"): can't understand "+imgdata)
         fname = imgdata[dblcolidx+2:]
+        imggroup = imgdata[:dblcolidx]
+        if iglname != imggroup:
+            print("warn: "+iglname+".json has images in "+imggroup)
         # in some cases the first images have been adjusted, so we ignore shifts in the image list before image number 4:
         #if int(idxstr) < 5:
         #    continue
@@ -181,7 +184,9 @@ def write_rkts_json(fname, rkjson):
             first = False
         json_file.write('\n}')
 
-def migrate_one_file(iilname, fpath, iglname):
+Purely_virtual_iglnames = []
+
+def migrate_one_file(iilname, fpath, iglname, virtual=False):
     print("migrating "+str(fpath))
     simplemode = False
     res = copy.deepcopy(BVM_BOILERPLATE)
@@ -196,26 +201,28 @@ def migrate_one_file(iilname, fpath, iglname):
         print("can't open "+str(fpath)+" "+str(e))
         return None
     volqname = "bdr:"+iglname
-    ilist = get_img_list(iilname, iglname)
     ilistfidx = {}
-    previousi = 0
-    for iinfo in ilist:
-        fname = iinfo["filename"]
-        ilistfidx[fname] = {}
-        dotidx = fname.rfind('.')
-        if dotidx == -1:
-            print(iglname+": strange filename: "+fname)
-            previousi = 0
-        else:
-            potentialnum = fname[dotidx-4:dotidx]
-            try:
-                i = int(potentialnum)
-                if previousi != 0 and i != previousi + 1:
-                    print(iglname+": non-contiguous imagelist"+fname)
-                previousi = i
-            except:
+    ilist = None
+    if not virtual:
+        ilist = get_img_list(iilname, iglname)
+        previousi = 0
+        for iinfo in ilist:
+            fname = iinfo["filename"]
+            ilistfidx[fname] = {}
+            dotidx = fname.rfind('.')
+            if dotidx == -1:
                 print(iglname+": strange filename: "+fname)
                 previousi = 0
+            else:
+                potentialnum = fname[dotidx-4:dotidx]
+                try:
+                    i = int(potentialnum)
+                    if previousi != 0 and i != previousi + 1:
+                        print(iglname+": non-contiguous imagelist"+fname)
+                    previousi = i
+                except:
+                    print(iglname+": strange filename: "+fname)
+                    previousi = 0
     res["imggroup"] = volqname
     if iilname in ESUKHIA_ATTR_RIDS:
         res["attribution"] = get_lgstr_arr("Data provided by Esukhia under the CC0 license", "en")
@@ -264,11 +271,11 @@ def migrate_one_file(iilname, fpath, iglname):
         igname = imgdata[4:dblcolidx]
         if igname != iglname:
             print(iglname+"("+idxstr+"): file not in imagegroup: "+imgdata)
-        elif fname not in ilistfidx:
+        elif not virtual and fname not in ilistfidx:
             print(iglname+"("+idxstr+"): file not in list: "+fname)
-        elif "seen" in ilistfidx[fname]:
+        elif not virtual and "seen" in ilistfidx[fname]:
             print(iglname+"("+idxstr+"): file used twice: "+fname)
-        else:
+        elif not virtual:
             ilistfidx[fname]["seen"] = True
     if len(psections) > 1:
         res["sections"] = []
@@ -278,33 +285,34 @@ def migrate_one_file(iilname, fpath, iglname):
     lastseen = None
     lastfname = None
     afterfirstseen = False
-    for i, iinfo in enumerate(ilist):
-        fname = iinfo["filename"]
-        lastfname = fname
-        fdata = ilistfidx[fname]
-        if "seen" not in fdata:
-            print(iglname+": file not used: "+fname)
-            # adding first files to the bvm if they're not in the list
-            if not afterfirstseen:
-                resimgdata = {}
-                resimglist.append(resimgdata)
-                resimgdata["filename"] = fname
-                # a bit risque but it seems to work
-                if i < 3:
-                    add_tag(resimgdata, "T0005")
-                    resimgdata["hidden"] = True
-            else:
-                if lastseen not in insertafter:
-                    insertafter[lastseen] = []
-                insertafter[lastseen].append(fname)
-        else:
-            afterfirstseen = True
-            lastseen = fname
-
+    if not virtual:
+        for i, iinfo in enumerate(ilist):
+            fname = iinfo["filename"]
+            lastfname = fname
+            if not virtual:
+                fdata = ilistfidx[fname]
+                if "seen" not in fdata:
+                    print(iglname+": file not used: "+fname)
+                    # adding first files to the bvm if they're not in the list
+                    if not afterfirstseen:
+                        resimgdata = {}
+                        resimglist.append(resimgdata)
+                        resimgdata["filename"] = fname
+                        # a bit risque but it seems to work
+                        if i < 3:
+                            add_tag(resimgdata, "T0005")
+                            resimgdata["hidden"] = True
+                    else:
+                        if lastseen not in insertafter:
+                            insertafter[lastseen] = []
+                        insertafter[lastseen].append(fname)
+                else:
+                    afterfirstseen = True
+                    lastseen = fname
     # removing the final entry so that we display the final images:
     finalimages = []
-    if lastseen == lastfname and lastseen in insertafter:
-        finalimage = insertafter[lastseen]
+    if not virtual and lastseen == lastfname and lastseen in insertafter:
+        finalimages = insertafter[lastseen]
         insertafter[lastseen] = None
 
     for i, idxstr  in enumerate(sortedkeys):
@@ -387,13 +395,14 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
-        if "1BL6" in fname or "WPT" in fname or "Pelliot" in fname  or "3CN3207" in fname or "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
+        if "WPT" in fname or "Pelliot" in fname  or "3CN3207" in fname or "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
             continue
+        virtual = "1ER156" in fname
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
         #res = fix_one_file(iilname, p, iglname)
-        res = migrate_one_file(iilname, p, iglname)
+        res = migrate_one_file(iilname, p, iglname, virtual)
         if res is None:
             continue
         bvmhash = hashlib.md5(iglname.encode("utf8")).hexdigest()[:2]
