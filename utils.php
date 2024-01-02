@@ -217,7 +217,7 @@ function get_json($eid, $jsonbname, $edition_info) {
 function get_json_virtual($eid, $jsonbname, $edition_info) {
     $res = [];
     $wlname = eid_to_wlname($eid);
-    $baseeid = substr($eid, 1);
+    $baseeid = substr($wlname, 1);
     $file = $edition_info['confinfo']['file'];
     $dir = substr( $file, 0, strrpos( $file, "/" ) + 1 );
     if (array_key_exists('jsondir', $edition_info['confinfo'])) {
@@ -277,7 +277,7 @@ function get_json_virtual($eid, $jsonbname, $edition_info) {
 function get_json_full($eid, $jsonbname, $edition_info) {
     $res = [];
     $wlname = eid_to_wlname($eid);
-    $baseeid = substr($eid, 1);
+    $baseeid = substr($wlname, 1);
     $file = $edition_info['confinfo']['file'];
     $dir = substr( $file, 0, strrpos( $file, "/" ) + 1 );
     if (array_key_exists('jsondir', $edition_info['confinfo'])) {
