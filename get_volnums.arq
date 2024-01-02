@@ -1,0 +1,8 @@
+select distinct ?ig ?vn {
+	values ?wa { bdr:WA0BC001 bdr:WA0BC002 bdr:WA3JT13481 bdr:WA1KG892 }
+	?mw :instanceOf ?wa ;
+	    :instanceHasReproduction ?w .
+	?w a :ImageInstance ;
+       :instanceHasVolume ?ig .
+	?ig :volumeNumber ?vn .
+} order by ?ig
