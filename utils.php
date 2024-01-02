@@ -209,10 +209,80 @@ $lastjsonbname = null;
 $lastjson = null;
 
 function get_json($eid, $jsonbname, $edition_info) {
+    if ($eid == "MW1BL6")
+        return get_json_virtual($eid, $jsonbname, $edition_info);
+    return get_json_full($eid, $jsonbname, $edition_info);
+}
+
+function get_json_virtual($eid, $jsonbname, $edition_info) {
     $res = [];
-    $baseeid = substr($eid, 2);
+    $wlname = eid_to_wlname($eid);
+    $baseeid = substr($eid, 1);
     $file = $edition_info['confinfo']['file'];
     $dir = substr( $file, 0, strrpos( $file, "/" ) + 1 );
+    if (array_key_exists('jsondir', $edition_info['confinfo'])) {
+        $dir = $edition_info['confinfo']['jsondir'];
+    }
+    $path = "rKTs/".$dir.$baseeid."/".$jsonbname.".json";
+    $jsons = file_get_contents($path);
+    $jsonobj = json_decode($jsons, true);
+    //print_r($jsonobj);
+    if (substr($jsonbname,0,1) != "I") {
+        $jsonbpath = "I".$jsonbname;
+    } else {
+        $jsonbpath = $jsonbname;
+    }
+    ksort($jsonobj);
+    
+    $attachtonext = [];
+    $i = 0;
+    foreach ($jsonobj as $value) {
+        $i += 1;
+        $psection = array_key_exists("psection", $value) ? $value["psection"] : "default";
+        $pg = $value["pagination"];
+        $fullfile = $value["file"];
+        if ($fullfile == "missing") {
+            $attachtonextval = [];
+            $attachtonextval["psection"] = $psection;
+            $attachtonextval["pg"] = $pg;
+            $attachtonext[] = $attachtonextval;
+            continue;
+        }
+        $imgnum = $i;
+        if (!array_key_exists($psection, $res)) {
+            $res[$psection] = [];
+        }
+        $res[$psection][$pg] = $imgnum;
+        foreach ($attachtonext as $attachtonextval) {
+            $psection = $attachtonextval["psection"];
+            if (!array_key_exists($psection, $res)) {
+                $res[$psection] = [];
+            }
+            $res[$psection][$attachtonextval["pg"]] = $imgnum;
+            //print("attaching ".$attachtonextval["pg"]." to ".$imgnum."\n");
+        }
+        $attachtonext = [];
+    }
+    foreach ($attachtonext as $attachtonextval) {
+        $psection = $attachtonextval["psection"];
+        if (!array_key_exists($psection, $res)) {
+            $res[$psection] = [];
+        }
+        $res[$psection][$attachtonextval["pg"]] = $imgnum;
+    }
+    $res["zzlastimgnum"] = $lastimgnum;
+    return $res;
+}
+
+function get_json_full($eid, $jsonbname, $edition_info) {
+    $res = [];
+    $wlname = eid_to_wlname($eid);
+    $baseeid = substr($eid, 1);
+    $file = $edition_info['confinfo']['file'];
+    $dir = substr( $file, 0, strrpos( $file, "/" ) + 1 );
+    if (array_key_exists('jsondir', $edition_info['confinfo'])) {
+        $dir = $edition_info['confinfo']['jsondir'];
+    }
     $path = "rKTs/".$dir.$baseeid."/".$jsonbname.".json";
     $jsons = file_get_contents($path);
     $jsonobj = json_decode($jsons, true);
@@ -330,6 +400,12 @@ function folio_side_to_pagenum($folionum, $side, $volnum, $jsonbname, $psection,
     return $imagenum;
 }
 
+function eid_to_wlname($eid) {
+    if ($eid == "MW1BL6")
+        return "W1ER156";
+    return substr($eid,1);
+}
+
 function add_location_simple($resource, $location, $edition_info, $eid) {
     if (!isset($location['bvolnum']))
         return;
@@ -338,7 +414,7 @@ function add_location_simple($resource, $location, $edition_info, $eid) {
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".substr($eid,1));
+    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".eid_to_wlname($eid));
     $evolnum = $location['bvolnum'];
     if (isset($location['evolnum']) && !empty($location['evolnum']) && $location['bvolnum'] != $location['evolnum']) {
         $evolnum = $location['evolnum'];
@@ -375,7 +451,7 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $locationNode->add('bdo:contentLocationVolume', intval($location['bvolnum']));
-    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".substr($eid,1));
+    $locationNode->addResource('bdo:contentLocationInstance', "http://purl.bdrc.io/resource/".eid_to_wlname($eid));
     $bpagenum = folio_side_to_pagenum($location['bpagenum'], $location['bpageside'], $location['bvolnum'], $location['bjson'], $location['bpsection'], $eid, $edition_info);
     $locationNode->add('bdo:contentLocationPage', $bpagenum);
 }
@@ -687,7 +763,7 @@ $name_to_bcp = [
     'English84000' => 'en',
     'skt' => 'sa-x-iast',
     'mongolian' => 'cmg-x-poppe-simpl',
-    'mng' => 'cmg-x-poppe-simpl',
+    'mng' => 'cmg-x-poppe',
     'mnguni' => 'cmg-Mong',
     'skttrans' => 'sa-x-ewts',
     'bsktrans' => 'bsk-x-ewts',

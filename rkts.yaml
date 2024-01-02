@@ -434,37 +434,39 @@ goldenmustang:
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaCx"
   volumeMap: []
-hemishe:
-  RID: ["MW4CZ45313"]
-  EID: "He"
-  file: "Collections/He Hemis I Kanjur/He.xml"
-  langScript: 'bdr:BoDbuCan'
-  script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:PrintMethod_Manuscript'
-  propSigla: "KaTenSiglaHe"
-  volumeMap: []
+#hemishe:
+#  RID: ["MW4CZ45313"]
+#  EID: "He"
+#  file: "Collections/He Hemis I Kanjur/He.xml"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  propSigla: "KaTenSiglaHe"
+#  volumeMap: []
 hemishi:
   RID: ["MW4CZ45314"]
   EID: "Hi"
-  file: "Collections/Hi Hemis II Kanjur/Hi.xml"
+  file: "sql_export/Hi.xml"
+  jsondir: "Collections/Hi Hemis II Kanjur/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaHi"
   volumeMap: []
-hemishg:
-  RID: ["MW4CZ45315"]
-  EID: "Hg"
-  file: "Collections/Hg Hemis Golden Collection/Hg.xml"
-  langScript: 'bdr:BoDbuCan'
-  script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:PrintMethod_Manuscript'
-  propSigla: "KaTenSiglaHg"
-  volumeMap: []
+#hemishg:
+#  RID: ["MW4CZ45315"]
+#  EID: "Hg"
+#  file: "Collections/Hg Hemis Golden Collection/Hg.xml"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  propSigla: "KaTenSiglaHg"
+#  volumeMap: []
 ragya:
   RID: ["MW2PD17098"]
   EID: "R"
-  file: "Collections/R Ragya Kanjur/R.xml"
+  file: "sql_export/R.xml"
+  jsondir: "Collections/R Ragya Kanjur/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -473,7 +475,8 @@ ragya:
 tashiyangtse:
   RID: ["MW2KG209840"]
   EID: "Ty"
-  file: "Collections/Ty Tashiyangtse Kanjur/Ty.xml"
+  file: "sql_export/Ty.xml"
+  jsondir: "Collections/Ty Tashiyangtse Kanjur/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
@@ -482,25 +485,30 @@ tashiyangtse:
 go:
   RID: ["MW2KG5016"]
   EID: "Go"
-  file: "Collections/Go Gondhla Collection/Go.xml"
+  file: "sql_export/Go.xml"
+  jsondir: "Collections/Go Gondhla Collection/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
+  hassections: False
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaGo"
   volumeMap: []
-ba:
+bd:
   RID: ["MW8LS15931"]
   EID: "Bd"
-  file: "Collections/Bd Bardan Collection/Bd.xml"
+  file: "sql_export/Bd.xml"
+  jsondir: "Collections/Bd Bardan Collection/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
+  hassections: False
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaBd"
   volumeMap: []
 ng:
   RID: ["MW2KG229028"]
   EID: "Ng"
-  file: "Collections/Ng Namgyal Collection/Ng.xml"
+  file: "sql_export/Ng.xml"
+  jsondir: "Collections/Ng Namgyal Collection/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
@@ -518,37 +526,44 @@ ng:
 gaz:
   RID: ["MW1KG11703"]
   EID: "Gaz"
-  file: "Collections/Gaz a 'dzom par ma/Gaz.xml"
+  file: "sql_export/Gaz.xml"
+  jsondir: "Collections/Gaz a 'dzom par ma/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
+  hassections: False
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaGaz"
   volumeMap: []
 gbm:
   RID: ["MW2PD19897"]
   EID: "Gbm"
-  file: "Collections/Gbm rnying rgyud bris ma/Gbm.xml"
+  file: "sql_export/Gbm.xml"
+  jsondir: "Collections/Gbm rnying rgyud bris ma/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
+  hassections: False
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaGbm"
   volumeMap: []
-gbr:
-  RID: ["MW21519"]
-  EID: "Gbr"
-  file: "Collections/Gbr bai ro'i rgyud 'bum/Gbr.xml"
-  langScript: 'bdr:BoDbuCan'
-  script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:PrintMethod_Manuscript'
-  propSigla: "KaTenSiglaGbr"
-  volumeMap: []
+#gbr:
+#  RID: ["MW21519"]
+#  EID: "Gbr"
+#  file: "Collections/Gbr bai ro'i rgyud 'bum/Gbr.xml"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  hassections: False
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  propSigla: "KaTenSiglaGbr"
+#  volumeMap: []
 gcd:
   RID: ["MW21520"]
   EID: "Gcd"
-  file: "Collections/Gcd rnying ma rgyud bcu bdun/Gcd.xml"
+  file: "sql_export/Gcd.xml"
+  jsondir: "Collections/Gcd rnying ma rgyud bcu bdun/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
   propSigla: "KaTenSiglaGcd"
   volumeMap: []
 #ggb:
@@ -558,25 +573,41 @@ gcd:
 #  langScript: 'bdr:BoDbuCan'
 #  script: 'bdr:ScriptDbuCan'
 #  printType: 'bdr:PrintMethod_Manuscript'
+#  hassections: False
 #  propSigla: "KaTenSiglaGgb"
 #  volumeMap: []
 gkh:
   RID: ["MW2PD17382"]
   EID: "Gkh"
-  file: "Collections/Gkh khams rnying rgyud/Gkh.xml"
+  file: "sql_export/Gkh.xml"
+  jsondir: "Collections/Gkh khams rnying rgyud/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
   propSigla: "KaTenSiglaGkh"
   volumeMap: []
 gpb:
   RID: ["MW1KG14783"]
   EID: "Gpb"
-  file: "Collections/Gpb snga 'gyur rgyud 'bum phyogs bsgrigs/Gpb.xml"
+  file: "sql_export/Gpb.xml"
+  jsondir: "Collections/Gpb snga 'gyur rgyud 'bum phyogs bsgrigs/"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
   propSigla: "KaTenSiglaGpb"
+  volumeMap: []
+ggk:
+  RID: ["MW1BL6"]
+  EID: "Ggk"
+  file: "sql_export/Ggk.xml"
+  jsondir: "Collections/Ggk gad dkar rnying rgyud/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
+  propSigla: "KaTenSiglaGgk"
   volumeMap: []
 
 # Gkk, Gsg, Gtb, ta, Ggk

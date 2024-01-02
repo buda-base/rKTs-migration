@@ -265,13 +265,6 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
             $part_r->addLiteral('bdo:partIndex', $section_part_count+1);
             $part_r->addResource('bdo:partOf', $section_r);
             $part_r->addResource('bdo:inRootInstance', $url_broader_edition);
-            if ($item->loc != "") {
-                $noteUri = bnode_url("NT", $part_r, $part_r, $item->loc);
-                $noteNode = $part_r->getGraph()->resource($noteUri);
-                $part_r->addResource('bdo:note', $noteNode);
-                $noteNode->add('bdo:noteText', "location statement in rKTs data: ".$item->loc);
-                $noteNode->addResource('rdf:type', 'bdo:Note');
-            }
         }
     }
     foreach ($item->note as $note) { // iterating on chapters
