@@ -109,11 +109,6 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edit
         add_props($expression_r, $props, 'ab', 'bdo:workIsAbout');
         add_props($expression_r, $props, 'ge', 'bdo:workGenre');
     }
-    if (isset($gl_abstractUrl_catId[$url_expression])) {
-        foreach($gl_abstractUrl_catId[$url_expression] as $text_url) {
-            $expression_r->addResource('bdo:workHasInstance', $text_url);
-        }
-    }
     $abstract_r = null;
     $firstTitleLits = get_first_title_lits($item, $bdrc);
     if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate && $edition != "G") { // just one abstract text for duplicates
