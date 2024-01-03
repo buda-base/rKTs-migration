@@ -20,13 +20,16 @@ $tag_to_event_role = [
 
 function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $fileName, $lastpartnum, $lastloc, &$section_r, $eid=null, $bdrc=False, $edition="K", $parentId=null, $thisPartTreeIndex=null, $hassections=true) {
     global $gl_abstractUrl_catId , $tag_to_event_role;
+    $rktsid = null;
     if ($edition == "T") {
-        $rktsid = $item->rktst;
+        $rktsid = $item->rktst->__toString();
     } elseif ($edition == "G") {
-        $rktsid = $item->rktsg;
+        $rktsid = $item->rktsg->__toString();
     } else {
-        $rktsid = $item->rkts;
+        $rktsid = $item->rkts->__toString();
     }
+    if (!$rktsid)
+        $rktsid = $item->rkts->__toString();
     if ($rktsid == "" || $rktsid == '-' || $rktsid == "new" || $rktsid == "?" || $rktsid == "new?" )
         $rktsid = null;
     $partnum = $lastpartnum+1;
@@ -40,6 +43,8 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
     $graph_part = new EasyRdf_Graph();
     $part_r = $graph_part->resource($url_part);
     if ($rktsid) {
+        if (substr($rktsid,0,1) == "K" || substr($rktsid,0,1) == "G" || substr($rktsid,0,1) == "T")
+            $rktsid = substr($rktsid, 1);
         $url_parent_text = id_to_url_expression($rktsid, $config, $bdrc, $edition);
         if (!isset($gl_abstractUrl_catId[$url_parent_text])) {
             $gl_abstractUrl_catId[$url_parent_text] = [];
