@@ -206,6 +206,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edit
             $expression_r->addResource('bdo:partOf', id_to_url_expression($parentid, $config, $bdrc, $edition));
         }
         $langtag = $name_to_bcp[$name];
+        if (!$langtag) continue;
         if ($config['oneTitleInExpression'] && isset($seenLangs[$langtag]))
             continue;
         $title = trim($child->__toString());
