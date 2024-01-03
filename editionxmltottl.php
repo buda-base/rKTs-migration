@@ -136,7 +136,7 @@ function edition_item_to_ttl($config, $item, $global_graph_fd, $edition_info, $f
         }
     }*/
     $location = get_text_loc($item, $fileName, 'rkts_'.$rktsid, $eid);
-    if (!empty($location) && array_key_exists('section', $location)) { // useful for xml debugging only
+    if (!empty($location) && (!$hassections || array_key_exists('section', $location))) { // useful for xml debugging only
         $current_section = $location['section'];
         if ($current_section == null) {
             $current_section = $location['bpsection'];

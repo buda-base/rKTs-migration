@@ -97,7 +97,7 @@ $gl_rkts_abstract = get_abstract_mapping($config);
 require_once "editionxmltottl.php";
 
 $gl_abstractUrl_catId = [];
-/*
+
 $kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 fillmappings($kernel_xml);
 
@@ -126,8 +126,8 @@ $kernelt_xml = simplexml_load_file('rKTs/Kernel/rktst.xml');
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, "T");
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, "T");
 unset($kernelt_xml);
-*/
-$filesList = [ "ggk", "gaz", "gbm", "gcd", "gkh", "gpb"];
+
+$filesList = [ "ggk" , "gaz", "gbm", "gkh", "gpb"];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
@@ -140,4 +140,3 @@ kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, "G");
 unset($kernelt_xml);
 
 fclose($global_graph_fd);
-

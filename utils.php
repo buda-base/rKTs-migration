@@ -409,7 +409,7 @@ function eid_to_wlname($eid) {
 function add_location_simple($resource, $location, $edition_info, $eid) {
     if (!isset($location['bvolnum']))
         return;
-    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationUri = bnode_url("CL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
@@ -446,7 +446,7 @@ function add_location_section_begin($resource, $location, $edition_info, $eid) {
         report_error($eid, 'invalid_sec_loc', $resource->getUri(), 'cannot indicate begin location');
         return;
     }
-    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationUri = bnode_url("CL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
     $resource->addResource('bdo:contentLocation', $locationNode);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
@@ -485,7 +485,7 @@ function add_location_section_end($resource, $location, $edition_info, $eid) {
 }
 
 function add_location($resource, $location, $volumeMapWithUrls) {
-    $locationUri = bnode_url("WL", $resource, $resource, json_encode($location));
+    $locationUri = bnode_url("CL", $resource, $resource, json_encode($location));
     $locationNode = $resource->getGraph()->resource($locationUri);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $resource->addResource('bdo:contentLocation', $locationNode);
@@ -523,7 +523,7 @@ function add_location($resource, $location, $volumeMapWithUrls) {
 }
 
 function add_location_to_section($resource, $sectionName, $volumeMapWithUrls) {
-    $locationUri = bnode_url("WL", $resource, $resource, $sectionName);
+    $locationUri = bnode_url("CL", $resource, $resource, $sectionName);
     $locationNode = $resource->getGraph()->resource($locationUri);
     $locationNode->addResource('rdf:type', "bdo:ContentLocation");
     $resource->addResource('bdo:contentLocation', $locationNode);

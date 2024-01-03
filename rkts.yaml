@@ -160,7 +160,7 @@ narthang:
 peking:
   RID: ["MW1PD96684", "MW3CN1094"]
   file: "Collections/Q Peking 1737 Kanjur/Q.xml"
-  EID: "Kq"
+  EID: "Q"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
   printType: 'bdr:PrintMethod_Relief_WoodBlock'
@@ -197,7 +197,7 @@ lhasa:
     ]
 urga:
   RID: ["MW29468", "MW1BL4"]
-  file: "Catalog/U Urga Kanjur/U.xml"
+  file: "Collections/U Urga Kanjur/U.xml"
   EID: "U"
   langScript: 'bdr:BoDbuCan'
   script: 'bdr:ScriptDbuCan'
@@ -555,17 +555,17 @@ gbm:
 #  printType: 'bdr:PrintMethod_Manuscript'
 #  propSigla: "KaTenSiglaGbr"
 #  volumeMap: []
-gcd:
-  RID: ["MW21520"]
-  EID: "Gcd"
-  file: "sql_export/Gcd.xml"
-  jsondir: "Collections/Gcd rnying ma rgyud bcu bdun/"
-  langScript: 'bdr:BoDbuCan'
-  script: 'bdr:ScriptDbuCan'
-  printType: 'bdr:PrintMethod_Manuscript'
-  hassections: False
-  propSigla: "KaTenSiglaGcd"
-  volumeMap: []
+#gcd:
+#  RID: ["MW21520"]
+#  EID: "Gcd"
+#  file: "sql_export/Gcd.xml"
+#  jsondir: "Collections/Gcd rnying ma rgyud bcu bdun/"
+#  langScript: 'bdr:BoDbuCan'
+#  script: 'bdr:ScriptDbuCan'
+#  printType: 'bdr:PrintMethod_Manuscript'
+#  hassections: False
+#  propSigla: "KaTenSiglaGcd"
+#  volumeMap: []
 #ggb:
 #  RID: ["MW21939"]
 #  EID: "Ggb"
