@@ -70,12 +70,13 @@ $subitemtoitem = [];
 
 function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edition="K") {
     global $name_to_bcp, $gl_rkts_props, $gl_rkts_abstract, $gl_KanToTenExpressions, $gl_abstractUrl_catId, $subitemtoitem;
+    $id = null;
     if ($edition == "K") {
-        $id = $item->rktst->__toString();
-    } elseif ($edition == "G") {
-        $id = $item->rktstg->__toString();
-    } else {
         $id = $item->rkts->__toString();
+    } elseif ($edition == "G") {
+        $id = $item->rktsg->__toString();
+    } else {
+        $id = $item->rktst->__toString();
     }
     if (isset($item->now) || $item->count() < 2)
         return;
@@ -101,10 +102,10 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edit
     }
     if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $edition)) {
         $props = $gl_rkts_props[$idwithletter];
-        add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
-        add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
-        add_props_creator($expression_r, $props, 're', 'bdr:R0ER0023');
-        add_props_creator($expression_r, $props, 'ma', 'bdr:R0ER0019');
+        //add_props_creator($expression_r, $props, 'pa', 'bdr:R0ER0018');
+        //add_props_creator($expression_r, $props, 'tr', 'bdr:R0ER0026');
+        //add_props_creator($expression_r, $props, 're', 'bdr:R0ER0023');
+        //add_props_creator($expression_r, $props, 'ma', 'bdr:R0ER0019');
         add_props($expression_r, $props, 'ab', 'bdo:workIsAbout');
         add_props($expression_r, $props, 'ge', 'bdo:workGenre');
     }
@@ -115,7 +116,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edit
     }
     $abstract_r = null;
     $firstTitleLits = get_first_title_lits($item, $bdrc);
-    if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate) { // just one abstract text for duplicates
+    if ($bdrc && $config['useAbstract'] && !$storeAsDuplicate && $edition != "G") { // just one abstract text for duplicates
         $url_abstract = id_to_url_abstract($id, $config, $bdrc, $edition);
         $expression_r->addResource('bdo:workHasParallelsIn', $url_abstract);
         if (!$bdrc || !isset($config['SameTextDifferentTranslation'][$idwithletter])) { // we don't add the abstract text twice
@@ -123,7 +124,7 @@ function kernel_item_to_ttl($config, $item, $global_graph_fd, $bdrc=False, $edit
             $abstract_r = $graph_abstract->resource($url_abstract);
             if ($bdrc && isset($gl_rkts_props[$idwithletter]) && !has_bdrc_abstract($idwithletter, $config, $bdrc, $edition)) {
                 $props = $gl_rkts_props[$idwithletter];
-                add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
+                //add_props_creator($abstract_r, $props, 'ma', 'bdr:R0ER0019');
                 add_props($abstract_r, $props, 'ab', 'bdo:workIsAbout');
                 add_props($abstract_r, $props, 'ge', 'bdo:workGenre');
             }
