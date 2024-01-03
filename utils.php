@@ -19,6 +19,7 @@ function catalogue_index_xml_to_rdf($index, $edition_info) {
     $index = substr($index, $edlen);
     $index = str_replace(["(", ".", ","], "-", $index);
     $index = str_replace(")", "", $index);
+    $index = str_replace("?", "_", $index);
     return $index;
 }
 
