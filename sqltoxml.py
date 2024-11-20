@@ -19,7 +19,7 @@ def export_kernel():
     #    print(row)
     query = "select rktsTyp, rkts, tib, skt, mng from rkts order by rkts asc"
     cursor.execute(query)
-    rkts_xml_strs = {"K": "", "G": "", "T": ""}
+    rkts_xml_strs = {"K": "", "G": "", "T": "", "B": ""}
     for row in cursor:
         if row[0] in rkts_xml_strs:
             letter = "" if row[0] == "K" else row[0].lower()
@@ -38,6 +38,8 @@ def export_kernel():
         text_file.write('<?xml version="1.0" encoding="UTF-8"?><outline><name>rKTs</name><note>exported from SQL</note>%s</outline>' % rkts_xml_strs["T"])
     with open("rKTs/sql_export/rktsg.xml", "w") as text_file:
         text_file.write('<?xml version="1.0" encoding="UTF-8"?><outline><name>rKTs</name><note>exported from SQL</note>%s</outline>' % rkts_xml_strs["G"])
+    with open("rKTs/sql_export/rktsb.xml", "w") as text_file:
+        text_file.write('<?xml version="1.0" encoding="UTF-8"?><outline><name>rKTs</name><note>exported from SQL</note>%s</outline>' % rkts_xml_strs["B"])
 
 def export_nlm():
     sc = connect( host="localhost", user="rkts", password="rkts", database="rkts")
@@ -113,10 +115,23 @@ def get_locations_xml(ref):
     sc.close()
     return res
 
+# Bks MW4CZ58520
+# Bkt MW30498
+# Gcn MW1ER128
+# Gcu MW1ER119
+# Ggm EAP
+# Ggt EAP
+# Gt EAP
+# L MW2KG210299
+# Pj EAP
+# Pz EAP
+# T Toyo Bunko
+# Ts MW3CN1302, used to be Cx
+
 def export_catalogs():
     sc = connect( host="localhost", user="rkts", password="rkts", database="rkts")
     cursor = sc.cursor()
-    query = "select coll, ref, rktsTyp, rkts, tib, skt, coloph, colophTitle, margin, rnb from catalog where coll = 'Gcd' or coll = 'Bd' or coll = 'Ba' or coll = 'Gaz' or coll = 'Gbm' or coll = 'Gbr' or coll = 'Gdg' or coll = 'Ggk' or coll = 'Gkh' or coll = 'Go' or coll = 'Gtn' or coll = 'He' or coll = 'Hg' or coll = 'Hi' or coll = 'Ng' or coll = 'R' or coll = 'Ty' order by rnb asc"
+    query = "select coll, ref, rktsTyp, rkts, tib, skt, coloph, colophTitle, margin, rnb from catalog where coll = 'U' or coll = 'Gcd' or coll = 'Bd' or coll = 'Ba' or coll = 'Gaz' or coll = 'Gbm' or coll = 'Gbr' or coll = 'Gdg' or coll = 'Ggk' or coll = 'Gkh' or coll = 'Go' or coll = 'Gtn' or coll = 'He' or coll = 'Hg' or coll = 'Hi' or coll = 'Ng' or coll = 'R' or coll = 'Ty' or coll = 'Bks' or coll = 'Bkt' or coll = 'Gcn' or coll = 'Gcu' or coll = 'L' order by rnb asc"
     cursor.execute(query)
     rows = cursor.fetchall()
     cursor.close()
@@ -136,7 +151,7 @@ def export_catalogs():
 
 def main():
     read_imggrouptovnum()
-    #export_kernel()
+    export_kernel()
     export_catalogs()
     #export_nlm()
 

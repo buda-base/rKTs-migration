@@ -190,7 +190,7 @@ def migrate_one_file(iilname, fpath, iglname, virtual=False):
     print("migrating "+str(fpath))
     simplemode = False
     res = copy.deepcopy(BVM_BOILERPLATE)
-    if "1PD96682" in str(fpath) or "1PD95844" in str(fpath) or "3CN895" in str(fpath) or "1BL1" in str(fpath):
+    if "1PD96682" in str(fpath) or "1PD95844" in str(fpath) or "3CN895" in str(fpath) or "4CZ45314" in str(fpath):
         simplemode = True
         res["pagination"][0]["type"] = "simple"
     rkjson = None
@@ -395,14 +395,18 @@ def main():
     for fname in glob.glob('rKTs/Collections/**/**/*.json'):
         if "sets" in fname or "vol" in fname:
             continue
-        if "WPT" in fname or "Pelliot" in fname  or "3CN3207" in fname or "EAP" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "EAP" in fname or "manifest" in fname or "2KG229046" in fname:
+        if "WPT" in fname or "Pelliot" in fname  or "3CN3207" in fname or "IOL" in fname or "EAP" in fname or "NLM" in fname or "SBB" in fname or "Toyobunko" in fname or "dkbc" in fname or "NLM" in fname or "Kopie" in fname or "Crop" in fname or "manifest" in fname or "2KG229046" in fname:
             continue
         virtual = "1ER156" in fname
         p = Path(fname)
         iglname = p.stem.startswith('I') and p.stem or 'I'+p.stem
         iilname = 'W'+p.parent.stem
         #res = fix_one_file(iilname, p, iglname)
-        res = migrate_one_file(iilname, p, iglname, virtual)
+        res = None
+        try:
+            res = migrate_one_file(iilname, p, iglname, virtual)
+        except:
+            print("ERROR migrating "+fname)
         if res is None:
             continue
         bvmhash = hashlib.md5(iglname.encode("utf8")).hexdigest()[:2]

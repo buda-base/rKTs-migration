@@ -1,5 +1,5 @@
 select distinct ?ig ?vn {
-	values ?wa { bdr:WA0BC001 bdr:WA0BC002 bdr:WA3JT13481 bdr:WA1KG892 }
+	values ?wa { bdr:WA0BC001 bdr:WA0BC002 bdr:WA3JT13481 bdr:WA1KG892 bdr:WA21872 bdr:WA30498 }
 	?mw :instanceOf ?wa ;
 	    :instanceHasReproduction ?w .
 	?w a :ImageInstance ;

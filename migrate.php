@@ -101,7 +101,7 @@ $gl_abstractUrl_catId = [];
 $kernel_xml = simplexml_load_file('rKTs/Kernel/rkts.xml');
 fillmappings($kernel_xml);
 
-$filesList = [ "derge" , "chemdo" , "goldenmustang" , "egoo",  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "ragya", "hemishi", "tashiyangtse", "go", "ng", "bd" ];
+$filesList = [ "derge" , "chemdo" , "goldenmustang" , "egoo",  "shey", "stog", "narthang", "peking", "lhasa", "urga", "cone", "lithang",  "phugdrak", "ragya", "hemishi", "tashiyangtse", "go", "ng", "bd", "l" ];
 
 
 foreach ($filesList as $fileName) {
@@ -127,7 +127,7 @@ kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, "T");
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, "T");
 unset($kernelt_xml);
 
-$filesList = [ "ggk" , "gaz", "gbm", "gkh", "gpb"];
+$filesList = [ "ggk" , "gaz", "gbm", "gkh", "gpb", "gcu"];
 
 foreach ($filesList as $fileName) {
     $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
@@ -137,6 +137,18 @@ foreach ($filesList as $fileName) {
 $kernelt_xml = simplexml_load_file('rKTs/sql_export/rktsg.xml');
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, "G");
 kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, "G");
+unset($kernelt_xml);
+
+$filesList = [ "bks", "bkt"];
+
+foreach ($filesList as $fileName) {
+    $edition_xml = simplexml_load_file("rKTs/".$config[$fileName]["file"]);
+    editions_to_ttl($config, $edition_xml, $global_graph_fd, $fileName, true, "B");
+}
+
+$kernelt_xml = simplexml_load_file('rKTs/sql_export/rktsb.xml');
+kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, false, "B");
+kernel_to_ttl($config, $kernelt_xml, $global_graph_fd, true, "B");
 unset($kernelt_xml);
 
 fclose($global_graph_fd);

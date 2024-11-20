@@ -5,6 +5,8 @@ rKTsAbstractUrlFormatTen: "http://purl.rkts.eu/resource/WTA%GID"
 rKTsExpressionUrlFormatTen: "http://purl.rkts.eu/resource/WTT%GID"
 rKTsAbstractUrlFormatNG: "http://purl.rkts.eu/resource/WNGA%GID"
 rKTsExpressionUrlFormatNG: "http://purl.rkts.eu/resource/WNGT%GID"
+rKTsAbstractUrlFormatB: "http://purl.rkts.eu/resource/WBA%GID"
+rKTsExpressionUrlFormatB: "http://purl.rkts.eu/resource/WBT%GID"
 rKTsEditionUrlFormat: "http://purl.rkts.eu/resource/WE%EID"
 rKTsTextUrlFormat: "http://purl.rkts.eu/resource/WE%EID_T%GID"
 rKTsSectionUrlFormat: "http://purl.rkts.eu/resource/WE%EID_S%SNUM"
@@ -18,6 +20,8 @@ bdrcAbstractUrlFormatTen: "http://purl.bdrc.io/resource/WA0RTI%GID"
 bdrcExpressionUrlFormatTen: "http://purl.bdrc.io/resource/WA0RT%GID"
 bdrcAbstractUrlFormatNG: "http://purl.bdrc.io/resource/WA0RGI%GID"
 bdrcExpressionUrlFormatNG: "http://purl.bdrc.io/resource/WA0RG%GID"
+bdrcAbstractUrlFormatB: "http://purl.bdrc.io/resource/WA0RBI%GID"
+bdrcExpressionUrlFormatB: "http://purl.bdrc.io/resource/WA0RB%GID"
 bdrcEditionUrlFormat: "http://purl.bdrc.io/resource/%EID"
 bdrcTextUrlFormat: "http://purl.bdrc.io/resource/%EID_%GID"
 bdrcSectionUrlFormat: "http://purl.bdrc.io/resource/%EID_S%SNUM"
@@ -493,6 +497,17 @@ go:
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaGo"
   volumeMap: []
+ba:
+  RID: ["MW4CZ45308"]
+  EID: "Ba"
+  file: "sql_export/Ba.xml"
+  jsondir: "Collections/Ba Basgo Fragments/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  hassections: False
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaBa"
+  volumeMap: []
 bd:
   RID: ["MW8LS15931"]
   EID: "Bd"
@@ -503,6 +518,28 @@ bd:
   hassections: False
   printType: 'bdr:PrintMethod_Manuscript'
   propSigla: "KaTenSiglaBd"
+  volumeMap: []
+bks:
+  RID: ["MW4CZ58520"]
+  EID: "Bks"
+  file: "sql_export/Bks.xml"
+  jsondir: "Collections/Bks Bon Kanjur Sichuan/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  hassections: False
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaBks"
+  volumeMap: []
+bkt:
+  RID: ["MW30498"]
+  EID: "Bks"
+  file: "sql_export/Bkt.xml"
+  jsondir: "Collections/Bkt Bon gyi bka' brten/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  hassections: False
+  printType: 'bdr:PrintMethod_Manuscript'
+  propSigla: "KaTenSiglaBkt"
   volumeMap: []
 ng:
   RID: ["MW2KG229028"]
@@ -576,6 +613,28 @@ gbm:
 #  hassections: False
 #  propSigla: "KaTenSiglaGgb"
 #  volumeMap: []
+# gcd:
+#   RID: ["MW21520"]
+#   EID: "Gcd"
+#   file: "sql_export/Gcd.xml"
+#   jsondir: "Collections/Gcd rnying ma rgyud bcu bdun/"
+#   langScript: 'bdr:BoDbuCan'
+#   script: 'bdr:ScriptDbuCan'
+#   printType: 'bdr:PrintMethod_Manuscript'
+#   hassections: False
+#   propSigla: "KaTenSiglaGcd"
+#   volumeMap: []
+gcu:
+  RID: ["MW1ER119"]
+  EID: "Gcu"
+  file: "sql_export/Gcu.xml"
+  jsondir: "Collections/Gcu rnying ma rgyud bcu bdun/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
+  propSigla: "KaTenSiglaGcu"
+  volumeMap: []
 gkh:
   RID: ["MW2PD17382"]
   EID: "Gkh"
@@ -609,5 +668,15 @@ ggk:
   hassections: False
   propSigla: "KaTenSiglaGgk"
   volumeMap: []
-
+l:
+  RID: ["MW3CN981"]
+  EID: "L"
+  file: "sql_export/L.xml"
+  jsondir: "Collections/L London Kanjur/"
+  langScript: 'bdr:BoDbuCan'
+  script: 'bdr:ScriptDbuCan'
+  printType: 'bdr:PrintMethod_Manuscript'
+  hassections: False
+  propSigla: "KaTenSiglaL"
+  volumeMap: []
 # Gkk, Gsg, Gtb, ta, Ggk

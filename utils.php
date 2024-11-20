@@ -60,6 +60,8 @@ function edition_to_param_name($edition) {
         return "Ten";
     if ($edition == "K")
         return "Kan";
+    if ($edition == "B")
+        return "B";
     return "NG";
 }
 
