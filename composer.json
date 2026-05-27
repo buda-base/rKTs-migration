@@ -5,7 +5,7 @@
     "require": {
         "easyrdf/easyrdf": "^0.9.1",
         "ulrichsg/getopt-php": "^3.0",
-        "symfony/yaml": "^3.4",
+        "symfony/yaml": "^5.4",
         "ext-simplexml": "*"
     },
     "license": "Apache2",
